@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "229968047952",
+    "project_id": "jobnepal-674cd",
+    "storage_bucket": "jobnepal-674cd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:229968047952:android:23839515cb56c340ecc655",
+        "android_client_info": {
+          "package_name": "com.chetan.jobnepal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "229968047952-t0t708a6279ovi71m6vo4alnjnsfefk6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDV5K6O7NPmTZNBpMKfocyVtzaOYnrFu7E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "229968047952-t0t708a6279ovi71m6vo4alnjnsfefk6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
