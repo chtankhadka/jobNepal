@@ -9,13 +9,12 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddAPhoto
-import androidx.compose.material.icons.filled.Camera
-import androidx.compose.material.icons.filled.FileOpen
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -32,7 +31,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
@@ -43,7 +41,7 @@ import kotlin.math.sin
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
-fun ProfileAnimation(size: Dp) {
+fun ProfileAnimation(size: Dp, padding: Dp) {
     var sizeState by remember {
         mutableStateOf(IntSize.Zero)
     }
@@ -62,7 +60,8 @@ fun ProfileAnimation(size: Dp) {
             .onSizeChanged {
                 sizeState = it
             }
-            .background(Color.Transparent),
+            .background(Color.Transparent)
+            .padding(padding),
         Alignment.Center
     ) {
         val r = size.value / 2

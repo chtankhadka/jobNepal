@@ -22,8 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 @Composable
 fun ExposedDropdownJobNepal(
     modifier: Modifier = Modifier,
-    list: Array<String>,
-    label: String? = null
+    list: Array<String>
 ) {
     val context = LocalContext.current
     var expanded by remember {
@@ -32,7 +31,6 @@ fun ExposedDropdownJobNepal(
     var selectedItemIndex by remember {
         mutableIntStateOf(0)
     }
-
     ExposedDropdownMenuBox(
         expanded = expanded,
         onExpandedChange = {expanded = !expanded},
@@ -43,11 +41,7 @@ fun ExposedDropdownJobNepal(
             onValueChange = {},
             readOnly = true,
             singleLine = true,
-            label = {
-                if (label != null) {
-                    Text(text = label)
-                }
-            },
+            label = null,
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             modifier = Modifier.menuAnchor()
         )
@@ -68,15 +62,6 @@ fun ExposedDropdownJobNepal(
                         Toast.makeText(context, item, Toast.LENGTH_SHORT).show()
                     })
             }
-
         }
     }
-}
-@Composable
-@Preview
-fun showDropdown(){
-    ExposedDropdownJobNepal(
-        list = arrayOf("Province 1","Province 2","Province 3"),
-
-    )
 }

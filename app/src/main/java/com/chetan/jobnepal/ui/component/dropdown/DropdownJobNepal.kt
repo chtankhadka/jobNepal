@@ -17,9 +17,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 
 @Composable
-fun DropdownJobNepal() {
+fun DropdownJobNepal(list: List<Pair<String, ImageVector>>) {
     var expanded by remember { mutableStateOf(false) }
     Box(
         modifier = Modifier
@@ -36,14 +37,14 @@ fun DropdownJobNepal() {
             expanded = expanded,
             onDismissRequest = { expanded = false }
         ) {
-            DropdownMenuItem(
-                text = { Text("Load") },
-                onClick = {  }
-            )
-            DropdownMenuItem(
-                text = { Text("Save") },
-                onClick = { }
-            )
+            list.forEach {
+                DropdownMenuItem(
+                    text = { Text(it.first) },
+                    leadingIcon = { Icon(imageVector = it.second, contentDescription = it.first)},
+                    onClick = {  }
+                )
+            }
+
         }
     }
 }

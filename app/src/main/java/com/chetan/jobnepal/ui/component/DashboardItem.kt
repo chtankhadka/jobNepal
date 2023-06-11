@@ -1,14 +1,17 @@
 package com.chetan.jobnepal.ui.component
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Alarm
+import androidx.compose.material.icons.filled.Comment
 import androidx.compose.material.icons.filled.ThumbDown
 import androidx.compose.material.icons.filled.ThumbUp
+import androidx.compose.material.icons.filled.YoutubeSearchedFor
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -20,19 +23,17 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.chetan.jobnepal.R
+import coil.compose.AsyncImage
 import com.chetan.jobnepal.ui.component.dropdown.DropdownJobNepal
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DashboardItem() {
-
+fun DashboardItem(item: Pair<String, String>) {
     Card(
         modifier = Modifier.fillMaxWidth(),
+        elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
     ) {
         Row(
             modifier = Modifier
@@ -53,13 +54,16 @@ fun DashboardItem() {
             verticalAlignment = Alignment.CenterVertically,
 
             ) {
-            Text(text = "Lumbini")
-            DropdownJobNepal()
+            Text(text = item.first)
+            DropdownJobNepal(listOf(
+                "Full Guid" to Icons.Default.YoutubeSearchedFor,
+                "Apply later" to Icons.Default.Alarm
+                ))
         }
-        Image(
+        AsyncImage(
             modifier = Modifier.fillMaxWidth(),
-            contentScale = ContentScale.Fit,
-            painter = painterResource(id = R.drawable.ic_launcher_foreground),
+            contentScale = ContentScale.FillWidth,
+            model = item.second,
             contentDescription = "details",
             alignment = Alignment.Center
         )
@@ -101,6 +105,20 @@ fun DashboardItem() {
                     style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
                 )
             }
+            Card() {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Comment,
+                        contentDescription = "",
+                    )
+                    Text(
+                        text = "1K",
+                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
+                    )
+                }
+            }
             Card(
                 onClick = { }) {
                 Text(
@@ -113,10 +131,4 @@ fun DashboardItem() {
 
         }
     }
-}
-
-@Composable
-@Preview
-fun showItem() {
-    DashboardItem()
 }
