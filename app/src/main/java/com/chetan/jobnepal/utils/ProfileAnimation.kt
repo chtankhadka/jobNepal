@@ -1,6 +1,7 @@
 package com.chetan.jobnepal.utils
 
 import android.annotation.SuppressLint
+import android.net.Uri
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -23,6 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,7 +36,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.chetan.jobnepal.R
+import com.chetan.jobnepal.ui.component.PhotoPickerJobNepal
 import kotlinx.coroutines.delay
 import kotlin.math.cos
 import kotlin.math.sin
@@ -47,6 +51,24 @@ fun ProfileAnimation(size: Dp, padding: Dp) {
     }
     var cameraPosition by remember {
         mutableFloatStateOf(0f)
+    }
+    var singlePhotoPicker by remember {
+        mutableStateOf(false)
+    }
+    var singlePhotoUri by remember {
+        mutableStateOf<Uri>(Uri.EMPTY)
+    }
+    var multiplePhotoUris by remember {
+        mutableStateOf<List<Uri>>(emptyList())
+    }
+    if (singlePhotoPicker) {
+        PhotoPickerJobNepal(
+            singlePhoto = true,
+            picUri = {
+                singlePhotoUri = it
+            },
+            picUris = { multiplePhotoUris = it },
+        ) { singlePhotoPicker = false }
     }
 
     LaunchedEffect(Unit) {
@@ -67,15 +89,18 @@ fun ProfileAnimation(size: Dp, padding: Dp) {
         val r = size.value / 2
         val a = cos(cameraPosition) * r
         val b = sin(cameraPosition) * r
-        Image(
+        AsyncImage(
             modifier = Modifier
                 .width(size)
                 .height(size)
                 .clip(CircleShape)
-                .border(border = BorderStroke(2.dp,MaterialTheme.colorScheme.onPrimary), shape = CircleShape),
+                .border(
+                    border = BorderStroke(2.dp, MaterialTheme.colorScheme.onPrimary),
+                    shape = CircleShape
+                ),
 
             contentScale = ContentScale.Crop,
-            painter = painterResource(id = R.drawable.ic_launcher_background),
+            model = singlePhotoUri,
             contentDescription = "Profile",
             alignment = Alignment.Center
         )
@@ -84,7 +109,7 @@ fun ProfileAnimation(size: Dp, padding: Dp) {
                 .size(32.dp)
                 .offset(a.dp, b.dp)
                 .clickable {
-
+                    singlePhotoPicker = true
                 },
             imageVector = Icons.Default.AddAPhoto,
             contentDescription = "shopping"
