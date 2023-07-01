@@ -41,7 +41,10 @@ fun DropdownJobNepal(list: List<Pair<String, ImageVector>>) {
                 DropdownMenuItem(
                     text = { Text(it.first) },
                     leadingIcon = { Icon(imageVector = it.second, contentDescription = it.first)},
-                    onClick = {  }
+                    onClick = {
+
+                    },
+
                 )
             }
 

@@ -16,7 +16,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -33,7 +32,7 @@ fun ExposedDropdownJobNepal(
     }
     ExposedDropdownMenuBox(
         expanded = expanded,
-        onExpandedChange = {expanded = !expanded},
+        onExpandedChange = { expanded = !expanded },
         modifier = modifier
     ) {
         TextField(
@@ -50,17 +49,21 @@ fun ExposedDropdownJobNepal(
             onDismissRequest = { expanded = false }
         ) {
             list.forEachIndexed { index, item ->
-                DropdownMenuItem(
-                    text = {
-                           Text(text = item,
-                           fontWeight = if (index == selectedItemIndex) FontWeight.Bold else null
-                           )
-                    },
-                    onClick = {
-                        selectedItemIndex = index
-                        expanded = false
-                        Toast.makeText(context, item, Toast.LENGTH_SHORT).show()
-                    })
+                if (index != 0) {
+                    DropdownMenuItem(
+                        text = {
+                            Text(
+                                text = item,
+                                fontWeight = if (index == selectedItemIndex) FontWeight.Bold else null
+                            )
+                        },
+                        onClick = {
+                            selectedItemIndex = index
+                            expanded = false
+                            Toast.makeText(context, item, Toast.LENGTH_SHORT).show()
+                        })
+                }
+
             }
         }
     }

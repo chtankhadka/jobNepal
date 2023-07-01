@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.chetan.jobnepal.screens.academic.Academic
 import com.chetan.jobnepal.screens.dashboard.DashboardScreen
 import com.chetan.jobnepal.screens.sign_in.ProfileScreen
 import com.chetan.jobnepal.screens.sign_in.UserData
@@ -30,6 +31,9 @@ fun AppNavHost(
             ProfileScreen(userData = UserData("h","","")) {
                 
             }
+        }
+        composable("academic"){
+            Academic(navController)
         }
         
     }
