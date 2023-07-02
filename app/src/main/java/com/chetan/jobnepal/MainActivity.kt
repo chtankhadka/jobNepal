@@ -5,33 +5,21 @@ import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
-import androidx.activity.result.IntentSenderRequest
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.chetan.jobnepal.screens.sign_in.GoogleSignInClient
-import com.chetan.jobnepal.screens.sign_in.ProfileScreen
-import com.chetan.jobnepal.screens.sign_in.SignInScreen
-import com.chetan.jobnepal.screens.sign_in.SignInViewModel
+import com.chetan.jobnepal.screens.sign_in.onetapauthentication.GoogleSignInClient
 import com.chetan.jobnepal.ui.theme.JobNepalTheme
 import com.google.android.gms.auth.api.identity.Identity
-import kotlinx.coroutines.launch
-import kotlin.system.exitProcess
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
     private val googleAuthUiClient by lazy {
         GoogleSignInClient(
             context = applicationContext,
@@ -117,31 +105,34 @@ class MainActivity : ComponentActivity() {
 //                        }
 //                    }
 
-                  AppNavHost(
-                      modifier = Modifier,
-                      navController = navController,
-                      onBack = {
-                          if (!navController.popBackStack()){
-                              exitOrAsk()
-                          }
-                      }
-                  )
+                    AppNavHost(
+                        modifier = Modifier,
+                        navController = navController,
+                        onBack = {
+                            if (!navController.popBackStack()) {
+                                exitOrAsk()
+                            }
+                        },
+                    )
 
                 }
             }
         }
     }
+
     var doubleBackToExitPressedOnce = false
-    private fun exitOrAsk(){
-        if (doubleBackToExitPressedOnce){
+    private fun exitOrAsk() {
+        if (doubleBackToExitPressedOnce) {
             finish()
         }
         doubleBackToExitPressedOnce = true
-        Toast.makeText(this,"Press Back again to exit",
-        Toast.LENGTH_SHORT).show()
+        Toast.makeText(
+            this, "Press Back again to exit",
+            Toast.LENGTH_SHORT
+        ).show()
         Handler(Looper.getMainLooper()).postDelayed({
             doubleBackToExitPressedOnce = false
-        },2000)
+        }, 2000)
     }
 
 }

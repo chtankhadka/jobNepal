@@ -1,4 +1,4 @@
-package com.chetan.jobnepal.screens.sign_in
+package com.chetan.jobnepal.screens.sign_in.onetapauthentication
 
 import android.content.Context
 import android.content.Intent

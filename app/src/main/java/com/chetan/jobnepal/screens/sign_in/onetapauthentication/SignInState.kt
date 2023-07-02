@@ -1,4 +1,4 @@
-package com.chetan.jobnepal.screens.sign_in
+package com.chetan.jobnepal.screens.sign_in.onetapauthentication
 
 data class SignInState (
     val isSigInSuccessful : Boolean = false,

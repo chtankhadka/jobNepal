@@ -48,6 +48,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
+import com.chetan.jobnepal.screens.sign_in.emailandpasswordauthentication.LoginWithEmailPasswordViewModel
 import com.chetan.jobnepal.ui.component.DashboardItem
 import com.chetan.jobnepal.ui.component.dropdown.ExposedDropdownJobNepal
 import com.chetan.jobnepal.utils.VibratingIcon
@@ -58,6 +59,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun DashboardScreen(
     navController: NavHostController,
+    viewModel: LoginWithEmailPasswordViewModel,
     onClick: () -> Unit
 ) {
 
@@ -82,7 +84,7 @@ fun DashboardScreen(
         drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet {
-                ModalDrawerSheetPage(navController)
+                ModalDrawerSheetPage(navController,viewModel)
             }
 
         }) {

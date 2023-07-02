@@ -24,11 +24,15 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.chetan.jobnepal.Destination
 import com.chetan.jobnepal.screens.myForm.MyForm
+import com.chetan.jobnepal.screens.sign_in.emailandpasswordauthentication.LoginWithEmailPasswordViewModel
 import com.chetan.jobnepal.ui.component.dropdown.DropdownJobNepal
 import com.chetan.jobnepal.utils.ProfileAnimation
 
 @Composable
-fun ModalDrawerSheetPage(navController: NavHostController) {
+fun ModalDrawerSheetPage(
+    navController: NavHostController,
+    viewModel: LoginWithEmailPasswordViewModel
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth(0.85f)
@@ -44,14 +48,21 @@ fun ModalDrawerSheetPage(navController: NavHostController) {
                 modifier = Modifier.padding(vertical = 10.dp)
             ) {
 
-                Text(text = "Chetan Khadka")
+                Text(text = viewModel.currentUser?.displayName ?: "")
                 Text(text = "Form Requested: 4")
                 Text(text = "Attend Exam: 1")
             }
             val list = listOf(
                 "Contacts" to Icons.Default.Contacts,
                 "Logout" to Icons.Default.Logout)
-            DropdownJobNepal(list)
+            DropdownJobNepal(list){
+                if (it == "Logout"){
+                    viewModel.logout()
+                    navController.navigate(Destination.Screen.SignWithEmailPassword.route){
+                        popUpTo(Destination.Screen.SignWithEmailPassword.route){inclusive = true}
+                    }
+                }
+            }
 
         }
         Divider(

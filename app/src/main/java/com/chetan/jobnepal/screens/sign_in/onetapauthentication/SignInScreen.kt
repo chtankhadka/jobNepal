@@ -1,4 +1,4 @@
-package com.chetan.jobnepal.screens.sign_in
+package com.chetan.jobnepal.screens.sign_in.onetapauthentication
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Box
@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun SignInScreen(
     state: SignInState,
-   onSignInClick: () -> Unit
+    onSignInClick: () -> Unit
 ){
     val context = LocalContext.current
     LaunchedEffect(key1 = state.signInError ){

@@ -20,7 +20,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 
 @Composable
-fun DropdownJobNepal(list: List<Pair<String, ImageVector>>) {
+fun DropdownJobNepal(
+    list: List<Pair<String,ImageVector>>,
+    clicked: (String) -> Unit
+) {
     var expanded by remember { mutableStateOf(false) }
     Box(
         modifier = Modifier
@@ -40,12 +43,12 @@ fun DropdownJobNepal(list: List<Pair<String, ImageVector>>) {
             list.forEach {
                 DropdownMenuItem(
                     text = { Text(it.first) },
-                    leadingIcon = { Icon(imageVector = it.second, contentDescription = it.first)},
+                    leadingIcon = { Icon(imageVector = it.second, contentDescription = it.first) },
                     onClick = {
-
+                        clicked(it.first)
                     },
 
-                )
+                    )
             }
 
         }

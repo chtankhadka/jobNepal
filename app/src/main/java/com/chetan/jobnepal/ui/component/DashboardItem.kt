@@ -58,7 +58,7 @@ fun DashboardItem(item: Pair<String, String>) {
             DropdownJobNepal(listOf(
                 "Full Guid" to Icons.Default.YoutubeSearchedFor,
                 "Apply later" to Icons.Default.Alarm
-                ))
+                )){}
         }
         AsyncImage(
             modifier = Modifier.fillMaxWidth(),

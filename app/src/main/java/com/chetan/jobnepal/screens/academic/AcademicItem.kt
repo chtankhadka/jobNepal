@@ -42,7 +42,7 @@ fun AcademicItem(list: List<Pair<String, String>>) {
                     "Edit" to Icons.Default.Edit,
                     "Delete" to Icons.Default.Delete
                 )
-            )
+            ){}
             Divider()
         }
         LazyRow(
