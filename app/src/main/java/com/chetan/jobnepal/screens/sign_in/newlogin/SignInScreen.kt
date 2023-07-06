@@ -1,8 +1,7 @@
-package com.chetan.jobnepal.screens.sign_in.onetapauthentication
-
+package com.chetan.jobnepal.screens.sign_in.newlogin
 import android.widget.Toast
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -17,9 +16,9 @@ import androidx.compose.ui.unit.dp
 fun SignInScreen(
     state: SignInState,
     onSignInClick: () -> Unit
-){
+) {
     val context = LocalContext.current
-    LaunchedEffect(key1 = state.signInError ){
+    LaunchedEffect(key1 = state.signInError) {
         state.signInError?.let { error ->
             Toast.makeText(
                 context,
@@ -28,14 +27,17 @@ fun SignInScreen(
             ).show()
         }
     }
+
     Box(
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .padding(16.dp),
         contentAlignment = Alignment.Center
-    ){
-        Button(onClick = onSignInClick) {
-            Text(text = "Sign In")
+    ) {
+        Button(
+            onClick = onSignInClick
+        ) {
+            Text(text = "Sign in")
         }
     }
 }

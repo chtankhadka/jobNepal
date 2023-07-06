@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">jobNepal</string>
-    <string name="web_client_id">229968047952-eqef9jkpdu1dvokee7229968047952-eqef9jkpdu1dvokee7svkrhso0nfendd.apps.googleusercontent.comsvkrhso0nfendd.apps.googleusercontent.com</string>
+    <string name="web_client_id">229968047952-eqef9jkpdu1dvokee7svkrhso0nfendd.apps.googleusercontent.com</string>
     <string name="take_a_selfie">Take a selfie</string>
     <string name="upload_from_storage">Upload from Storage</string>
     <string name="upload_from_gallery">Upload from Gallery</string>

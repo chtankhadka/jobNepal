@@ -1,19 +1,19 @@
-package com.chetan.jobnepal.screens.sign_in.onetapauthentication
+package com.chetan.jobnepal.screens.sign_in.newlogin
+
 
 import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
-import com.chetan.jobnepal.R
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
-import com.google.android.gms.auth.api.identity.BeginSignInRequest.GoogleIdTokenRequestOptions
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.tasks.await
-import java.util.concurrent.CancellationException
 
-class GoogleSignInClient(
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.tasks.await
+
+class GoogleAuthUiClient(
     private val context: Context,
     private val oneTapClient: SignInClient
 ) {
@@ -24,9 +24,9 @@ class GoogleSignInClient(
             oneTapClient.beginSignIn(
                 buildSignInRequest()
             ).await()
-        } catch (e: Exception) {
+        } catch(e: Exception) {
             e.printStackTrace()
-            if (e is CancellationException) throw e
+            if(e is CancellationException) throw e
             null
         }
         return result?.pendingIntent?.intentSender
@@ -48,21 +48,23 @@ class GoogleSignInClient(
                 },
                 errorMessage = null
             )
-        } catch (e: Exception) {
+        } catch(e: Exception) {
             e.printStackTrace()
-            if (e is CancellationException) throw e
-            SignInResult(data = null, errorMessage = e.message)
+            if(e is CancellationException) throw e
+            SignInResult(
+                data = null,
+                errorMessage = e.message
+            )
         }
     }
 
-    suspend fun signOut(){
+    suspend fun signOut() {
         try {
             oneTapClient.signOut().await()
             auth.signOut()
-
-        }catch (e: Exception) {
+        } catch(e: Exception) {
             e.printStackTrace()
-            if (e is CancellationException) throw e
+            if(e is CancellationException) throw e
         }
     }
 
@@ -73,13 +75,14 @@ class GoogleSignInClient(
             profilePictureUrl = photoUrl?.toString()
         )
     }
+
     private fun buildSignInRequest(): BeginSignInRequest {
         return BeginSignInRequest.Builder()
             .setGoogleIdTokenRequestOptions(
-                GoogleIdTokenRequestOptions.builder()
+                BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
                     .setSupported(true)
+                    .setServerClientId("229968047952-eqef9jkpdu1dvokee7svkrhso0nfendd.apps.googleusercontent.com")
                     .setFilterByAuthorizedAccounts(false)
-                    .setServerClientId(context.getString(R.string.web_client_id))
                     .build()
             )
             .setAutoSelectEnabled(true)

@@ -2,6 +2,7 @@ package com.chetan.jobnepal.utils
 
 import android.annotation.SuppressLint
 import android.net.Uri
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -32,6 +33,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
@@ -45,7 +47,8 @@ import kotlin.math.sin
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
-fun ProfileAnimation(size: Dp, padding: Dp) {
+fun ProfileAnimation(size: Dp, padding: Dp, uri: Uri?, enableEdit: Boolean) {
+    Toast.makeText(LocalContext.current,uri.toString(),Toast.LENGTH_LONG).show()
     var sizeState by remember {
         mutableStateOf(IntSize.Zero)
     }
@@ -61,34 +64,62 @@ fun ProfileAnimation(size: Dp, padding: Dp) {
     var multiplePhotoUris by remember {
         mutableStateOf<List<Uri>>(emptyList())
     }
-    if (singlePhotoPicker) {
-        PhotoPickerJobNepal(
-            singlePhoto = true,
-            picUri = {
-                singlePhotoUri = it
-            },
-            picUris = { multiplePhotoUris = it },
-        ) { singlePhotoPicker = false }
-    }
-
-    LaunchedEffect(Unit) {
-        while (cameraPosition < 0.8f) {
-            delay(100)
-            cameraPosition += 0.01f
+    if (enableEdit){
+        if (singlePhotoPicker) {
+            PhotoPickerJobNepal(
+                singlePhoto = true,
+                picUri = {
+                    singlePhotoUri = it
+                },
+                picUris = { multiplePhotoUris = it },
+            ) { singlePhotoPicker = false }
         }
-    }
-    Box(
-        modifier = Modifier
-            .onSizeChanged {
-                sizeState = it
+
+        LaunchedEffect(Unit) {
+            while (cameraPosition < 0.8f) {
+                delay(100)
+                cameraPosition += 0.01f
             }
-            .background(Color.Transparent)
-            .padding(padding),
-        Alignment.Center
-    ) {
-        val r = size.value / 2
-        val a = cos(cameraPosition) * r
-        val b = sin(cameraPosition) * r
+        }
+        Box(
+            modifier = Modifier
+                .onSizeChanged {
+                    sizeState = it
+                }
+                .background(Color.Transparent)
+                .padding(padding),
+            Alignment.Center
+        ) {
+            val r = size.value / 2
+            val a = cos(cameraPosition) * r
+            val b = sin(cameraPosition) * r
+            AsyncImage(
+                modifier = Modifier
+                    .width(size)
+                    .height(size)
+                    .clip(CircleShape)
+                    .border(
+                        border = BorderStroke(2.dp, MaterialTheme.colorScheme.onPrimary),
+                        shape = CircleShape
+                    ),
+
+                contentScale = ContentScale.Crop,
+                model = uri?: singlePhotoUri,
+                contentDescription = "Profile",
+                alignment = Alignment.Center
+            )
+            Icon(
+                modifier = Modifier
+                    .size(32.dp)
+                    .offset(a.dp, b.dp)
+                    .clickable {
+                        singlePhotoPicker = true
+                    },
+                imageVector = Icons.Default.AddAPhoto,
+                contentDescription = "shopping"
+            )
+        }
+    }else{
         AsyncImage(
             modifier = Modifier
                 .width(size)
@@ -100,19 +131,10 @@ fun ProfileAnimation(size: Dp, padding: Dp) {
                 ),
 
             contentScale = ContentScale.Crop,
-            model = singlePhotoUri,
+            model = uri?: singlePhotoUri,
             contentDescription = "Profile",
             alignment = Alignment.Center
         )
-        Icon(
-            modifier = Modifier
-                .size(32.dp)
-                .offset(a.dp, b.dp)
-                .clickable {
-                    singlePhotoPicker = true
-                },
-            imageVector = Icons.Default.AddAPhoto,
-            contentDescription = "shopping"
-        )
     }
+
 }

@@ -43,7 +43,7 @@ fun ModalDrawerSheetPage(
             modifier = Modifier
                 .fillMaxWidth()
         ) {
-            ProfileAnimation(size = 100.dp,padding = 10.dp)
+            ProfileAnimation(size = 100.dp,padding = 10.dp, uri = viewModel.currentUser?.photoUrl,enableEdit = false)
             Column(
                 modifier = Modifier.padding(vertical = 10.dp)
             ) {
