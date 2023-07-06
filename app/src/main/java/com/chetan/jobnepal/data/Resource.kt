@@ -2,8 +2,8 @@ package com.chetan.jobnepal.data
 
 import java.lang.Exception
 
-sealed class Resource<out R>{
-    data class Success<out R>(val result: R) : Resource<R>()
+sealed class Resource<out T>{
+    data class Success<out T>(val data: T) : Resource<T>()
     data class Failure(val exception: Exception) : Resource<Nothing>()
     object Loading : Resource<Nothing>()
 }

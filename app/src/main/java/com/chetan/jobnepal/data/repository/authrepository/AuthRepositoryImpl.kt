@@ -1,4 +1,4 @@
-package com.chetan.jobnepal.data.authrepository
+package com.chetan.jobnepal.data.repository.authrepository
 
 import com.chetan.jobnepal.data.Resource
 

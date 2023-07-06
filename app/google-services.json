@@ -14,7 +14,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "229968047952-t0t708a6279ovi71m6vo4alnjnsfefk6.apps.googleusercontent.com",
+          "client_id": "229968047952-kvguk7494guu1mba7s75s1i533bg88qm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.chetan.jobnepal",
+            "certificate_hash": "9ae3c7f391d799140b388b93ebd6c5b2c8182ed8"
+          }
+        },
+        {
+          "client_id": "229968047952-eqef9jkpdu1dvokee7svkrhso0nfendd.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -27,7 +35,36 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "229968047952-t0t708a6279ovi71m6vo4alnjnsfefk6.apps.googleusercontent.com",
+              "client_id": "229968047952-eqef9jkpdu1dvokee7svkrhso0nfendd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:229968047952:android:2ce86ce5c4b1ba02ecc655",
+        "android_client_info": {
+          "package_name": "com.chetan.jobnepal.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "229968047952-eqef9jkpdu1dvokee7svkrhso0nfendd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDV5K6O7NPmTZNBpMKfocyVtzaOYnrFu7E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "229968047952-eqef9jkpdu1dvokee7svkrhso0nfendd.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

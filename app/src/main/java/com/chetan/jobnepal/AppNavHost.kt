@@ -3,14 +3,17 @@ package com.chetan.jobnepal
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.chetan.jobnepal.screens.academic.Academic
+import com.chetan.jobnepal.screens.admin.uploadvideo.UploadVideoScreen
+import com.chetan.jobnepal.screens.admin.uploadvideo.UploadVideoViewModel
 import com.chetan.jobnepal.screens.dashboard.DashboardScreen
-import com.chetan.jobnepal.screens.sign_in.emailandpasswordauthentication.LoginWithEmailPassword
+import com.chetan.jobnepal.screens.sign_in.emailandpasswordauthentication.LoginWithEmailPasswordScreen
 import com.chetan.jobnepal.screens.sign_in.emailandpasswordauthentication.LoginWithEmailPasswordViewModel
-import com.chetan.jobnepal.screens.sign_in.emailandpasswordauthentication.SignupWithEmailPassword
+import com.chetan.jobnepal.screens.sign_in.emailandpasswordauthentication.SignupWithEmailPasswordScreen
 import com.chetan.jobnepal.screens.sign_in.onetapauthentication.ProfileScreen
 import com.chetan.jobnepal.screens.sign_in.onetapauthentication.UserData
 
@@ -27,11 +30,11 @@ fun AppNavHost(
     ) {
         composable("sign-with-email-password"){
             val viewModel = hiltViewModel<LoginWithEmailPasswordViewModel>()
-            LoginWithEmailPassword(navController,viewModel)
+            LoginWithEmailPasswordScreen(navController,viewModel)
         }
         composable("signup-with-email-password"){
             val viewModel = hiltViewModel<LoginWithEmailPasswordViewModel>()
-            SignupWithEmailPassword(navController,viewModel)
+            SignupWithEmailPasswordScreen(navController,viewModel)
         }
 
         composable("dashboard") {
@@ -48,6 +51,15 @@ fun AppNavHost(
         }
         composable("academic"){
             Academic(navController)
+        }
+
+        composable("upload-video-screen"){
+            val viewModel = hiltViewModel<UploadVideoViewModel>()
+            UploadVideoScreen(
+                navController,
+                state = viewModel.state.collectAsStateWithLifecycle().value,
+                onEvent = viewModel.onEvent
+            )
         }
         
     }

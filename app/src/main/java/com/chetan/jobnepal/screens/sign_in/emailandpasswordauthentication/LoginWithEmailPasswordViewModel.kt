@@ -3,7 +3,7 @@ package com.chetan.jobnepal.screens.sign_in.emailandpasswordauthentication
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chetan.jobnepal.data.Resource
-import com.chetan.jobnepal.data.authrepository.AuthRepository
+import com.chetan.jobnepal.data.repository.authrepository.AuthRepository
 import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

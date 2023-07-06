@@ -21,7 +21,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun VibratingIcon(notificationsActive: ImageVector) {
+fun VibratingIcon(
+    notificationsActive: ImageVector,
+    onClick: () -> Unit
+) {
     var isVibrating by remember { mutableStateOf(false) }
 
     val shakeAnimationSpec = rememberInfiniteTransition().animateFloat(
@@ -45,7 +48,10 @@ fun VibratingIcon(notificationsActive: ImageVector) {
         .size(32.dp)
 
     IconButton(
-        onClick = { isVibrating = !isVibrating },
+        onClick = {
+            isVibrating = !isVibrating
+            onClick()
+                  },
         modifier = shakeModifier
     ) {
         Icon(

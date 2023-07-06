@@ -56,27 +56,32 @@ fun YouCannotClickMe(
             .background(boxColor)
             .pointerInteropFilter { event ->
                 val offset = Offset(event.x, event.y)
-                when (event.action) {
-                    android.view.MotionEvent.ACTION_DOWN -> {
-                        clickOrDrag = true
-                        xAxis = offset.x
-                        yAxis = offset.y
-                    }
+                if (enable){
+                    when (event.action) {
+                        android.view.MotionEvent.ACTION_DOWN -> {
+                            clickOrDrag = true
+                            xAxis = offset.x
+                            yAxis = offset.y
+                        }
 
-                    android.view.MotionEvent.ACTION_MOVE -> {
-                        val delta = Offset(event.x, event.y)
-                        clickOrDrag = true
-                        xAxis = delta.x
-                        yAxis = delta.y
-                    }
+                        android.view.MotionEvent.ACTION_MOVE -> {
+                            val delta = Offset(event.x, event.y)
+                            clickOrDrag = true
+                            xAxis = delta.x
+                            yAxis = delta.y
+                        }
 
-                    android.view.MotionEvent.ACTION_UP -> {
-                        clickOrDrag = false
-                        xAxis = boxSize / 2f
-                        yAxis = boxSize / 2f
+                        android.view.MotionEvent.ACTION_UP -> {
+                            clickOrDrag = false
+                            xAxis = boxSize / 2f
+                            yAxis = boxSize / 2f
+                        }
                     }
+                    true
+                } else{
+                    false
                 }
-                true
+
             }
             .onGloballyPositioned { coordinates ->
                 boxSize = coordinates.size.width
@@ -88,7 +93,7 @@ fun YouCannotClickMe(
         val offsetX by transition.animateFloat(label = "") { clicked ->
             if (clicked && enable) {
                 val targetX = if (xAxis < (boxSize / 2f)) {
-                    (boxSize - xAxis) * oneAxix + 25
+                    (boxSize - xAxis) * oneAxix + buttonWidth / 2
                 } else {
                     (boxSize - xAxis) * oneAxix - 75
                 }
@@ -100,7 +105,7 @@ fun YouCannotClickMe(
         val offsetY by transition.animateFloat(label = "") { clicked ->
             if (clicked && enable) {
                 val targetY = if (yAxis < (boxSize / 2f)) {
-                    (boxSize - yAxis) * oneAxix + 15
+                    (boxSize - yAxis) * oneAxix + buttonHeight / 2
                 } else {
                     (boxSize - yAxis) * oneAxix - 45
                 }
@@ -112,20 +117,20 @@ fun YouCannotClickMe(
 
 
         Button(
+            enabled = !enable,
             onClick = {
-                if (enable) {
                     onClick()
-                }
-
             },
             modifier = Modifier
-                .offset(offsetX.dp - 25.dp, offsetY.dp - 15.dp)
+                .offset(offsetX.dp - (buttonWidth / 2).dp, offsetY.dp - (buttonWidth / 2).dp)
                 .size(width = buttonWidth.dp, height = buttonHeight.dp),
             colors = ButtonDefaults.buttonColors(buttonColor)
         ) {
             Text(text = text)
+
         }
     }
+
 
 }
 

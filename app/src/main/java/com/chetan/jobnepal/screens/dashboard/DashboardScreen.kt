@@ -48,6 +48,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
+import com.chetan.jobnepal.Destination
 import com.chetan.jobnepal.screens.sign_in.emailandpasswordauthentication.LoginWithEmailPasswordViewModel
 import com.chetan.jobnepal.ui.component.DashboardItem
 import com.chetan.jobnepal.ui.component.dropdown.ExposedDropdownJobNepal
@@ -126,13 +127,12 @@ fun DashboardScreen(
                                 modifier = Modifier
                                     .shadow(4.dp, shape = RoundedCornerShape(20))
                                     .clip(RoundedCornerShape(20))
-                                    .background(MaterialTheme.colorScheme.onPrimary)
-                                    .clickable {
-
-                                    },
+                                    .background(MaterialTheme.colorScheme.onPrimary),
                                 contentAlignment = Alignment.Center
                             ) {
-                                VibratingIcon(Icons.Default.NotificationsActive)
+                                VibratingIcon(Icons.Default.NotificationsActive){
+                                    navController.navigate(Destination.Screen.UploadVideoScreen.route)
+                                }
                             }
                         }
                     )

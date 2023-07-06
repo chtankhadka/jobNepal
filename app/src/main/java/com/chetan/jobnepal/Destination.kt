@@ -7,5 +7,6 @@ open class Destination(open val route : String) {
         object SignWithEmailPassword: Destination("sign-with-email-password")
         object GoogleSignIn: Destination("google-sign-in")
         object Academic : Destination("academic")
+        object UploadVideoScreen : Destination("upload-video-screen")
     }
 }
