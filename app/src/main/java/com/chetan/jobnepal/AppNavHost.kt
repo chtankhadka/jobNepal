@@ -21,6 +21,8 @@ import com.chetan.jobnepal.screens.academic.Academic
 import com.chetan.jobnepal.screens.admin.uploadvideo.UploadVideoScreen
 import com.chetan.jobnepal.screens.admin.uploadvideo.UploadVideoViewModel
 import com.chetan.jobnepal.screens.dashboard.DashboardScreen
+import com.chetan.jobnepal.screens.onboardscreen.OnBoardScreen
+import com.chetan.jobnepal.screens.onboardscreen.OnBoardViewModel
 import com.chetan.jobnepal.screens.sign_in.emailandpasswordauthentication.LoginWithEmailPasswordScreen
 import com.chetan.jobnepal.screens.sign_in.emailandpasswordauthentication.LoginWithEmailPasswordViewModel
 import com.chetan.jobnepal.screens.sign_in.emailandpasswordauthentication.SignupWithEmailPasswordScreen
@@ -41,7 +43,7 @@ fun AppNavHost(
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = "sign_in"
+        startDestination = "on-board"
     ) {
 
 
@@ -97,6 +99,19 @@ fun AppNavHost(
                 }
             )
         }
+
+        composable("on-board"){
+            val viewModel= hiltViewModel<OnBoardViewModel>()
+            OnBoardScreen(
+                onComplete = {
+                    navController.cleanNavigate("sign_in")
+                },
+                viewModel.state.collectAsStateWithLifecycle().value,
+                onEvent = viewModel.onEvent
+
+            )
+        }
+
         composable("sign-with-email-password"){
             val viewModel = hiltViewModel<LoginWithEmailPasswordViewModel>()
             LoginWithEmailPasswordScreen(navController,viewModel)
@@ -131,5 +146,18 @@ fun AppNavHost(
             )
         }
         
+    }
+}
+
+fun NavHostController.cleanNavigate(
+    toRoute: String,
+    popUpTo: String? = currentDestination?.route
+) {
+    navigate(route = toRoute) {
+        popUpTo?.let {
+            popUpTo(it) {
+                inclusive = true
+            }
+        }
     }
 }
