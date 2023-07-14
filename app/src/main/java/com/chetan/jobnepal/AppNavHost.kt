@@ -47,7 +47,7 @@ fun AppNavHost(
         startDestination = if (onBoardViewModel.preference.onBoardCompleted) "sign_in" else "on-board"
     ) {
         composable("sign_in") {
-            val viewModel = viewModel<SignInViewModel>()
+            val viewModel = hiltViewModel<SignInViewModel>()
             val state by viewModel.state.collectAsStateWithLifecycle()
             LaunchedEffect(key1 = Unit) {
                 if(googleAuthUiClient.getSignedInUser() != null) {

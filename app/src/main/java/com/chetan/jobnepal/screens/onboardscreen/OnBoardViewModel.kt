@@ -23,8 +23,6 @@ class OnBoardViewModel @Inject constructor(val preference: Preference) : ViewMod
                 }
                 if (state.value.isLastPage){
                     preference.onBoardCompleted = true
-                    Timber.tag("i m here")
-
                 }
             }
         }
