@@ -40,18 +40,15 @@ fun AppNavHost(
     lifecycleScope: LifecycleCoroutineScope,
     applicationContext: Context
 ) {
+    val onBoardViewModel = hiltViewModel<OnBoardViewModel>()
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = "on-board"
+        startDestination = if (onBoardViewModel.preference.onBoardCompleted) "sign_in" else "on-board"
     ) {
-
-
-
         composable("sign_in") {
             val viewModel = viewModel<SignInViewModel>()
             val state by viewModel.state.collectAsStateWithLifecycle()
-
             LaunchedEffect(key1 = Unit) {
                 if(googleAuthUiClient.getSignedInUser() != null) {
                     navController.navigate("dashboard")

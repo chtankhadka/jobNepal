@@ -39,17 +39,6 @@ fun OnBoardScreen(onComplete: () -> Unit, state: OnBoardState, onEvent: (OnBoard
     val pagerState = rememberPagerState()
     val scope = rememberCoroutineScope()
 
-    val isNextVisible = remember {
-        derivedStateOf {
-            pagerState.currentPage != state.data.size - 1
-        }
-    }
-    val isPrevVisible = remember {
-        derivedStateOf {
-            pagerState.currentPage != state.currentPageNumber
-        }
-    }
-
     val imageVisibility by remember {
         mutableStateOf(true)
     }
@@ -102,40 +91,21 @@ fun OnBoardScreen(onComplete: () -> Unit, state: OnBoardState, onEvent: (OnBoard
                 .fillMaxWidth()
                 .padding(horizontal = 15.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.End
         ) {
-            if (isPrevVisible.value) {
+            if (pagerState.currentPage == state.data.size - 1){
                 Button(onClick = {
                     scope.launch {
-                        onEvent(OnBoardEvent.SwithchPage(state.currentPageNumber - 1 ))
-                    }
+                        onEvent(OnBoardEvent.SwithchPage(state.currentPageNumber + 1))
+                        onComplete()
+                        }
                 }) {
                     Text(
-                        text = "Prev"
+                        text = "Let's begin to JobNepal"
                     )
                 }
             }
 
-            if (isNextVisible.value) {
-                Button(onClick = {
-                    scope.launch {
-                        onEvent(OnBoardEvent.SwithchPage(state.currentPageNumber + 1))
-                    }
-                }) {
-                    Text(
-                        text = " Next"
-                    )
-                }
-            }
-            if (!isNextVisible.value) {
-                Button(onClick = {
-                    onComplete()
-                }) {
-                    Text(
-                        text = "Get Started"
-                    )
-                }
-            }
         }
     }
 
