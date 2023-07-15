@@ -112,7 +112,7 @@ fun UploadVideoScreen(
             Toast.makeText(LocalContext.current,state.videoList.toString(),Toast.LENGTH_LONG).show()
         }
         LazyColumn(
-            modifier = Modifier.size(300.dp).background(Color.Yellow),
+            modifier = Modifier.size(300.dp).background(Color.Blue),
             contentPadding = PaddingValues(2.dp),
             verticalArrangement = Arrangement.spacedBy(5.dp)
         ) {

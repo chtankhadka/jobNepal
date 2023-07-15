@@ -4,20 +4,15 @@ import android.app.Application
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class Preference constructor(
-    val context: Context
+class Preference @Inject constructor(
+    @ApplicationContext private val application : Application
 ) {
-    @Inject
-    constructor(
-        application: Application,
-
-        ) : this(
-        application.applicationContext
-    )
+    private val context: Context = application.applicationContext
 
     companion object {
         private const val PREFERENCE_NAME = "PREFERENCE_NAME"

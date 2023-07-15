@@ -13,11 +13,11 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.chetan.jobnepal.screens.academic.Academic
+import com.chetan.jobnepal.screens.academic.AcademicScreen
+import com.chetan.jobnepal.screens.academic.AcademicViewModel
 import com.chetan.jobnepal.screens.admin.uploadvideo.UploadVideoScreen
 import com.chetan.jobnepal.screens.admin.uploadvideo.UploadVideoViewModel
 import com.chetan.jobnepal.screens.dashboard.DashboardScreen
@@ -131,7 +131,12 @@ fun AppNavHost(
 //            }
 //        }
         composable("academic"){
-            Academic(navController)
+            val viewModel = hiltViewModel<AcademicViewModel>()
+            AcademicScreen(
+                navController,
+                state = viewModel.state.collectAsStateWithLifecycle().value,
+                onEvent = viewModel.onEvent
+            )
         }
 
         composable("upload-video-screen"){

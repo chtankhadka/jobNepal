@@ -22,7 +22,7 @@ import coil.compose.AsyncImage
 import com.chetan.jobnepal.ui.component.dropdown.DropdownJobNepal
 
 @Composable
-fun AcademicItem(list: List<Pair<String, String>>) {
+fun AcademicItem(list: List<Pair<String, String>>, state: AcademicState) {
     Card(
         modifier = Modifier
             .padding(start = 5.dp),
@@ -48,10 +48,10 @@ fun AcademicItem(list: List<Pair<String, String>>) {
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(10.dp)
         ){
-            items(list.size){
+            items(state.downloadAttachementUrl.size){
                     AsyncImage(
                         modifier = Modifier.height(200.dp),
-                        model = list[it].second, contentDescription = "",
+                        model = state.downloadAttachementUrl[it], contentDescription = "",
                         contentScale = ContentScale.Crop
                         )
             }

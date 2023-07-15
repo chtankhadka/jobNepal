@@ -27,9 +27,12 @@ import com.chetan.jobnepal.ui.component.dropdown.CascadeDropdownMenuJobNepal
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun Academic(navController: NavHostController) {
+fun AcademicScreen(
+    navController: NavHostController,
+    state: AcademicState,
+    onEvent: (event: AcademicEvent) -> Unit
+) {
     val list = listOf(
-        "Nepal" to "https://img.freepik.com/free-photo/hand-writing-paper-with-pen_1232-1344.jpg?w=1380&t=st=1686458933~exp=1686459533~hmac=36ba0df24c3cf4a8a190ed558c34b8f76e60647edf2d0cde383a42bc5982782c",
         "Gopal" to "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRvcAvHvN_TYQn2SFov3FKgnU_Ygdy9OwrzJQ&usqp=CAU",
         "Sopal" to "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbfcnFAfUXHQOD3jecWzEaSfV8iqjfQyf4Bg&usqp=CAU",
         "Nopal" to "https://www.wikihow.com/images/thumb/f/f2/Prepare-for-an-Exam-Step-2-Version-2.jpg/v4-460px-Prepare-for-an-Exam-Step-2-Version-2.jpg.webp"
@@ -40,10 +43,13 @@ fun Academic(navController: NavHostController) {
 
     if (showAcademicDialog) {
         AcademicDialog(
-            list
-        ) {
-            showAcademicDialog = false
-        }
+            list = list,
+            onDismissRequest = {
+                showAcademicDialog = false
+            },
+            onClick = {
+                onEvent(AcademicEvent.UploadAttachement(it))
+            })
     }
     Scaffold(
         topBar = {
@@ -74,7 +80,7 @@ fun Academic(navController: NavHostController) {
                 verticalArrangement = Arrangement.spacedBy(5.dp)
             ) {
                 items(list.size) {
-                    AcademicItem(list)
+                    AcademicItem(list, state)
                 }
 
 
