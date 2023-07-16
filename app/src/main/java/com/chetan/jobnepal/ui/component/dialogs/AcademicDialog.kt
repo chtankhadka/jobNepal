@@ -11,12 +11,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -40,13 +42,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import coil.compose.AsyncImage
+import com.chetan.jobnepal.screens.academic.AcademicState
+import com.chetan.jobnepal.ui.component.IconJobNepal
 
 @Composable
 fun AcademicDialog(
+    state: AcademicState,
     list: List<Pair<String, String>>,
     onDismissRequest: () -> Unit,
     onClick: (List<Uri>) -> Unit
@@ -74,6 +81,50 @@ fun AcademicDialog(
                 .padding(10.dp),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(5.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(
+                    modifier = Modifier
+                        .shadow(4.dp, shape = RoundedCornerShape(20))
+                        .clip(RoundedCornerShape(20))
+                        .background(MaterialTheme.colorScheme.tertiaryContainer)
+                        .height(32.dp)
+                        .weight(1f)
+                        .clickable {
+                            onDismissRequest()
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        modifier = Modifier.height(IntrinsicSize.Min),
+                        text = state.selectedLevel,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+
+                Box(
+                    modifier = Modifier
+                        .shadow(4.dp, shape = RoundedCornerShape(20))
+                        .clip(RoundedCornerShape(20))
+                        .background(MaterialTheme.colorScheme.secondaryContainer)
+                        .height(IntrinsicSize.Min)
+                        .clickable {
+                            onDismissRequest()
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        modifier = Modifier.size(32.dp),
+                        imageVector = Icons.Default.Close,
+                        contentDescription = "Close",
+                        tint = Color.Black
+                    )
+                }
+            }
             LazyVerticalGrid(
                 modifier = Modifier.fillMaxSize(0.7f),
                 columns = GridCells.Adaptive(minSize = 100.dp),
@@ -96,20 +147,16 @@ fun AcademicDialog(
                                     model = uri,
                                     contentDescription = ""
                                 )
-                                IconButton(
+                                IconJobNepal(
                                     modifier = Modifier
-                                        .size(24.dp)
                                         .align(Alignment.TopEnd),
+                                    icon = Icons.Default.Close,
                                     onClick = {
                                         selectedImageUris =
                                             selectedImageUris.filterNot { it == uri }
                                     }
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Default.Close,
-                                        contentDescription = "Remove"
-                                    )
-                                }
+                                )
+
                             }
                         }
                     }
@@ -118,17 +165,24 @@ fun AcademicDialog(
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight(0.3f),
-                horizontalArrangement = Arrangement.SpaceBetween,
+                horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Button(
-                    modifier = Modifier.height(IntrinsicSize.Min),
-                    shape = RoundedCornerShape(16.dp),
-                    onClick = {
-                        onClick(selectedImageUris)
-                    }) {
-                    Text(text = "Upload your Attachments")
+                if (!selectedImageUris.isEmpty()){
+                    Button(
+                        modifier = Modifier
+                            .height(IntrinsicSize.Min)
+                            .weight(1f),
+                        shape = RoundedCornerShape(16.dp),
+                        onClick = {
+                            onClick(selectedImageUris)
+                        }) {
+                        Text(text = "Upload your Attachments")
+                    }
+                    Spacer(modifier = Modifier.width(5.dp))
                 }
+                
+
                 FloatingActionButton(
                     modifier = Modifier.height(IntrinsicSize.Min),
                     shape = RoundedCornerShape(16.dp),

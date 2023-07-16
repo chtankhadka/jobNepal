@@ -8,6 +8,7 @@ import com.chetan.jobnepal.ui.component.dialogs.Progress
 data class AcademicState(
     val uploadAttachementList: List<Uri> = listOf(),
     val downloadAttachementUrl: List<String> = listOf(),
+    val selectedLevel: String = "",
     override val infoMsg: Message? = null,
     override val progress: Progress? = null
 ) : JobNepalScreenState(infoMsg, progress)

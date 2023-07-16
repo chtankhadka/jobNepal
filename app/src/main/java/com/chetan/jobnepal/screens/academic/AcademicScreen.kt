@@ -1,6 +1,7 @@
 package com.chetan.jobnepal.screens.academic
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,11 +19,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.chetan.jobnepal.ui.component.IconJobNepal
 import com.chetan.jobnepal.ui.component.dialogs.AcademicDialog
 import com.chetan.jobnepal.ui.component.dropdown.CascadeDropdownMenuJobNepal
+import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -43,13 +46,14 @@ fun AcademicScreen(
 
     if (showAcademicDialog) {
         AcademicDialog(
+            state,
             list = list,
             onDismissRequest = {
                 showAcademicDialog = false
-            },
-            onClick = {
-                onEvent(AcademicEvent.UploadAttachement(it))
-            })
+            }
+        ) {
+            onEvent(AcademicEvent.UploadAttachement(it))
+        }
     }
     Scaffold(
         topBar = {
@@ -66,7 +70,9 @@ fun AcademicScreen(
                 actions = {
                     CascadeDropdownMenuJobNepal(
                         onLevelSelected = {
+                            onEvent(AcademicEvent.LevelSelected(it))
                             showAcademicDialog = true
+                            Timber.d(it)
                         }
                     )
                 }

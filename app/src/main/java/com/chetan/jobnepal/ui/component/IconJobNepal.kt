@@ -18,12 +18,13 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun IconJobNepal(
+    modifier: Modifier = Modifier,
     onClick: () -> Unit,
     icon: ImageVector,
     background: Color = MaterialTheme.colorScheme.onPrimary
     ){
     Box(
-        modifier = Modifier
+        modifier = modifier
             .shadow(4.dp, shape = RoundedCornerShape(20))
             .clip(RoundedCornerShape(20))
             .background(background)
