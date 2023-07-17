@@ -34,7 +34,7 @@ fun CascadeDropdownMenuJobNepal(
         CascadeDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
             androidx.compose.material3.DropdownMenuItem(text = { Text(text = "1.SLC/SEE") },
                 onClick = {
-                    onLevelSelected("SLC/SEE")
+                    onLevelSelected("SEE")
                     expanded = false
                 })
 
@@ -73,7 +73,7 @@ fun CascadeDropdownMenuJobNepal(
                 DropdownMenuItem(text = { Text(text = "1.Technical") }, children = {
                     androidx.compose.material3.DropdownMenuItem(text = { Text(text = "1.BSc.CSIT") },
                         onClick = {
-                            onLevelSelected("BSc.CSIT")
+                            onLevelSelected("BSc_CSIT")
                             expanded = false
                         })
                     androidx.compose.material3.DropdownMenuItem(text = { Text(text = "2.BSC-Nursing") },

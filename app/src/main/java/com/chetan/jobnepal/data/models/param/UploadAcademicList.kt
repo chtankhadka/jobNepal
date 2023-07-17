@@ -1,24 +1,30 @@
 package com.chetan.jobnepal.data.models.param
 
 data class UploadAcademicList(
-    val see: List<seeColl> = emptyList(),
-    val intermediate: List<intermediateColl> = emptyList(),
-    val bachelor: List<bachelorColl> = emptyList()
+    val SEE: List<seeColl> = emptyList(),
+    val IAC: List<iacColl> = emptyList(),
+    val BSC_CSIT: List<bsccsitColl> = emptyList()
 ) {
     data class seeColl(
         val id: String,
         val date: String,
         val url: String
-    )
-    data class intermediateColl(
+    ){
+        constructor() : this("", "", "")
+    }
+    data class iacColl(
         val id: String,
         val date: String,
         val url: String
-    )
-    data class bachelorColl(
+    ){
+        constructor() : this("", "", "")
+    }
+    data class bsccsitColl(
         val id: String,
         val date: String,
         val url: String
-    )
+    ){
+        constructor() : this("", "", "")
+    }
 
 }

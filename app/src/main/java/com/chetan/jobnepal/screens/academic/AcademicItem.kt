@@ -19,10 +19,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.chetan.jobnepal.data.models.param.UploadAcademicList
 import com.chetan.jobnepal.ui.component.dropdown.DropdownJobNepal
 
 @Composable
-fun AcademicItem(list: List<Pair<String, String>>, state: AcademicState) {
+fun AcademicItem(
+    title: String = "",
+    data: List<MappedList>) {
     Card(
         modifier = Modifier
             .padding(start = 5.dp),
@@ -36,7 +39,7 @@ fun AcademicItem(list: List<Pair<String, String>>, state: AcademicState) {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = "SEE")
+            Text(text = title)
             DropdownJobNepal(
                 list = listOf(
                     "Edit" to Icons.Default.Edit,
@@ -48,10 +51,10 @@ fun AcademicItem(list: List<Pair<String, String>>, state: AcademicState) {
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(10.dp)
         ){
-            items(state.downloadAttachementUrl.size){
+            items(data.size){
                     AsyncImage(
                         modifier = Modifier.height(200.dp),
-                        model = state.downloadAttachementUrl[it], contentDescription = "",
+                        model = data[it].url, contentDescription = "",
                         contentScale = ContentScale.Crop
                         )
             }
