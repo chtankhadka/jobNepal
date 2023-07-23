@@ -3,6 +3,7 @@ package com.chetan.jobnepal.data.repository.firestorerepository
 import com.chetan.jobnepal.data.Resource
 import com.chetan.jobnepal.data.models.param.UploadAcademicList
 import com.chetan.jobnepal.data.models.param.UploadNewVideoLink
+import com.chetan.jobnepal.data.models.param.UploadProfileParam
 
 interface FirestoreRepository {
 
@@ -25,5 +26,11 @@ interface FirestoreRepository {
     suspend fun getAcademicData() : Resource<UploadAcademicList>
 
     suspend fun deleteAcademicData(level: String, names: List<String>): Resource<Any>
+
+    suspend fun uploadProfileData(
+        data: UploadProfileParam
+    ): Resource<Any>
+
+    suspend fun getProfileData() : Resource<UploadProfileParam>
 
 }

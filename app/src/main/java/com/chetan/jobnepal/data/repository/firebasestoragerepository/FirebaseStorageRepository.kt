@@ -9,4 +9,7 @@ interface FirebaseStorageRepository {
     suspend fun uploadAcademicAttachement(fileUri: List<Uri>,level: String) : Resource<List<Pair<String,String>>>
 
     suspend fun deleteAcademicAtachements(level: String, names: List<String>) : Resource<Any>
+
+    //profile data
+    suspend fun uploadProfileImage(fileUri: Uri): Resource<Pair<String,String>>
 }

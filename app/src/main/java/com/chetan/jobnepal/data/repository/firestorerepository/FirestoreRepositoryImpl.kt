@@ -4,6 +4,7 @@ import com.chetan.jobnepal.data.Resource
 import com.chetan.jobnepal.data.local.Preference
 import com.chetan.jobnepal.data.models.param.UploadAcademicList
 import com.chetan.jobnepal.data.models.param.UploadNewVideoLink
+import com.chetan.jobnepal.data.models.param.UploadProfileParam
 import com.chetan.jobnepal.screens.academic.AcademicState
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -122,6 +123,33 @@ class FirestoreRepositoryImpl @Inject constructor(
 
 
         } catch (e: Exception) {
+            e.printStackTrace()
+            Resource.Failure(e)
+        }
+    }
+
+    override suspend fun uploadProfileData(data: UploadProfileParam): Resource<Any> {
+        return try {
+            val documentRef = firestore.collection(preference.dbTable.toString()).document("Profile")
+            val result = documentRef.set(data).await()
+            Resource.Success(result)
+        }catch (e: Exception){
+            e.printStackTrace()
+            Resource.Failure(e)
+        }
+    }
+
+    override suspend fun getProfileData(): Resource<UploadProfileParam> {
+        return try {
+            val documentRef = firestore.collection(preference.dbTable.toString()).document("Profile")
+            val result = documentRef.get().await().toObject(UploadProfileParam::class.java)
+            if (result != null){
+                Resource.Success(result)
+            }else{
+                Resource.Failure(java.lang.Exception("No Data yet"))
+            }
+
+        }catch (e: Exception){
             e.printStackTrace()
             Resource.Failure(e)
         }

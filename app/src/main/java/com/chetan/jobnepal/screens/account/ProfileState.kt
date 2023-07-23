@@ -1,11 +1,13 @@
 package com.chetan.jobnepal.screens.account
 
 import com.chetan.jobnepal.data.enums.Gender
+import com.chetan.jobnepal.data.models.param.UploadProfileParam
 import com.chetan.jobnepal.ui.component.JobNepalScreenState
 import com.chetan.jobnepal.ui.component.dialogs.Message
 import com.chetan.jobnepal.ui.component.dialogs.Progress
 
 data class ProfileState(
+    val profileResponse : UploadProfileParam = UploadProfileParam(),
     val editFirstName: String = "",
     val editMiddleName: String = "",
     val editLastName: String = "",
@@ -14,7 +16,7 @@ data class ProfileState(
     val editFatherFirstName: String = "",
     val editFatherMiddleName: String = "",
     val editFatherLastNam: String = "",
-
+    var isOtherVisible: Boolean = false,
     override val infoMsg: Message? = null,
     override val progress: Progress? = null
 

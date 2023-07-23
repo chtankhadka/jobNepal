@@ -1,6 +1,9 @@
 package com.chetan.jobnepal.screens.account
 
+import android.net.Uri
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -42,7 +45,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
-import com.chetan.jobnepal.R
 import com.chetan.jobnepal.data.enums.Gender
 import com.chetan.jobnepal.ui.component.IconJobNepal
 import com.chetan.jobnepal.ui.component.animation.YouCannotClickMe
@@ -58,6 +60,18 @@ fun ProfileScreen(
     onEvent: (event: ProfileEvent) -> Unit
 ) {
     val ctx = LocalContext.current
+
+    var selectedImageUri by remember {
+        mutableStateOf<Uri?>(null)
+    }
+    val photoPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia(),
+        onResult = { uri ->
+            if (uri != null) {
+                selectedImageUri = uri
+            }
+        })
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -85,7 +99,7 @@ fun ProfileScreen(
             ) {
                 Box(modifier = Modifier.fillMaxWidth(0.7f)) {
                     AsyncImage(
-                        model = R.drawable.ic_launcher_background,
+                        model = selectedImageUri,
                         contentDescription = ""
                     )
                 }
@@ -207,16 +221,15 @@ fun ProfileScreen(
                         ) {
                             Text(text = "Other details")
                             Icon(
-                                imageVector = if (!isVisible) Icons.Default.KeyboardArrowDown else Icons.Default.KeyboardArrowUp,
+                                imageVector = if (!state.isOtherVisible) Icons.Default.KeyboardArrowDown else Icons.Default.KeyboardArrowUp,
                                 contentDescription = null,
                                 modifier = Modifier.clickable {
-                                    isVisible = !isVisible
+                                    onEvent(ProfileEvent.OnOtherDetailsClicked(!state.isOtherVisible))
                                 }
                             )
                         }
                         Divider(modifier = Modifier.padding(top = 20.dp, bottom = 10.dp))
-                        if (isVisible) {
-
+                        if (state.isOtherVisible) {
                             TextFieldJobNepal(
                                 label = "Father First Name",
                                 value = state.editFatherFirstName,
@@ -250,17 +263,17 @@ fun ProfileScreen(
                 }
 
                 Spacer(modifier = Modifier.height(5.dp))
-                    YouCannotClickMe(
-                        enable = !state.areAllDataFilled(),
-                        size = 200f,
-                        buttonWidth = 100,
-                        buttonHeight = 50,
-                        text = "Upload",
-                        boxColor = Color.Transparent,
-                        buttonColor = MaterialTheme.colorScheme.onTertiaryContainer,
-                        onClick = {
-                            Toast.makeText(ctx,"Clicked",Toast.LENGTH_SHORT).show()
-                        })
+                YouCannotClickMe(
+                    enable = !state.areAllDataFilled(),
+                    size = 200f,
+                    buttonWidth = 100,
+                    buttonHeight = 50,
+                    text = "Upload",
+                    boxColor = Color.Transparent,
+                    buttonColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                    onClick = {
+                        Toast.makeText(ctx, "Clicked", Toast.LENGTH_SHORT).show()
+                    })
 
 
             }

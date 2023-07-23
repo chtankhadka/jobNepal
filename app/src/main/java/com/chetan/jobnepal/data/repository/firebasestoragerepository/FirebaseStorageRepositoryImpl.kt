@@ -66,4 +66,19 @@ class FirebaseStorageRepositoryImpl @Inject constructor(
             Resource.Failure(e)
         }
     }
+
+    override suspend fun uploadProfileImage(fileUri: Uri): Resource<Pair<String,String>> {
+        return try {
+            val file = File(fileUri.path!!)
+            val fileName = file.name + "${GenerateRandomNumber.generateRandomNumber(111..999)}"
+            val imageRef = storageRef.child(preference.dbTable + "/Profile/" + fileName)
+            val uploadTask = imageRef.putFile(fileUri).await()
+            val downloadUrl = uploadTask.storage.downloadUrl.await()
+            val uploadedImageInfo = Pair(fileName,downloadUrl.toString())
+            Resource.Success(uploadedImageInfo)
+        }catch (e: Exception){
+            e.printStackTrace()
+            Resource.Failure(e)
+        }
+    }
 }

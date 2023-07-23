@@ -12,5 +12,7 @@ sealed interface ProfileEvent {
     data class OnFatherFirstNameChange(val value: String) : ProfileEvent
     data class OnFatherMiddleNameChange(val value: String) : ProfileEvent
     data class OnFatherLastNameChange(val value: String) : ProfileEvent
+
+    data class OnOtherDetailsClicked(val value: Boolean) : ProfileEvent
     object Upload : ProfileEvent
 }
