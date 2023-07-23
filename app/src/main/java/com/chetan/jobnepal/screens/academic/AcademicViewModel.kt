@@ -37,7 +37,7 @@ class AcademicViewModel @Inject constructor(
                             it.copy(progress = Progress(value = 0.0F))
                         }
                         val resource = storageRepository.uploadAcademicAttachement(
-                            event.value
+                            event.value,state.selectedLevel
                         )
                         when (resource) {
                             is Resource.Failure -> {
@@ -54,65 +54,89 @@ class AcademicViewModel @Inject constructor(
                                 _state.update {
                                     it.copy(progress = null, downloadAttachementUrl = resource.data)
                                 }
-                                //academic upload
-                                val academicUploadResponse = when (state.selectedLevel) {
-                                    AcademicState.SLC_SEE -> {
-                                        firestoreRepository.uploadAcademicData(
-                                            data = UploadAcademicList(SEE = state.downloadAttachementUrl.map {
-                                                UploadAcademicList.seeColl("SLC", "11", it)
-                                            }),
-                                            selectedLevel = state.selectedLevel
-                                        )
-                                    }
 
-                                    AcademicState.IAC -> {
-                                        firestoreRepository.uploadAcademicData(
-                                            data = UploadAcademicList(IAC = state.downloadAttachementUrl.map {
-                                                UploadAcademicList.iacColl("IAC", "12", it)
-                                            }),
-                                            selectedLevel = "IAC"
-                                        )
-                                    }
-                                    AcademicState.BSC_CSIT -> {
-                                        firestoreRepository.uploadAcademicData(
-                                            data = UploadAcademicList(BSC_CSIT = state.downloadAttachementUrl.map {
-                                                UploadAcademicList.bsccsitColl("BSc.CSIT", "12", it)
-                                            }),
-                                            selectedLevel = "BSc_CSIT"
-                                        )
-                                    }
 
-                                    else -> {
-                                        firestoreRepository.uploadAcademicData(
-                                            data = UploadAcademicList(IAC = state.downloadAttachementUrl.map {
-                                                UploadAcademicList.iacColl("IAC", "12", "else")
-                                            }),
-                                            selectedLevel = "IAC"
-                                        )
-                                    }
-                                }
-                                when (academicUploadResponse) {
-                                    is Resource.Failure -> {
-                                        _state.update {
-                                            it.copy(
-                                                infoMsg = Message.Error(description = "Data Not uploaded"),
-                                                progress = null
+                                //academic data
+                                if (!resource.data.isEmpty()) {
+                                    val academicUploadResponse = when (state.selectedLevel) {
+                                        AcademicState.SLC_SEE -> {
+                                            firestoreRepository.uploadAcademicData(
+                                                data = UploadAcademicList(SEE = resource.data.map {
+                                                    UploadAcademicList.seeColl(
+                                                        "SLC",
+                                                        "11",
+                                                        it.first, it.second
+                                                    )
+                                                }),
+                                                selectedLevel = state.selectedLevel
+                                            )
+                                        }
+
+                                        AcademicState.IAC -> {
+                                            firestoreRepository.uploadAcademicData(
+                                                data = UploadAcademicList(IAC = resource.data.map {
+                                                    UploadAcademicList.iacColl(
+                                                        "IAC",
+                                                        "12",
+                                                        it.first,
+                                                        it.second
+                                                    )
+                                                }),
+                                                selectedLevel = "IAC"
+                                            )
+                                        }
+
+                                        AcademicState.BSc_CSIT -> {
+                                            firestoreRepository.uploadAcademicData(
+                                                data = UploadAcademicList(BSc_CSIT = resource.data.map {
+                                                    UploadAcademicList.bsccsitColl(
+                                                        "BSc.CSIT",
+                                                        "12",
+                                                        it.first, it.second
+                                                    )
+                                                }),
+                                                selectedLevel = "BSc_CSIT"
+                                            )
+                                        }
+
+                                        else -> {
+                                            firestoreRepository.uploadAcademicData(
+                                                data = UploadAcademicList(IAC = resource.data.map {
+                                                    UploadAcademicList.iacColl(
+                                                        "IAC",
+                                                        "12",
+                                                        it.first,
+                                                        it.second
+                                                    )
+                                                }),
+                                                selectedLevel = "IAC"
                                             )
                                         }
                                     }
-
-                                    Resource.Loading -> TODO()
-                                    is Resource.Success -> {
-                                        _state.update {
-                                            it.copy(
-                                                progress = null,
-                                                downloadAttachementUrl = resource.data,
-                                                showDialog = false
-                                            )
+                                    when (academicUploadResponse) {
+                                        is Resource.Failure -> {
+                                            _state.update {
+                                                it.copy(
+                                                    infoMsg = Message.Error(description = "Data Not uploaded"),
+                                                    progress = null
+                                                )
+                                            }
                                         }
-                                        getAcademicResponse()
+
+                                        Resource.Loading -> TODO()
+                                        is Resource.Success -> {
+                                            _state.update {
+                                                it.copy(
+                                                    progress = null,
+                                                    downloadAttachementUrl = resource.data,
+                                                    showDialog = false
+                                                )
+                                            }
+                                            getAcademicResponse()
+                                        }
                                     }
                                 }
+
                             }
                         }
                     }
@@ -129,6 +153,49 @@ class AcademicViewModel @Inject constructor(
                         it.copy(
                             showDialog = event.value
                         )
+                    }
+                }
+
+                is AcademicEvent.Delete -> {
+                    _state.update {
+                        it.copy(
+                                progress = Progress(value = 0F)
+                        )
+                    }
+//                    val resource = storageRepository.deleteAcademicAtachements(event.value,event.name)
+//                    when (resource){
+//                        is Resource.Failure -> {
+//                            _state.update {
+//                                it.copy(
+//                                    infoMsg = Message.Error(description = resource.exception.message),
+//                                    progress = null
+//                                )
+//                            }
+//                        }
+//
+//                        is Resource.Loading -> TODO()
+//                        is Resource.Success -> {
+//                            getAcademicResponse()
+//                        }
+//                    }
+
+                    val resource1 = firestoreRepository.deleteAcademicData("", listOf(""))
+                    when (resource1){
+                        is Resource.Failure -> {
+
+                        }
+                        Resource.Loading -> {
+
+                        }
+                        is Resource.Success -> {
+
+                        }
+                    }
+
+                }
+                is AcademicEvent.ShowEdit -> {
+                    _state.update {
+                        it.copy(showEdit = event.value)
                     }
                 }
             }

@@ -7,6 +7,10 @@ import com.chetan.jobnepal.data.models.param.UploadNewVideoLink
 interface FirestoreRepository {
 
     //dashboard video link
+
+    suspend fun createJobNepalCollection(
+        jobNepalColletion : List<String>
+    ) : Resource<Any>
     suspend fun uploadNewVideoLink(
         data : UploadNewVideoLink
     ): Resource<Any>
@@ -19,5 +23,7 @@ interface FirestoreRepository {
     ): Resource<Any>
 
     suspend fun getAcademicData() : Resource<UploadAcademicList>
+
+    suspend fun deleteAcademicData(level: String, names: List<String>): Resource<Any>
 
 }

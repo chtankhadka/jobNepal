@@ -128,7 +128,7 @@ fun AcademicDialog(
             LazyVerticalGrid(
                 modifier = Modifier.fillMaxSize(0.7f),
                 columns = GridCells.Adaptive(minSize = 100.dp),
-                horizontalArrangement = Arrangement.spacedBy(5.dp),
+                horizontalArrangement = Arrangement.SpaceAround,
                 verticalArrangement = Arrangement.spacedBy(5.dp),
                 content = {
                     items(selectedImageUris) { uri ->

@@ -8,9 +8,10 @@ import com.chetan.jobnepal.ui.component.dialogs.Progress
 
 data class AcademicState(
     val uploadAttachementList: List<Uri> = listOf(),
-    val downloadAttachementUrl: List<String> = listOf(),
+    val downloadAttachementUrl: List<Pair<String,String>> = listOf(),
     val academicListResponse : UploadAcademicList = UploadAcademicList(),
     var showDialog: Boolean = false,
+    var showEdit: Boolean = false,
     val selectedLevel: String = "",
     override val infoMsg: Message? = null,
     override val progress: Progress? = null,
@@ -20,6 +21,6 @@ data class AcademicState(
         const val SLC_SEE = "SEE"
         const val IAC = "IAC"
         const val BAC = "BAC"
-        const val BSC_CSIT = "BSc_CSIT"
+        const val BSc_CSIT = "BSc_CSIT"
     }
 }

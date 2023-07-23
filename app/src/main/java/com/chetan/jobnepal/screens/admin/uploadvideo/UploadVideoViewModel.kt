@@ -21,6 +21,13 @@ class UploadVideoViewModel @Inject constructor(
     private val _state = MutableStateFlow(UploadVideoState())
     val state: StateFlow<UploadVideoState> = _state
 
+    init {
+        viewModelScope.launch {
+            repository.createJobNepalCollection(listOf("academic","nepal"))
+        }
+
+    }
+
     val onEvent: (event: UploadVideoEvent) -> Unit = { event ->
         viewModelScope.launch {
             when (event) {

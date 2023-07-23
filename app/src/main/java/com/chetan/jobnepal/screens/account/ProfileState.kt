@@ -1,0 +1,34 @@
+package com.chetan.jobnepal.screens.account
+
+import com.chetan.jobnepal.data.enums.Gender
+import com.chetan.jobnepal.ui.component.JobNepalScreenState
+import com.chetan.jobnepal.ui.component.dialogs.Message
+import com.chetan.jobnepal.ui.component.dialogs.Progress
+
+data class ProfileState(
+    val editFirstName: String = "",
+    val editMiddleName: String = "",
+    val editLastName: String = "",
+    val editGender: Gender? = null,
+    val editEmail: String = "",
+    val editFatherFirstName: String = "",
+    val editFatherMiddleName: String = "",
+    val editFatherLastNam: String = "",
+
+    override val infoMsg: Message? = null,
+    override val progress: Progress? = null
+
+) : JobNepalScreenState(infoMsg, progress) {
+
+    fun areAllDataFilled(): Boolean {
+        return editFirstName.isNotBlank()
+                && editMiddleName.isNotBlank()
+                && editLastName.isNotBlank()
+                && !editGender?.value.isNullOrBlank()
+                && editEmail.isNotBlank()
+                && editFatherFirstName.isNotBlank()
+                && editFatherMiddleName.isNotBlank()
+                && editFatherLastNam.isNotBlank()
+    }
+//    fun asUpdateProfileParam() = UpdateProfilePaream()
+}

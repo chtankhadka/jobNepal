@@ -13,13 +13,27 @@ import javax.inject.Singleton
 
 @Singleton
 class FirestoreRepositoryImpl @Inject constructor(
-    private val firestore: FirebaseFirestore,
-    private val preference: Preference
+    private val firestore: FirebaseFirestore, private val preference: Preference
 ) : FirestoreRepository {
+    override suspend fun createJobNepalCollection(jobNepalColletion: List<String>): Resource<Any> {
+        return try {
+            val collectionRef = firestore.collection(preference.dbTable.toString())
+            val batch = firestore.batch()
+            for (documentId in jobNepalColletion) {
+                val documentRef = collectionRef.document(documentId)
+                batch.set(documentRef, emptyMap<String, Any>())
+            }
+            batch.commit().await()
+            Resource.Success(Unit)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Resource.Failure(e)
+        }
+    }
+
     override suspend fun uploadNewVideoLink(data: UploadNewVideoLink): Resource<Any> {
         return try {
-            val documentRef = firestore.collection(preference.dbTable.toString())
-                .document(data.id)
+            val documentRef = firestore.collection(preference.dbTable.toString()).document(data.id)
 
             val newData = mapOf(
                 "data" to FieldValue.arrayUnion(*data.data.toTypedArray())
@@ -35,9 +49,7 @@ class FirestoreRepositoryImpl @Inject constructor(
 
     override suspend fun getNewVideoLink(): Resource<List<UploadNewVideoLink.DataColl>> {
         return try {
-            val result = firestore.collection(preference.dbTable.toString())
-                .get()
-                .await()
+            val result = firestore.collection(preference.dbTable.toString()).get().await()
                 .toObjects(UploadNewVideoLink.DataColl::class.java)
             Resource.Success(result)
 
@@ -48,12 +60,11 @@ class FirestoreRepositoryImpl @Inject constructor(
     }
 
     override suspend fun uploadAcademicData(
-        data: UploadAcademicList,
-        selectedLevel: String
+        data: UploadAcademicList, selectedLevel: String
     ): Resource<Any> {
         return try {
-            val documentRef = firestore.collection(preference.dbTable.toString())
-                .document("academic")
+            val documentRef =
+                firestore.collection(preference.dbTable.toString()).document("academic")
             val newData = when (selectedLevel) {
                 AcademicState.SLC_SEE -> {
                     mapOf(selectedLevel to FieldValue.arrayUnion(*data.SEE.toTypedArray()))
@@ -63,8 +74,8 @@ class FirestoreRepositoryImpl @Inject constructor(
                     mapOf(selectedLevel to FieldValue.arrayUnion(*data.IAC.toTypedArray()))
                 }
 
-                AcademicState.BSC_CSIT -> {
-                    mapOf(selectedLevel to FieldValue.arrayUnion(*data.BSC_CSIT.toTypedArray()))
+                AcademicState.BSc_CSIT -> {
+                    mapOf(selectedLevel to FieldValue.arrayUnion(*data.BSc_CSIT.toTypedArray()))
                 }
 
                 AcademicState.BAC -> {
@@ -86,16 +97,30 @@ class FirestoreRepositoryImpl @Inject constructor(
 
     override suspend fun getAcademicData(): Resource<UploadAcademicList> {
         return try {
-            val result = firestore.collection(preference.dbTable.toString())
-                .document("academic")
-                .get()
-                .await()
-                .toObject(UploadAcademicList::class.java)
+            val result =
+                firestore.collection(preference.dbTable.toString()).document("academic").get()
+                    .await().toObject(UploadAcademicList::class.java)
             if (result != null) {
                 Resource.Success(result)
             } else {
                 Resource.Failure(java.lang.Exception("No Data yet"))
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Resource.Failure(e)
+        }
+    }
+
+    override suspend fun deleteAcademicData(level: String, names: List<String>): Resource<Any> {
+        return try {
+            val documentRef =
+                firestore.collection(preference.dbTable.toString()).document("academic")
+                    .update("IAC", FieldValue.arrayRemove("1000011340336")).await()
+
+
+            Resource.Success(Unit)
+
+
         } catch (e: Exception) {
             e.printStackTrace()
             Resource.Failure(e)

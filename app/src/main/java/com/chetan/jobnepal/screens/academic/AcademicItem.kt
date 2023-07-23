@@ -1,10 +1,12 @@
 package com.chetan.jobnepal.screens.academic
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -16,16 +18,21 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.chetan.jobnepal.data.models.param.UploadAcademicList
+import com.chetan.jobnepal.ui.component.IconJobNepal
 import com.chetan.jobnepal.ui.component.dropdown.DropdownJobNepal
 
 @Composable
 fun AcademicItem(
     title: String = "",
-    data: List<MappedList>) {
+    data: MutableList<MappedList>,
+    onClick: (String?,List<String>) -> Unit,
+    showEdit: Boolean,
+) {
     Card(
         modifier = Modifier
             .padding(start = 5.dp),
@@ -45,18 +52,37 @@ fun AcademicItem(
                     "Edit" to Icons.Default.Edit,
                     "Delete" to Icons.Default.Delete
                 )
-            ){}
+            ){
+                onClick(it, data.map { it.name })
+            }
             Divider()
         }
         LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(10.dp)
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(5.dp)
         ){
+
             items(data.size){
+                Box(
+                    modifier = Modifier.size(200.dp)
+                        .clip(RoundedCornerShape(5.dp))
+                ){
                     AsyncImage(
-                        modifier = Modifier.height(200.dp),
                         model = data[it].url, contentDescription = "",
                         contentScale = ContentScale.Crop
-                        )
+                    )
+                    if (showEdit){
+                        IconJobNepal(
+                            modifier = Modifier.align(Alignment.TopEnd),
+                            onClick = {
+                                onClick(null, listOf(data[it].name))
+                                data.removeAt(it)
+                            },
+                            icon = Icons.Default.Delete)
+                    }
+
+                }
             }
         }
     }

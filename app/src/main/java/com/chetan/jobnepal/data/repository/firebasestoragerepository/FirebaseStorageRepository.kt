@@ -5,5 +5,8 @@ import com.chetan.jobnepal.data.Resource
 
 interface FirebaseStorageRepository {
 
-    suspend fun uploadAcademicAttachement(fileUri: List<Uri>) : Resource<List<String>>
+
+    suspend fun uploadAcademicAttachement(fileUri: List<Uri>,level: String) : Resource<List<Pair<String,String>>>
+
+    suspend fun deleteAcademicAtachements(level: String, names: List<String>) : Resource<Any>
 }

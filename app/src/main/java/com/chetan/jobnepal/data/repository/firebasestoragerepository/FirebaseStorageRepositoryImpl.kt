@@ -3,6 +3,8 @@ package com.chetan.jobnepal.data.repository.firebasestoragerepository
 import android.net.Uri
 import com.chetan.jobnepal.data.Resource
 import com.chetan.jobnepal.data.local.Preference
+import com.chetan.jobnepal.utils.GenerateRandomNumber
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.Dispatchers
@@ -21,18 +23,19 @@ class FirebaseStorageRepositoryImpl @Inject constructor(
     private val preference: Preference
 ) : FirebaseStorageRepository {
 
-    override suspend fun uploadAcademicAttachement(fileUri: List<Uri>): Resource<List<String>> {
+    override suspend fun uploadAcademicAttachement(fileUri: List<Uri>,level: String): Resource<List<Pair<String,String>>> {
         return try {
-            val uploadedImageUris = mutableListOf<String>()
+            val uploadedImageInfo = mutableListOf<Pair<String,String>>()
             withContext(Dispatchers.IO){
                 val deferredUpload = fileUri.map { uri ->
                     async {
                         val file = File(uri.path!!)
-                        val imageRef = storageRef.child(preference.dbTable+"/Images/"+file.name)
+                        val fileName = file.name+"${GenerateRandomNumber.generateRandomNumber(111..999)}"
+                        val imageRef = storageRef.child(preference.dbTable+"/Academic/${level}/"+fileName)
                         try {
                             val uploadTask = imageRef.putFile(uri).await()
                             val downloadUrl = uploadTask.storage.downloadUrl.await()
-                            uploadedImageUris.add(downloadUrl.toString())
+                            uploadedImageInfo.add(Pair(fileName,downloadUrl.toString()))
                         } catch (e: Exception){
                             e.printStackTrace()
                         }
@@ -40,9 +43,25 @@ class FirebaseStorageRepositoryImpl @Inject constructor(
                 }
                 deferredUpload.awaitAll()
             }
-            Resource.Success(uploadedImageUris)
+            Resource.Success(uploadedImageInfo)
 
         }catch (e: Exception){
+            e.printStackTrace()
+            Resource.Failure(e)
+        }
+    }
+
+    override suspend fun deleteAcademicAtachements(level: String, names: List<String>): Resource<Any> {
+        return try {
+            val filePath = "${preference.dbTable}/Academic/IAC/"
+            withContext(Dispatchers.IO) {
+                val deletionTasks = names.map {
+                    storageRef.child(filePath + it).delete()
+                }
+                Tasks.await(Tasks.whenAll(deletionTasks))
+            }
+            Resource.Success(Unit)
+        } catch (e: Exception) {
             e.printStackTrace()
             Resource.Failure(e)
         }

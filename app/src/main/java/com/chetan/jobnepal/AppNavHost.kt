@@ -18,6 +18,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.chetan.jobnepal.screens.academic.AcademicScreen
 import com.chetan.jobnepal.screens.academic.AcademicViewModel
+import com.chetan.jobnepal.screens.account.ProfileScreen
+import com.chetan.jobnepal.screens.account.ProfileViewModel
 import com.chetan.jobnepal.screens.admin.uploadvideo.UploadVideoScreen
 import com.chetan.jobnepal.screens.admin.uploadvideo.UploadVideoViewModel
 import com.chetan.jobnepal.screens.dashboard.DashboardScreen
@@ -142,6 +144,15 @@ fun AppNavHost(
         composable("upload-video-screen"){
             val viewModel = hiltViewModel<UploadVideoViewModel>()
             UploadVideoScreen(
+                navController,
+                state = viewModel.state.collectAsStateWithLifecycle().value,
+                onEvent = viewModel.onEvent
+            )
+        }
+
+        composable(Destination.Screen.ProfileScreen.route){
+            val viewModel = hiltViewModel<ProfileViewModel>()
+            ProfileScreen(
                 navController,
                 state = viewModel.state.collectAsStateWithLifecycle().value,
                 onEvent = viewModel.onEvent

@@ -82,6 +82,9 @@ fun ModalDrawerSheetPage(
                   if (it.second == "Academic")  {
                       navController.navigate(Destination.Screen.Academic.route)
                   }
+                    if (it.second == "Profile"){
+                        navController.navigate(Destination.Screen.ProfileScreen.route)
+                    }
                 },
                 shape = RoundedCornerShape(5.dp)
             ) {

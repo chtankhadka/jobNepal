@@ -20,7 +20,7 @@ class SignInViewModel @Inject constructor(val preference: Preference) : ViewMode
             signInError = result.errorMessage
         ) }
         if (state.value.isSignInSuccessful){
-            preference.dbTable = result.data?.userEmail
+            preference.dbTable = result.data?.userEmail?.split("@")?.get(0)
         }
 
     }

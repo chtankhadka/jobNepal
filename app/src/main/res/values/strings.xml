@@ -4,4 +4,6 @@
     <string name="take_a_selfie">Take a selfie</string>
     <string name="upload_from_storage">Upload from Storage</string>
     <string name="upload_from_gallery">Upload from Gallery</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
 </resources>
