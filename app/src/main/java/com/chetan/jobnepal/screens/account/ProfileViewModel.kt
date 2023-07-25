@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chetan.jobnepal.data.Resource
 import com.chetan.jobnepal.data.enums.Gender
+import com.chetan.jobnepal.data.models.param.UploadProfileParam
 import com.chetan.jobnepal.data.repository.firebasestoragerepository.FirebaseStorageRepository
 import com.chetan.jobnepal.data.repository.firestorerepository.FirestoreRepository
 import com.chetan.jobnepal.ui.component.dialogs.Message
@@ -80,7 +81,51 @@ class ProfileViewModel @Inject constructor(
                 }
             }
 
-            ProfileEvent.Upload -> {
+            is ProfileEvent.Upload -> {
+                viewModelScope.launch {
+                    _state.update {
+                        it.copy(progress = Progress(value = 0.0F))
+                    }
+                    val resource = storageRepository.uploadProfileImage(event.value)
+                    when (resource) {
+                        is Resource.Failure -> {
+
+                        }
+
+                        Resource.Loading -> {
+
+                        }
+
+                        is Resource.Success -> {
+                            val state = state.value
+                            when (val resource1 = firestoreRepository.uploadProfileData(
+                                UploadProfileParam(
+                                    firstName = state.editFirstName,
+                                    middleName = state.editMiddleName,
+                                    lastName = state.editLastName,
+                                    email = state.editEmail,
+                                    phoneNo = "",
+                                    profileUrl = resource.data.second,
+                                    photoName = resource.data.first,
+                                    dob = "",
+                                    gender = state.editGender?.value,
+                                    fatherFirstName = state.editFatherFirstName,
+                                    fatherMiddleName = state.editFatherMiddleName,
+                                    fatherLastName = state.editFatherLastNam
+                                ))) {
+                                is Resource.Failure -> {
+
+                                }
+                                Resource.Loading -> {
+
+                                }
+                                is Resource.Success -> {
+                                    getProfileData()
+                                }
+                            }
+                        }
+                    }
+                }
 
             }
 
@@ -95,7 +140,6 @@ class ProfileViewModel @Inject constructor(
 
     fun getProfileData() {
         viewModelScope.launch {
-            val state = state.value
             _state.update {
                 it.copy(progress = Progress(value = 0.0F))
             }
@@ -121,13 +165,14 @@ class ProfileViewModel @Inject constructor(
                             editFirstName = resource.data.firstName ?: "",
                             editMiddleName = resource.data.middleName ?: "",
                             editLastName = resource.data.lastName ?: "",
-                            editGender = Gender.values().find {
-                                it.value == resource?.data?.gender
+                            editGender = Gender.values().find {gender ->
+                                gender.value == resource.data.gender
                             },
                             editEmail = resource.data.email ?: "",
                             editFatherFirstName = resource.data.fatherFirstName ?: "",
                             editFatherMiddleName = resource.data.fatherMiddleName ?: "",
                             editFatherLastNam = resource.data.fatherLastName ?: "",
+                            imageUrl = resource.data.profileUrl?: ""
 
                             )
                     }

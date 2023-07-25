@@ -18,6 +18,8 @@ class Preference @Inject constructor(
         private const val PREFERENCE_NAME = "PREFERENCE_NAME"
         private const val ONBOARD_COMPLETED = "ONBOARD_COMPLETED"
         private const val DB_TABLE = "DB_TABLE"
+        private const val GMAIL_PROFILE = "GMAIL_PROFILE"
+        private const val GMAIL_USER_NAME = "GMAIL_USER_NAME"
     }
 
     private val sharedPreferences: SharedPreferences =
@@ -33,5 +35,15 @@ class Preference @Inject constructor(
         get() = sharedPreferences.getString(DB_TABLE,"")
         set(value) {
             sharedPreferences.edit().putString(DB_TABLE, value).apply()
+        }
+    var gmailProfile
+        get() = sharedPreferences.getString(GMAIL_PROFILE,"")
+        set(value) {
+            sharedPreferences.edit().putString(GMAIL_PROFILE, value).apply()
+        }
+    var gmailUserName
+        get() = sharedPreferences.getString(GMAIL_USER_NAME,"")
+        set(value){
+            sharedPreferences.edit().putString(GMAIL_USER_NAME, value).apply()
         }
 }

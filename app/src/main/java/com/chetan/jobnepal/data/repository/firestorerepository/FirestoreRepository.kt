@@ -15,7 +15,7 @@ interface FirestoreRepository {
     suspend fun uploadNewVideoLink(
         data : UploadNewVideoLink
     ): Resource<Any>
-    suspend fun getNewVideoLink() : Resource<List<UploadNewVideoLink.DataColl>>
+    suspend fun getNewVideoLink() : Resource<List<UploadNewVideoLink>>
 
     //academic
     suspend fun uploadAcademicData(

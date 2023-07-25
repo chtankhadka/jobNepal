@@ -7,6 +7,7 @@ data class UploadProfileParam(
     val email: String? = "",
     val phoneNo: String? = "",
     val profileUrl: String? = "",
+    val photoName: String? = "",
     val dob: String? = "",
     val gender: String? = "",
     val fatherFirstName: String? = "",

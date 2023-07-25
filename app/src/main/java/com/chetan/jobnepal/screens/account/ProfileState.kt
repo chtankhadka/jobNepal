@@ -11,6 +11,7 @@ data class ProfileState(
     val editFirstName: String = "",
     val editMiddleName: String = "",
     val editLastName: String = "",
+    val imageUrl: String = "",
     val editGender: Gender? = null,
     val editEmail: String = "",
     val editFatherFirstName: String = "",

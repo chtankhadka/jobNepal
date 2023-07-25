@@ -23,6 +23,7 @@ import com.chetan.jobnepal.screens.account.ProfileViewModel
 import com.chetan.jobnepal.screens.admin.uploadvideo.UploadVideoScreen
 import com.chetan.jobnepal.screens.admin.uploadvideo.UploadVideoViewModel
 import com.chetan.jobnepal.screens.dashboard.DashboardScreen
+import com.chetan.jobnepal.screens.dashboard.DashboardViewModel
 import com.chetan.jobnepal.screens.onboardscreen.OnBoardScreen
 import com.chetan.jobnepal.screens.onboardscreen.OnBoardViewModel
 import com.chetan.jobnepal.screens.sign_in.emailandpasswordauthentication.LoginWithEmailPasswordScreen
@@ -78,8 +79,7 @@ fun AppNavHost(
                         "Sign in successful",
                         Toast.LENGTH_LONG
                     ).show()
-
-                    navController.navigate("profile")
+                    navController.navigate("dashboard")
                     viewModel.resetState()
                 }
             }
@@ -121,17 +121,26 @@ fun AppNavHost(
         }
 
         composable("dashboard") {
-            val viewModel = hiltViewModel<LoginWithEmailPasswordViewModel>()
-            DashboardScreen(navController, viewModel)
-            {
-                navController.navigate(Destination.Screen.GoogleSignIn.route)
-            }
+            val viewModel = hiltViewModel<DashboardViewModel>()
+            DashboardScreen(
+                navController,
+                state = viewModel.state.collectAsStateWithLifecycle().value,
+                onEvent = viewModel.onEvent,
+                onClick = {
+                    if (it == "logout"){
+                        lifecycleScope.launch {
+                            googleAuthUiClient.signOut()
+                            navController.navigate("sign_in"){
+                                popUpTo(Destination.Screen.SignWithEmailPassword.route){inclusive = true}
+                            }
+                        }
+
+
+                    }
+                }
+                )
+
         }
-//        composable("google-sign-in"){
-//            ProfileScreen(userData = UserData("h","","")) {
-//
-//            }
-//        }
         composable("academic"){
             val viewModel = hiltViewModel<AcademicViewModel>()
             AcademicScreen(

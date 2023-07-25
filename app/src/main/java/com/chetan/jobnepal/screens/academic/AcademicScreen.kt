@@ -48,7 +48,7 @@ fun AcademicScreen(
             .fillMaxWidth()
             .padding(horizontal = 5.dp),
             navigationIcon = {
-                IconJobNepal(onClick = { }, icon = Icons.Default.ArrowBack)
+                IconJobNepal(onClick = { navController.popBackStack()}, icon = Icons.Default.ArrowBack)
             },
             title = {
                 Text(text = "Academic", style = MaterialTheme.typography.titleLarge)

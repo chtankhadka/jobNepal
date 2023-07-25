@@ -21,6 +21,9 @@ class SignInViewModel @Inject constructor(val preference: Preference) : ViewMode
         ) }
         if (state.value.isSignInSuccessful){
             preference.dbTable = result.data?.userEmail?.split("@")?.get(0)
+            preference.gmailProfile = result.data?.profilePictureUrl
+            preference.gmailUserName = result.data?.username
+
         }
 
     }

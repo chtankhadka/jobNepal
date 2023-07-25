@@ -49,7 +49,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import com.chetan.jobnepal.Destination
-import com.chetan.jobnepal.screens.sign_in.emailandpasswordauthentication.LoginWithEmailPasswordViewModel
 import com.chetan.jobnepal.ui.component.DashboardItem
 import com.chetan.jobnepal.ui.component.dropdown.ExposedDropdownJobNepal
 import com.chetan.jobnepal.utils.VibratingIcon
@@ -60,8 +59,9 @@ import kotlinx.coroutines.launch
 @Composable
 fun DashboardScreen(
     navController: NavHostController,
-    viewModel: LoginWithEmailPasswordViewModel,
-    onClick: () -> Unit
+    onClick: (String) -> Unit,
+    state: DashboardState,
+    onEvent: (event: DashboardEvent) -> Unit
 ) {
 
     val scope = rememberCoroutineScope()
@@ -85,7 +85,7 @@ fun DashboardScreen(
         drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet {
-                ModalDrawerSheetPage(navController,viewModel)
+                ModalDrawerSheetPage(navController,state,onClick)
             }
 
         }) {
@@ -190,8 +190,8 @@ fun DashboardScreen(
                             contentPadding = PaddingValues(horizontal = 0.dp, vertical = 5.dp),
                             verticalArrangement = Arrangement.spacedBy(5.dp)
                         ) {
-                            items(list.size) {
-                                DashboardItem(list[it])
+                            items(list.size) {position ->
+                                DashboardItem(list[position])
                             }
                         }
 
@@ -277,7 +277,7 @@ fun DashboardScreen(
                                 modifier = Modifier
                                     .size(15.dp)
                                     .clickable {
-                                        navController.navigate("google-sign-in")
+
                                     },
                                 imageVector = Icons.Default.Close,
                                 contentDescription = ""
@@ -293,5 +293,3 @@ fun DashboardScreen(
 
 
 }
-
-

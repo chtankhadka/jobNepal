@@ -42,12 +42,13 @@ import coil.compose.AsyncImage
 import com.chetan.jobnepal.R
 import com.chetan.jobnepal.ui.component.PhotoPickerJobNepal
 import kotlinx.coroutines.delay
+import java.io.Serializable
 import kotlin.math.cos
 import kotlin.math.sin
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
-fun ProfileAnimation(size: Dp, padding: Dp, uri: Uri?, enableEdit: Boolean) {
+fun ProfileAnimation(size: Dp, padding: Dp, enableEdit: Boolean, uri: Serializable?) {
     Toast.makeText(LocalContext.current,uri.toString(),Toast.LENGTH_LONG).show()
     var sizeState by remember {
         mutableStateOf(IntSize.Zero)

@@ -1,5 +1,6 @@
 package com.chetan.jobnepal.screens.account
 
+import android.net.Uri
 import com.chetan.jobnepal.data.enums.Gender
 
 sealed interface ProfileEvent {
@@ -14,5 +15,5 @@ sealed interface ProfileEvent {
     data class OnFatherLastNameChange(val value: String) : ProfileEvent
 
     data class OnOtherDetailsClicked(val value: Boolean) : ProfileEvent
-    object Upload : ProfileEvent
+    data class Upload(val value: Uri) : ProfileEvent
 }

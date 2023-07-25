@@ -7,6 +7,7 @@ import com.chetan.jobnepal.data.repository.firestorerepository.FirestoreReposito
 import com.chetan.jobnepal.data.models.param.UploadNewVideoLink
 import com.chetan.jobnepal.ui.component.dialogs.Message
 import com.chetan.jobnepal.ui.component.dialogs.Progress
+import com.chetan.jobnepal.utils.GenerateRandomNumber
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -23,7 +24,7 @@ class UploadVideoViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            repository.createJobNepalCollection(listOf("academic","nepal"))
+            repository.createJobNepalCollection(listOf("academic","nepal","videoList"))
         }
 
     }
@@ -39,15 +40,10 @@ class UploadVideoViewModel @Inject constructor(
                         }
                         val resource = repository.uploadNewVideoLink(
                             UploadNewVideoLink(
-                                id = state.id,
-                                data = listOf(
-                                    UploadNewVideoLink.DataColl(
-                                        id = state.id,
+                                        id = GenerateRandomNumber.generateRandomNumber(111111..999999).toString(),
                                         title = state.title,
                                         description = state.description,
                                         videoLink = state.url
-                                    )
-                                )
                             )
                         )
                         when (resource) {

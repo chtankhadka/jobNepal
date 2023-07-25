@@ -3,6 +3,7 @@ package com.chetan.jobnepal.screens.account
 import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
@@ -80,7 +81,9 @@ fun ProfileScreen(
                     .padding(5.dp),
                 navigationIcon = {
                     IconJobNepal(
-                        onClick = { },
+                        onClick = {
+                                  navController.popBackStack()
+                        },
                         icon = Icons.Default.ArrowBack
                     )
                 },
@@ -99,7 +102,7 @@ fun ProfileScreen(
             ) {
                 Box(modifier = Modifier.fillMaxWidth(0.7f)) {
                     AsyncImage(
-                        model = selectedImageUri,
+                        model = selectedImageUri?:state.imageUrl,
                         contentDescription = ""
                     )
                 }
@@ -130,7 +133,7 @@ fun ProfileScreen(
                             FloatingActionButton(
                                 modifier = Modifier.weight(0.15f),
                                 onClick = {
-
+                                    photoPickerLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
                                 }) {
                                 Icon(
                                     imageVector = Icons.Default.Camera,
@@ -273,6 +276,8 @@ fun ProfileScreen(
                     buttonColor = MaterialTheme.colorScheme.onTertiaryContainer,
                     onClick = {
                         Toast.makeText(ctx, "Clicked", Toast.LENGTH_SHORT).show()
+                        selectedImageUri?.let { it1 -> ProfileEvent.Upload(it1) }
+                            ?.let { it2 -> onEvent(it2) }
                     })
 
 
