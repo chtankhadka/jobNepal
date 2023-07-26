@@ -1,4 +1,4 @@
-package com.chetan.jobnepal.data.models.param
+package com.chetan.jobnepal.data.models.academic
 
 data class UploadAcademicList(
     val SEE: List<seeColl> = emptyList(),

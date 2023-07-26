@@ -3,7 +3,7 @@ package com.chetan.jobnepal.screens.academic
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chetan.jobnepal.data.Resource
-import com.chetan.jobnepal.data.models.param.UploadAcademicList
+import com.chetan.jobnepal.data.models.academic.UploadAcademicList
 import com.chetan.jobnepal.data.repository.firebasestoragerepository.FirebaseStorageRepository
 import com.chetan.jobnepal.data.repository.firestorerepository.FirestoreRepository
 import com.chetan.jobnepal.ui.component.dialogs.Message

@@ -1,9 +1,10 @@
 package com.chetan.jobnepal.data.repository.firestorerepository
 
 import com.chetan.jobnepal.data.Resource
-import com.chetan.jobnepal.data.models.param.UploadAcademicList
+import com.chetan.jobnepal.data.models.academic.UploadAcademicList
+import com.chetan.jobnepal.data.models.dashboard.FormAppliedList
 import com.chetan.jobnepal.data.models.param.UploadNewVideoLink
-import com.chetan.jobnepal.data.models.param.UploadProfileParam
+import com.chetan.jobnepal.data.models.profile.UploadProfileParam
 
 interface FirestoreRepository {
 
@@ -15,7 +16,7 @@ interface FirestoreRepository {
     suspend fun uploadNewVideoLink(
         data : UploadNewVideoLink
     ): Resource<Any>
-    suspend fun getNewVideoLink() : Resource<List<UploadNewVideoLink>>
+    suspend fun getNewVideoLink() : Resource<UploadNewVideoLink>
 
     //academic
     suspend fun uploadAcademicData(
@@ -32,5 +33,11 @@ interface FirestoreRepository {
     ): Resource<Any>
 
     suspend fun getProfileData() : Resource<UploadProfileParam>
+
+    // get applied form data
+    suspend fun uploadAppliedFormData(
+        data: FormAppliedList
+    ) : Resource<Any>
+    suspend fun getAppliedFormData() : Resource<List<FormAppliedList>>
 
 }

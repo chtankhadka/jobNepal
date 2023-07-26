@@ -2,9 +2,10 @@ package com.chetan.jobnepal.data.repository.firestorerepository
 
 import com.chetan.jobnepal.data.Resource
 import com.chetan.jobnepal.data.local.Preference
-import com.chetan.jobnepal.data.models.param.UploadAcademicList
+import com.chetan.jobnepal.data.models.academic.UploadAcademicList
+import com.chetan.jobnepal.data.models.dashboard.FormAppliedList
 import com.chetan.jobnepal.data.models.param.UploadNewVideoLink
-import com.chetan.jobnepal.data.models.param.UploadProfileParam
+import com.chetan.jobnepal.data.models.profile.UploadProfileParam
 import com.chetan.jobnepal.screens.academic.AcademicState
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -35,12 +36,9 @@ class FirestoreRepositoryImpl @Inject constructor(
     override suspend fun uploadNewVideoLink(data: UploadNewVideoLink): Resource<Any> {
         return try {
             val documentRef = firestore.collection(preference.dbTable.toString()).document("videoList")
-
             val newData = mapOf(
-                "data" to FieldValue.arrayUnion(*arrayOf(data))
-            )
+                "dataColl" to FieldValue.arrayUnion(*data.dataColl.toTypedArray()))
             val result = documentRef.update(newData).await()
-
             Resource.Success(result)
         } catch (e: Exception) {
             e.printStackTrace()
@@ -48,18 +46,24 @@ class FirestoreRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getNewVideoLink(): Resource<List<UploadNewVideoLink>> {
+    override suspend fun getNewVideoLink(): Resource<UploadNewVideoLink> {
         return try {
-            val result = firestore.collection(preference.dbTable.toString()).get().await()
-                .toObjects(UploadNewVideoLink::class.java)
-            Resource.Success(result)
+            val result = firestore.collection(preference.dbTable.toString())
+                .document("videoList")
+                .get()
+                .await()
+                .toObject(UploadNewVideoLink::class.java)
+            if (result != null) {
+                Resource.Success(result)
+            } else {
+                Resource.Failure(java.lang.Exception("No Data yet"))
+            }
 
         } catch (e: Exception) {
             e.printStackTrace()
             Resource.Failure(e)
         }
     }
-
     override suspend fun uploadAcademicData(
         data: UploadAcademicList, selectedLevel: String
     ): Resource<Any> {
@@ -150,6 +154,34 @@ class FirestoreRepositoryImpl @Inject constructor(
             }
 
         }catch (e: Exception){
+            e.printStackTrace()
+            Resource.Failure(e)
+        }
+    }
+
+    override suspend fun uploadAppliedFormData(data: FormAppliedList): Resource<Any> {
+        return try {
+            val documentRef = firestore.collection(preference.dbTable.toString()).document("appliedList")
+
+            val newData = mapOf(
+                "data" to FieldValue.arrayUnion(*arrayOf(data))
+            )
+            val result = documentRef.update(newData).await()
+
+            Resource.Success(result)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Resource.Failure(e)
+        }
+
+    }
+
+    override suspend fun getAppliedFormData(): Resource<List<FormAppliedList>> {
+        return try {
+            val result = firestore.collection(preference.dbTable.toString()).get().await()
+                .toObjects(FormAppliedList::class.java)
+            Resource.Success(result)
+        } catch (e: Exception) {
             e.printStackTrace()
             Resource.Failure(e)
         }

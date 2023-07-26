@@ -1,7 +1,7 @@
 package com.chetan.jobnepal.screens.academic
 
 import android.net.Uri
-import com.chetan.jobnepal.data.models.param.UploadAcademicList
+import com.chetan.jobnepal.data.models.academic.UploadAcademicList
 import com.chetan.jobnepal.ui.component.JobNepalScreenState
 import com.chetan.jobnepal.ui.component.dialogs.Message
 import com.chetan.jobnepal.ui.component.dialogs.Progress

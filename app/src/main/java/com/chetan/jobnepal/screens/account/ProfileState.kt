@@ -1,7 +1,7 @@
 package com.chetan.jobnepal.screens.account
 
 import com.chetan.jobnepal.data.enums.Gender
-import com.chetan.jobnepal.data.models.param.UploadProfileParam
+import com.chetan.jobnepal.data.models.profile.UploadProfileParam
 import com.chetan.jobnepal.ui.component.JobNepalScreenState
 import com.chetan.jobnepal.ui.component.dialogs.Message
 import com.chetan.jobnepal.ui.component.dialogs.Progress

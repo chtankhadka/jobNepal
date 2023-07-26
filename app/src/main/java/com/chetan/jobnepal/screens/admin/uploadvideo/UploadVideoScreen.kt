@@ -102,21 +102,25 @@ fun UploadVideoScreen(
         }
         Button(
             onClick = {
+                onEvent(UploadVideoEvent.Reset)
+            }) {
+            Text(text = "Reset")
+
+        }
+        Button(
+            onClick = {
                 onEvent(UploadVideoEvent.DownloadVideoUrl)
                 clicked = true
             }) {
             Text(text = "get Data")
 
         }
-        if (clicked){
-            Toast.makeText(LocalContext.current,state.videoList.toString(),Toast.LENGTH_LONG).show()
-        }
         LazyColumn(
             modifier = Modifier.size(300.dp).background(Color.Blue),
             contentPadding = PaddingValues(2.dp),
             verticalArrangement = Arrangement.spacedBy(5.dp)
         ) {
-            items(state.videoList){
+            items(state.videoList.dataColl){
                 Text(text =it.id)
                 Text(text = it.title)
                 Text(text = it.videoLink)

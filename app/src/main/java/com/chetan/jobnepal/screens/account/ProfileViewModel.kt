@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chetan.jobnepal.data.Resource
 import com.chetan.jobnepal.data.enums.Gender
-import com.chetan.jobnepal.data.models.param.UploadProfileParam
+import com.chetan.jobnepal.data.models.profile.UploadProfileParam
 import com.chetan.jobnepal.data.repository.firebasestoragerepository.FirebaseStorageRepository
 import com.chetan.jobnepal.data.repository.firestorerepository.FirestoreRepository
 import com.chetan.jobnepal.ui.component.dialogs.Message
@@ -112,7 +112,8 @@ class ProfileViewModel @Inject constructor(
                                     fatherFirstName = state.editFatherFirstName,
                                     fatherMiddleName = state.editFatherMiddleName,
                                     fatherLastName = state.editFatherLastNam
-                                ))) {
+                                )
+                            )) {
                                 is Resource.Failure -> {
 
                                 }

@@ -26,11 +26,16 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.chetan.jobnepal.data.models.param.UploadNewVideoLink
+import com.chetan.jobnepal.screens.dashboard.DashboardEvent
 import com.chetan.jobnepal.ui.component.dropdown.DropdownJobNepal
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DashboardItem(item: Pair<String, String>) {
+fun DashboardItem(
+    data: UploadNewVideoLink.DataColl,
+    onEvent: (event: DashboardEvent) -> Unit
+) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
@@ -54,7 +59,7 @@ fun DashboardItem(item: Pair<String, String>) {
             verticalAlignment = Alignment.CenterVertically,
 
             ) {
-            Text(text = item.first)
+            Text(text = data.title)
             DropdownJobNepal(listOf(
                 "Full Guid" to Icons.Default.YoutubeSearchedFor,
                 "Apply later" to Icons.Default.Alarm
@@ -63,7 +68,7 @@ fun DashboardItem(item: Pair<String, String>) {
         AsyncImage(
             modifier = Modifier.fillMaxWidth(),
             contentScale = ContentScale.FillWidth,
-            model = item.second,
+            model = data.videoLink,
             contentDescription = "details",
             alignment = Alignment.Center
         )
@@ -120,7 +125,9 @@ fun DashboardItem(item: Pair<String, String>) {
                 }
             }
             Card(
-                onClick = { }) {
+                onClick = {
+                    onEvent(DashboardEvent.Apply(data))
+                }) {
                 Text(
                     text = "Apply",
                     modifier = Modifier.padding(horizontal = 2.dp),

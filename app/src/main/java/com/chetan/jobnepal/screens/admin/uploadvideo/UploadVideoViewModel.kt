@@ -23,9 +23,7 @@ class UploadVideoViewModel @Inject constructor(
     val state: StateFlow<UploadVideoState> = _state
 
     init {
-        viewModelScope.launch {
-            repository.createJobNepalCollection(listOf("academic","nepal","videoList"))
-        }
+
 
     }
 
@@ -38,14 +36,18 @@ class UploadVideoViewModel @Inject constructor(
                         _state.update {
                             it.copy(progress = Progress(value = 0.0F))
                         }
-                        val resource = repository.uploadNewVideoLink(
-                            UploadNewVideoLink(
-                                        id = GenerateRandomNumber.generateRandomNumber(111111..999999).toString(),
-                                        title = state.title,
-                                        description = state.description,
-                                        videoLink = state.url
+                       val resource = repository.uploadNewVideoLink(
+                        UploadNewVideoLink(
+                            dataColl = listOf(
+                                UploadNewVideoLink.DataColl(
+                                    id = state.id + GenerateRandomNumber.generateRandomNumber(111111..999999),
+                                    title = state.title,
+                                    description = state.description,
+                                    videoLink = state.url
+                                )
                             )
                         )
+                    )
                         when (resource) {
                             is Resource.Failure -> {
                                 _state.update {
@@ -118,6 +120,12 @@ class UploadVideoViewModel @Inject constructor(
                 is UploadVideoEvent.TitleChange -> {
                     _state.update {
                         it.copy(title = event.value)
+                    }
+                }
+
+                UploadVideoEvent.Reset -> {
+                    viewModelScope.launch {
+                        repository.createJobNepalCollection(listOf("academic","nepal","videoList","appliedList"))
                     }
                 }
             }

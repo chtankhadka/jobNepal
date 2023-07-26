@@ -6,7 +6,7 @@ import com.chetan.jobnepal.ui.component.dialogs.Message
 import com.chetan.jobnepal.ui.component.dialogs.Progress
 
 data class UploadVideoState(
-        var videoList: List<UploadNewVideoLink> = listOf(),
+        var videoList: UploadNewVideoLink= UploadNewVideoLink(),
         var id: String = "",
         var url: String = "",
         var title: String ="",

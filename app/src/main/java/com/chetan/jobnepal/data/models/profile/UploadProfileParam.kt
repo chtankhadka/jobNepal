@@ -1,4 +1,4 @@
-package com.chetan.jobnepal.data.models.param
+package com.chetan.jobnepal.data.models.profile
 
 data class UploadProfileParam(
     val firstName: String? ="",
