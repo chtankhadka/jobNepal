@@ -275,7 +275,6 @@ fun ProfileScreen(
                     boxColor = Color.Transparent,
                     buttonColor = MaterialTheme.colorScheme.onTertiaryContainer,
                     onClick = {
-                        Toast.makeText(ctx, "Clicked", Toast.LENGTH_SHORT).show()
                         selectedImageUri?.let { it1 -> ProfileEvent.Upload(it1) }
                             ?.let { it2 -> onEvent(it2) }
                     })

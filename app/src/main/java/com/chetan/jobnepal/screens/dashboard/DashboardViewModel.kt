@@ -55,6 +55,27 @@ class DashboardViewModel @Inject constructor(
                     }
                 }
             }
+
+            val resource2 = firestoreRepository.getAppliedFormData()
+            when (resource2){
+                is Resource.Failure -> {
+                    _state.update {
+                        it.copy(
+                            infoMsg = Message.Error(description = resource2.exception.message),
+                            progress = null
+                        )
+                    }
+                }
+
+                Resource.Loading -> TODO()
+                is Resource.Success -> {
+                    _state.update {
+                        it.copy(
+                            appliedListResponse = resource2.data
+                        )
+                    }
+                }
+            }
         }
 
 
@@ -67,12 +88,15 @@ class DashboardViewModel @Inject constructor(
                 is DashboardEvent.Apply -> {
                     firestoreRepository.uploadAppliedFormData(
                             FormAppliedList(
-                                id = event.value.id,
-                                title = event.value.title,
-                                videoLink = event.value.videoLink,
-                                description = event.value.description,
-                                apply = "applied",
-                                paymentSuccess = false
+                                dataColl = listOf( FormAppliedList.DataColl(
+                                    id = event.value.id,
+                                    title = event.value.title,
+                                    videoLink = event.value.videoLink,
+                                    description = event.value.description,
+                                    apply = "applied",
+                                    paymentSuccess = false
+                                ))
+
                             )
                         )
                 }

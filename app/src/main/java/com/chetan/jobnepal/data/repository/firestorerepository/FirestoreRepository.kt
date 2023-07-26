@@ -38,6 +38,6 @@ interface FirestoreRepository {
     suspend fun uploadAppliedFormData(
         data: FormAppliedList
     ) : Resource<Any>
-    suspend fun getAppliedFormData() : Resource<List<FormAppliedList>>
+    suspend fun getAppliedFormData() : Resource<FormAppliedList>
 
 }

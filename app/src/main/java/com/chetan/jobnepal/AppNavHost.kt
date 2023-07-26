@@ -74,11 +74,6 @@ fun AppNavHost(
 
             LaunchedEffect(key1 = state.isSignInSuccessful) {
                 if(state.isSignInSuccessful) {
-                    Toast.makeText(
-                        applicationContext,
-                        "Sign in successful",
-                        Toast.LENGTH_LONG
-                    ).show()
                     navController.navigate("dashboard")
                     viewModel.resetState()
                 }

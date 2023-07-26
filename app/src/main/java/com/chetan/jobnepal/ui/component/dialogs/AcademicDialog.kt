@@ -54,7 +54,6 @@ import com.chetan.jobnepal.ui.component.IconJobNepal
 @Composable
 fun AcademicDialog(
     state: AcademicState,
-    list: List<Pair<String, String>>,
     onDismissRequest: () -> Unit,
     onClick: (List<Uri>) -> Unit
 ) {

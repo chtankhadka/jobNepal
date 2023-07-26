@@ -19,7 +19,6 @@ import androidx.navigation.NavHostController
 import com.chetan.jobnepal.ui.component.IconJobNepal
 import com.chetan.jobnepal.ui.component.dialogs.AcademicDialog
 import com.chetan.jobnepal.ui.component.dropdown.CascadeDropdownMenuJobNepal
-import timber.log.Timber
 
 data class MappedList(
     val id: String, val date: String, val name: String, val url: String
@@ -31,13 +30,9 @@ data class MappedList(
 fun AcademicScreen(
     navController: NavHostController, state: AcademicState, onEvent: (event: AcademicEvent) -> Unit
 ) {
-    val list = listOf(
-        "Gopal" to "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRvcAvHvN_TYQn2SFov3FKgnU_Ygdy9OwrzJQ&usqp=CAU",
-        "Sopal" to "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbfcnFAfUXHQOD3jecWzEaSfV8iqjfQyf4Bg&usqp=CAU",
-        "Nopal" to "https://www.wikihow.com/images/thumb/f/f2/Prepare-for-an-Exam-Step-2-Version-2.jpg/v4-460px-Prepare-for-an-Exam-Step-2-Version-2.jpg.webp"
-    )
+
     if (state.showDialog) {
-        AcademicDialog(state, list = list, onDismissRequest = {
+        AcademicDialog(state, onDismissRequest = {
             onEvent(AcademicEvent.ShowDialog(false))
         }) {
             onEvent(AcademicEvent.UploadAttachement(it))
@@ -64,7 +59,7 @@ fun AcademicScreen(
         Column(
             modifier = Modifier.padding(it), verticalArrangement = Arrangement.spacedBy(5.dp)
         ) {
-            if (!state.academicListResponse.SEE.isEmpty()) {
+            if (state.academicListResponse.SEE.isNotEmpty()) {
                 AcademicItem(
                     "SEE/SLC",
                     data = state.academicListResponse.SEE.map {
@@ -89,7 +84,7 @@ fun AcademicScreen(
                     showEdit = state.showEdit
                 )
             }
-            if (!state.academicListResponse.IAC.isEmpty()) {
+            if (state.academicListResponse.IAC.isNotEmpty()) {
                 AcademicItem(
                     "IAC",
                     showEdit = state.showEdit,
@@ -113,8 +108,7 @@ fun AcademicScreen(
                     }
                 )
             }
-            Text(text = state.downloadAttachementUrl.toString())
-            if (!state.academicListResponse.BSc_CSIT.isEmpty()) {
+            if (state.academicListResponse.BSc_CSIT.isNotEmpty()) {
                 AcademicItem("BSc.CSIT", data = state.academicListResponse.BSc_CSIT.map {
                     MappedList(id = it.id, date = it.date, name = it.name, url = it.url)
                 }.toMutableList(), onClick = { task: String?, names: List<String> ->

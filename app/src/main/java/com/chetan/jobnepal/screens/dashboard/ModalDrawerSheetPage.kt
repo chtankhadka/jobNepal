@@ -23,7 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.chetan.jobnepal.Destination
-import com.chetan.jobnepal.screens.myForm.MyForm
+import com.chetan.jobnepal.screens.dashboard.myForm.MyForm
 import com.chetan.jobnepal.ui.component.dropdown.DropdownJobNepal
 import com.chetan.jobnepal.utils.ProfileAnimation
 
@@ -32,6 +32,7 @@ fun ModalDrawerSheetPage(
     navController: NavHostController,
     state: DashboardState,
     onClick: (String) -> Unit,
+    onEvent: (event: DashboardEvent) -> Unit,
 
     ) {
     Column(
@@ -105,7 +106,7 @@ fun ModalDrawerSheetPage(
                 .fillMaxHeight(),
             Arrangement.Bottom
         ) {
-            MyForm()
+            MyForm(state,onEvent)
         }
     }
 }

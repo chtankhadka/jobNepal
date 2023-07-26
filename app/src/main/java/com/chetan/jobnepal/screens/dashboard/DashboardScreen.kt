@@ -87,7 +87,7 @@ fun DashboardScreen(
         drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet {
-                ModalDrawerSheetPage(navController,state,onClick)
+                ModalDrawerSheetPage(navController,state,onClick,onEvent)
             }
 
         }) {
@@ -181,7 +181,6 @@ fun DashboardScreen(
                             )
 
                         }
-                        Toast.makeText(LocalContext.current,state.videoListResponse.toString(),Toast.LENGTH_SHORT).show()
                         LazyColumn(
                             modifier = Modifier,
                             contentPadding = PaddingValues(horizontal = 0.dp, vertical = 5.dp),

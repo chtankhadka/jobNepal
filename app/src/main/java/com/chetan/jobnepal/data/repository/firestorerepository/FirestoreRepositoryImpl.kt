@@ -164,7 +164,7 @@ class FirestoreRepositoryImpl @Inject constructor(
             val documentRef = firestore.collection(preference.dbTable.toString()).document("appliedList")
 
             val newData = mapOf(
-                "data" to FieldValue.arrayUnion(*arrayOf(data))
+                "dataColl" to FieldValue.arrayUnion(*data.dataColl.toTypedArray())
             )
             val result = documentRef.update(newData).await()
 
@@ -176,11 +176,18 @@ class FirestoreRepositoryImpl @Inject constructor(
 
     }
 
-    override suspend fun getAppliedFormData(): Resource<List<FormAppliedList>> {
+    override suspend fun getAppliedFormData(): Resource<FormAppliedList> {
         return try {
-            val result = firestore.collection(preference.dbTable.toString()).get().await()
-                .toObjects(FormAppliedList::class.java)
-            Resource.Success(result)
+            val result = firestore.collection(preference.dbTable.toString())
+                .document("appliedList")
+                .get()
+                .await()
+                .toObject(FormAppliedList::class.java)
+            if (result != null) {
+                Resource.Success(result)
+            } else {
+                Resource.Failure(java.lang.Exception("No Data yet"))
+            }
         } catch (e: Exception) {
             e.printStackTrace()
             Resource.Failure(e)
