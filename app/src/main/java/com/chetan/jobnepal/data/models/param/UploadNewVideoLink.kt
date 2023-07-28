@@ -8,7 +8,8 @@ data class UploadNewVideoLink(
         val id: String = "",
         val title: String = "",
         val videoLink: String = "",
-        val description: String = ""
+        val description: String = "",
+        val publishedTime: String = ""
     )
 }
 

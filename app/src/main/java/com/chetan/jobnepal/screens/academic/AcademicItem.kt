@@ -1,6 +1,5 @@
 package com.chetan.jobnepal.screens.academic
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -19,7 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -49,8 +47,8 @@ fun AcademicItem(
             Text(text = title)
             DropdownJobNepal(
                 list = listOf(
-                    "Edit" to Icons.Default.Edit,
-                    "Delete" to Icons.Default.Delete
+                    Triple("Edit" , Icons.Default.Edit,true),
+                    Triple("Delete" , Icons.Default.Delete,true)
                 )
             ){
                 onClick(it, data.map { it.name })

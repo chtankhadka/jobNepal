@@ -1,5 +1,7 @@
 package com.chetan.jobnepal.screens.admin.uploadvideo
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chetan.jobnepal.data.Resource
@@ -13,8 +15,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 import javax.inject.Inject
 
+@RequiresApi(Build.VERSION_CODES.O)
 @HiltViewModel
 class UploadVideoViewModel @Inject constructor(
     private val repository: FirestoreRepository
@@ -23,7 +27,11 @@ class UploadVideoViewModel @Inject constructor(
     val state: StateFlow<UploadVideoState> = _state
 
     init {
-
+        _state.update {
+            it.copy(
+                publishedTime = LocalDateTime.now().toString()
+            )
+        }
 
     }
 
@@ -43,7 +51,8 @@ class UploadVideoViewModel @Inject constructor(
                                     id = state.id + GenerateRandomNumber.generateRandomNumber(111111..999999),
                                     title = state.title,
                                     description = state.description,
-                                    videoLink = state.url
+                                    videoLink = state.url,
+                                    publishedTime = state.publishedTime
                                 )
                             )
                         )

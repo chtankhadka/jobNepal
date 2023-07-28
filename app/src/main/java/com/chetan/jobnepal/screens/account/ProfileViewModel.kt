@@ -55,6 +55,11 @@ class ProfileViewModel @Inject constructor(
                     it.copy(editLastName = event.value)
                 }
             }
+            is ProfileEvent.OnDobChange ->{
+                _state.update {
+                    it.copy(editDob = event.value)
+                }
+            }
 
             is ProfileEvent.OnGenderChange -> {
                 _state.update {
@@ -69,7 +74,6 @@ class ProfileViewModel @Inject constructor(
             }
 
             is ProfileEvent.OnFatherMiddleNameChange -> {
-
                 _state.update {
                     it.copy(editFatherMiddleName = event.value)
                 }
@@ -107,7 +111,7 @@ class ProfileViewModel @Inject constructor(
                                     phoneNo = "",
                                     profileUrl = resource.data.second,
                                     photoName = resource.data.first,
-                                    dob = "",
+                                    dob = state.editDob,
                                     gender = state.editGender?.value,
                                     fatherFirstName = state.editFatherFirstName,
                                     fatherMiddleName = state.editFatherMiddleName,
@@ -166,6 +170,7 @@ class ProfileViewModel @Inject constructor(
                             editFirstName = resource.data.firstName ?: "",
                             editMiddleName = resource.data.middleName ?: "",
                             editLastName = resource.data.lastName ?: "",
+                            editDob = resource.data.dob ?: "",
                             editGender = Gender.values().find {gender ->
                                 gender.value == resource.data.gender
                             },

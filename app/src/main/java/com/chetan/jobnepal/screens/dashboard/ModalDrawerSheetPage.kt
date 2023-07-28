@@ -55,8 +55,8 @@ fun ModalDrawerSheetPage(
                 Text(text = "Attend Exam: 1")
             }
             val list = listOf(
-                "Contacts" to Icons.Default.Contacts,
-                "Logout" to Icons.Default.Logout)
+                Triple("Contacts" , Icons.Default.Contacts,true),
+                Triple("Logout" , Icons.Default.Logout,true))
             DropdownJobNepal(list){
                 if (it == "Logout"){
                     onClick("logout")

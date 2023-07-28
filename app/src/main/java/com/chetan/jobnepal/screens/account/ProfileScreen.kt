@@ -50,7 +50,12 @@ import com.chetan.jobnepal.data.enums.Gender
 import com.chetan.jobnepal.ui.component.IconJobNepal
 import com.chetan.jobnepal.ui.component.animation.YouCannotClickMe
 import com.chetan.jobnepal.ui.component.textfield.EnumTextFieldJobNepal
+import com.chetan.jobnepal.ui.component.textfield.ReadonlyJobNepalTextField
 import com.chetan.jobnepal.ui.component.textfield.TextFieldJobNepal
+import com.maxkeppeker.sheets.core.models.base.rememberSheetState
+import com.maxkeppeler.sheets.calendar.CalendarDialog
+import com.maxkeppeler.sheets.calendar.models.CalendarConfig
+import com.maxkeppeler.sheets.calendar.models.CalendarSelection
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -72,6 +77,17 @@ fun ProfileScreen(
                 selectedImageUri = uri
             }
         })
+
+    val calendarState = rememberSheetState()
+    CalendarDialog(
+        state = calendarState,
+        config = CalendarConfig(
+            monthSelection = true,
+            yearSelection = true
+        ),
+        selection = CalendarSelection.Date{date ->
+        onEvent(ProfileEvent.OnDobChange(date.toString()))
+    })
 
     Scaffold(
         topBar = {
@@ -178,13 +194,14 @@ fun ProfileScreen(
                                 required = true
                             )
                             Spacer(modifier = Modifier.width(5.dp))
-                            TextFieldJobNepal(
+                            ReadonlyJobNepalTextField(
+                                value = state.editDob,
                                 label = "Date of birth",
-                                value = state.editLastName,
-                                onValueChange = {
-                                    onEvent(ProfileEvent.OnLastNameChange(it))
-                                }, required = true,
-                                singleLine = true
+                                required = true,
+                                onClick = {
+                                    calendarState.show()
+                                }
+
                             )
                         }
                         TextFieldJobNepal(
@@ -212,9 +229,7 @@ fun ProfileScreen(
                         modifier = Modifier.padding(7.dp),
                         verticalArrangement = Arrangement.spacedBy(5.dp)
                     ) {
-                        var isVisible by remember {
-                            mutableStateOf(false)
-                        }
+
                         Spacer(modifier = Modifier.height(10.dp))
                         Row(
                             modifier = Modifier

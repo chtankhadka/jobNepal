@@ -18,10 +18,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import java.io.Serializable
 
 @Composable
 fun DropdownJobNepal(
-    list: List<Pair<String,ImageVector>>,
+    list: List<Triple<String, ImageVector, Boolean>>,
     clicked: (String) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -42,6 +43,7 @@ fun DropdownJobNepal(
         ) {
             list.forEach {
                 DropdownMenuItem(
+                    enabled = it.third,
                     text = { Text(it.first) },
                     leadingIcon = { Icon(imageVector = it.second, contentDescription = it.first) },
                     onClick = {

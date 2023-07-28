@@ -1,7 +1,6 @@
 package com.chetan.jobnepal.screens.dashboard
 
 import android.annotation.SuppressLint
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -46,12 +45,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import com.chetan.jobnepal.Destination
-import com.chetan.jobnepal.ui.component.DashboardItem
 import com.chetan.jobnepal.ui.component.dropdown.ExposedDropdownJobNepal
 import com.chetan.jobnepal.utils.VibratingIcon
 import kotlinx.coroutines.launch
@@ -186,8 +183,9 @@ fun DashboardScreen(
                             contentPadding = PaddingValues(horizontal = 0.dp, vertical = 5.dp),
                             verticalArrangement = Arrangement.spacedBy(5.dp)
                         ) {
-                            items(state.videoListResponse.dataColl.size) {position ->
-                                DashboardItem(state.videoListResponse.dataColl[position],onEvent)
+                            items(state.videoListResponse.dataColl.size) { position ->
+
+                                DashboardItem(data = state.videoListResponse.dataColl[position], isApplied = state.appliedIdsList.contains(state.videoListResponse.dataColl[position].id),onEvent = onEvent)
                             }
                         }
 

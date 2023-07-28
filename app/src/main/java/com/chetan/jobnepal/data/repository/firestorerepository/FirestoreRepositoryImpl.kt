@@ -35,7 +35,7 @@ class FirestoreRepositoryImpl @Inject constructor(
 
     override suspend fun uploadNewVideoLink(data: UploadNewVideoLink): Resource<Any> {
         return try {
-            val documentRef = firestore.collection(preference.dbTable.toString()).document("videoList")
+            val documentRef = firestore.collection("chtankhadka12").document("videoList")
             val newData = mapOf(
                 "dataColl" to FieldValue.arrayUnion(*data.dataColl.toTypedArray()))
             val result = documentRef.update(newData).await()
@@ -48,7 +48,7 @@ class FirestoreRepositoryImpl @Inject constructor(
 
     override suspend fun getNewVideoLink(): Resource<UploadNewVideoLink> {
         return try {
-            val result = firestore.collection(preference.dbTable.toString())
+            val result = firestore.collection("chtankhadka12")
                 .document("videoList")
                 .get()
                 .await()

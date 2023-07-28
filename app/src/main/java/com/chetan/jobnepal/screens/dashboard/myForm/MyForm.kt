@@ -15,14 +15,10 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Alarm
-import androidx.compose.material.icons.filled.Comment
-import androidx.compose.material.icons.filled.ThumbDown
-import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material.icons.filled.YoutubeSearchedFor
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -35,7 +31,6 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -84,13 +79,14 @@ fun MyForm(state: DashboardState, onEvent: (event: DashboardEvent) -> Unit) {
                 Column(modifier = Modifier
                     .fillMaxSize().padding(horizontal = 5.dp)
                 ) {
-                    MyFormItem(state.appliedListResponse.dataColl.filter { it.apply =="applied" },onEvent)
+                    MyFormItem(state.appliedListResponse.dataColl.filter { it.apply =="applyLater" },onEvent)
                 }
             }
             1 ->{
                 Column(modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Green)) {
+                    .fillMaxSize().padding(horizontal = 5.dp)
+                ) {
+                    MyFormItem(state.appliedListResponse.dataColl.filter { it.apply =="applied" },onEvent)
                 }
             }
             2 -> {
@@ -137,8 +133,8 @@ fun MyFormItem(data: List<FormAppliedList.DataColl>, onEvent: (event: DashboardE
                     ) {
                     Text(text = data[it].title)
                     DropdownJobNepal(listOf(
-                        "Full Guid" to Icons.Default.YoutubeSearchedFor,
-                        "Apply later" to Icons.Default.Alarm
+                        Triple("Full Guid" , Icons.Default.YoutubeSearchedFor,true),
+                        Triple("Apply later" , Icons.Default.Alarm,true)
                     )){}
                 }
                 AsyncImage(

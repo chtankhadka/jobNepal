@@ -7,6 +7,7 @@ sealed interface ProfileEvent {
     data class OnFirstNameChange(val value: String) : ProfileEvent
     data class OnMiddleNameChange(val value: String) : ProfileEvent
     data class OnLastNameChange(val value: String) : ProfileEvent
+    data class OnDobChange(val value: String) : ProfileEvent
     data class OnEmailChange(val value: String) : ProfileEvent
     data class OnGenderChange(val value: Gender?) : ProfileEvent
 

@@ -11,6 +11,7 @@ data class ProfileState(
     val editFirstName: String = "",
     val editMiddleName: String = "",
     val editLastName: String = "",
+    val editDob: String = "",
     val imageUrl: String = "",
     val editGender: Gender? = null,
     val editEmail: String = "",
@@ -29,6 +30,7 @@ data class ProfileState(
                 && editLastName.isNotBlank()
                 && !editGender?.value.isNullOrBlank()
                 && editEmail.isNotBlank()
+                && editDob.isNotBlank()
                 && editFatherFirstName.isNotBlank()
                 && editFatherMiddleName.isNotBlank()
                 && editFatherLastNam.isNotBlank()

@@ -30,7 +30,6 @@ class DashboardViewModel @Inject constructor(
             it.copy(
                 profileUrl = preference.gmailProfile.toString(),
                 currentUserName = preference.gmailUserName.toString()
-
             )
         }
 
@@ -66,26 +65,24 @@ class DashboardViewModel @Inject constructor(
                         )
                     }
                 }
-
                 Resource.Loading -> TODO()
                 is Resource.Success -> {
                     _state.update {
                         it.copy(
-                            appliedListResponse = resource2.data
+                            appliedListResponse = resource2.data,
+                            appliedIdsList = resource2.data.dataColl.map { dataColl -> dataColl.id }
                         )
                     }
                 }
             }
         }
-
-
     }
 
 
     val onEvent: (event: DashboardEvent) -> Unit = { event ->
         viewModelScope.launch {
             when (event) {
-                is DashboardEvent.Apply -> {
+                is DashboardEvent.ApplyNow -> {
                     firestoreRepository.uploadAppliedFormData(
                             FormAppliedList(
                                 dataColl = listOf( FormAppliedList.DataColl(
@@ -99,6 +96,21 @@ class DashboardViewModel @Inject constructor(
 
                             )
                         )
+                }
+
+                is DashboardEvent.ApplyLetter -> {
+                    firestoreRepository.uploadAppliedFormData(
+                        FormAppliedList(
+                            dataColl =  listOf(FormAppliedList.DataColl(
+                                id = event.value.id,
+                                title = event.value.title,
+                                videoLink = event.value.videoLink,
+                                description = event.value.description,
+                                apply = "applyLater",
+                                paymentSuccess = false
+                            ))
+                        )
+                    )
                 }
             }
         }

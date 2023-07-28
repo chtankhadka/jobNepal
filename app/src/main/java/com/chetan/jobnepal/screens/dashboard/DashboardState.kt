@@ -10,6 +10,7 @@ import com.chetan.jobnepal.ui.component.dialogs.Progress
 data class DashboardState(
     val videoListResponse: UploadNewVideoLink = UploadNewVideoLink(),
     val appliedListResponse: FormAppliedList= FormAppliedList(),
+    val appliedIdsList : List<String> = emptyList(),
     val profileUrl: String = "",
     val currentUserName: String = "",
     override val infoMsg: Message? = null,
