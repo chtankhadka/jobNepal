@@ -32,32 +32,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.chetan.jobnepal.screens.admin.uploadvideo.UploadVideoEvent
-import com.chetan.jobnepal.screens.admin.uploadvideo.UploadVideoState
+import com.chetan.jobnepal.screens.dashboard.DashboardEvent
 import com.chetan.jobnepal.ui.component.CustomTooltipShape
 import com.chetan.jobnepal.ui.component.IconJobNepal
 
 @Composable
-fun JobsSelectionDialog(
-
-    onEvent: (event: UploadVideoEvent) -> Unit,
-    onDissmiss: () -> Unit
+fun JobsApplyDialog(
+    listOfJobs: List<Pair<String, List<String>>>,
+    onEvent: (event: DashboardEvent) -> Unit,
 ) {
-    val listOfJobs = listOf(
-        "technicalList" to listOf(
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6"
-        ),
-        "nonTechnicalList" to listOf("1", "2", "3"),
-    )
 
     Dialog(
         properties = DialogProperties(),
-        onDismissRequest = {onEvent(UploadVideoEvent.SetCheckedList(false))}
+        onDismissRequest = {}
     ) {
         Card(modifier = Modifier
             .fillMaxHeight(0.9f)
@@ -69,7 +56,10 @@ fun JobsSelectionDialog(
                     .padding(top = 3.dp, end = 3.dp),
                 horizontalArrangement = Arrangement.End
             ) {
-                IconJobNepal(onClick = { onEvent(UploadVideoEvent.SetCheckedList(false)) }, icon = Icons.Default.DownloadDone)
+                IconJobNepal(onClick = {
+//                    onEvent(UploadVideoEvent.SetCheckedList(false))
+                                       },
+                    icon = Icons.Default.DownloadDone)
             }
             LazyColumn(
                 modifier = Modifier.padding(10.dp),
@@ -104,16 +94,16 @@ fun JobsSelectionDialog(
                                         } else {
                                             selectedList = emptyList()
                                         }
-                                        onEvent(UploadVideoEvent.UpdateCheckedList(listOfJobs[index].first,selectedList))
+//                                        onEvent(UploadVideoEvent.UpdateCheckedList(listOfJobs[index].first,selectedList))
                                     })
                             }
                         }
                         Divider(modifier = Modifier.padding(bottom = 5.dp))
 
-                        jobSelectionVerticalGrid(columnCount = 3) {
+                        VerticalGrid(columnCount = 3) {
                             listOfJobs[index].second.map { item ->
                                 {
-                                    jobSelectionCheckBox(
+                                    checkBox(
                                         item = item,
                                         isSelected = selectedList.contains(item),
                                         onChange = { changed ->
@@ -122,7 +112,7 @@ fun JobsSelectionDialog(
                                             } else {
                                                 selectedList - item
                                             }
-                                            onEvent(UploadVideoEvent.UpdateCheckedList(listOfJobs[index].first,selectedList))
+//                                            onEvent(UploadVideoEvent.UpdateCheckedList(listOfJobs[index].first,selectedList))
                                         }
                                     )
                                 }
@@ -138,7 +128,7 @@ fun JobsSelectionDialog(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun jobSelectionCheckBox(
+fun checkBox(
     item: String,
     isSelected: Boolean,
     onChange: (Boolean) -> Unit
@@ -176,7 +166,7 @@ fun jobSelectionCheckBox(
     }
 }
 @Composable
-fun jobSelectionVerticalGrid(columnCount: Int, items: () -> List<(@Composable () -> Unit)>) {
+fun VerticalGrid(columnCount: Int, items: () -> List<(@Composable () -> Unit)>) {
     Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(5.dp)) {
         items.invoke().windowed(columnCount, columnCount, true).forEach {
             Row(
@@ -191,6 +181,13 @@ fun jobSelectionVerticalGrid(columnCount: Int, items: () -> List<(@Composable ()
     }
 }
 
+@Preview
+@Composable
+fun showNow() {
+//    JobsSelectionDialog(state = , onEvent) {
+//
+//    }
+}
 
 
 

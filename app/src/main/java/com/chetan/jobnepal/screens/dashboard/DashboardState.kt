@@ -11,7 +11,9 @@ data class DashboardState(
     val videoListResponse: UploadNewVideoLink = UploadNewVideoLink(),
     val appliedListResponse: FormAppliedList= FormAppliedList(),
     val appliedIdsList : List<String> = emptyList(),
+
     val profileUrl: String = "",
+    val showApplyDialog: Boolean = false,
     val currentUserName: String = "",
     override val infoMsg: Message? = null,
     override val progress: Progress? = null

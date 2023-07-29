@@ -112,6 +112,17 @@ class DashboardViewModel @Inject constructor(
                         )
                     )
                 }
+
+                is DashboardEvent.ShowApplyDialog -> {
+                    _state.update {
+                        it.copy(
+                            showApplyDialog = event.value
+                        )
+                    }
+                }
+
+                is DashboardEvent.SetCheckedList -> TODO()
+                is DashboardEvent.UpdateCheckedList -> TODO()
             }
         }
     }

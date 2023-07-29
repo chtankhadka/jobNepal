@@ -185,7 +185,11 @@ fun DashboardScreen(
                         ) {
                             items(state.videoListResponse.dataColl.size) { position ->
 
-                                DashboardItem(data = state.videoListResponse.dataColl[position], isApplied = state.appliedIdsList.contains(state.videoListResponse.dataColl[position].id),onEvent = onEvent)
+                                DashboardItem(
+                                    state = state,
+                                    index = position,
+                                    isApplied = state.appliedIdsList.contains(state.videoListResponse.dataColl[position].id),
+                                    onEvent = onEvent)
                             }
                         }
 

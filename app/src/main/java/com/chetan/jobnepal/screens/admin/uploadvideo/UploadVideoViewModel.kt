@@ -55,9 +55,11 @@ class UploadVideoViewModel @Inject constructor(
                                         description = state.description,
                                         videoLink = state.url,
                                         publishedTime = state.publishedTime,
-                                        academicList = UploadNewVideoLink.DataColl.AcademicList(
-                                            technicalList = state.technicalList,
-                                            nonTechnicalList = state.nonTechnicalList)
+                                        academicList = listOf(
+                                            state.technicalList,
+                                            state.nonTechnicalList
+                                        )
+
                                     )
                                 )
                             )
@@ -75,7 +77,17 @@ class UploadVideoViewModel @Inject constructor(
                             Resource.Loading -> TODO()
                             is Resource.Success -> {
                                 _state.update {
-                                    it.copy(progress = null)
+                                    it.copy(
+                                        progress = null,
+                                        technicalList = UploadNewVideoLink.DataColl.AcademicList(
+                                            jobList = emptyList(),
+                                            listName = ""
+                                        ),
+                                        nonTechnicalList = UploadNewVideoLink.DataColl.AcademicList(
+                                            jobList = emptyList(),
+                                            listName = ""
+                                        )
+                                    )
                                 }
                             }
                         }
@@ -153,20 +165,21 @@ class UploadVideoViewModel @Inject constructor(
                 is UploadVideoEvent.UpdateCheckedList -> {
                     _state.update {
                         if (event.title == "technicalList") {
-                            it.copy(technicalList = event.value.map { job ->
-                                UploadNewVideoLink.DataColl.AcademicList.TechnicalList(
-                                    jobName = job
-                                )
-                            })
+                            it.copy(technicalList = UploadNewVideoLink.DataColl.AcademicList(
+                                listName = event.title,
+                                jobList = event.value.map {
+                                    UploadNewVideoLink.DataColl.AcademicList.AvailableJobs(it)
+                                }
+                            ))
                         } else {
-                            it.copy(nonTechnicalList = event.value.map { job ->
-                                UploadNewVideoLink.DataColl.AcademicList.NonTechnicalList(
-                                    jobName = job
-                                )
-                            })
+                            it.copy(nonTechnicalList = UploadNewVideoLink.DataColl.AcademicList(
+                                listName = event.title,
+                                jobList = event.value.map {
+                                    UploadNewVideoLink.DataColl.AcademicList.AvailableJobs(it)
+                                }
+                            ))
                         }
                     }
-
                 }
 
                 is UploadVideoEvent.SetCheckedList -> {

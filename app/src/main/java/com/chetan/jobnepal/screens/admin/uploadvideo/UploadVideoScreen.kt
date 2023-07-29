@@ -34,11 +34,8 @@ fun UploadVideoScreen(
     state: UploadVideoState,
     onEvent: (event: UploadVideoEvent) -> Unit
 ) {
-    var showDialog by remember {
-        mutableStateOf(false)
-    }
     if (state.showJobDialog){
-        JobsSelectionDialog(state,onEvent) {
+        JobsSelectionDialog(onEvent) {
         }
     }
     Column(

@@ -4,12 +4,14 @@ import com.chetan.jobnepal.data.models.param.UploadNewVideoLink
 import com.chetan.jobnepal.ui.component.JobNepalScreenState
 import com.chetan.jobnepal.ui.component.dialogs.Message
 import com.chetan.jobnepal.ui.component.dialogs.Progress
-import java.time.LocalDateTime
 
 data class UploadVideoState(
         var videoList: UploadNewVideoLink= UploadNewVideoLink(),
-        val technicalList: List<UploadNewVideoLink.DataColl.AcademicList.TechnicalList> = emptyList(),
-        val nonTechnicalList: List<UploadNewVideoLink.DataColl.AcademicList.NonTechnicalList> = emptyList(),
+        val technicalList: UploadNewVideoLink.DataColl.AcademicList =
+                UploadNewVideoLink.DataColl.AcademicList(jobList = emptyList(), listName = ""),
+        val nonTechnicalList: UploadNewVideoLink.DataColl.AcademicList =
+                UploadNewVideoLink.DataColl.AcademicList(jobList = emptyList(), listName = ""),
+        val academicList: List<UploadNewVideoLink.DataColl.AcademicList> = emptyList(),
         var showJobDialog: Boolean = false,
         var id: String = "",
         var url: String = "",

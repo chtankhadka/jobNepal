@@ -1,5 +1,7 @@
 package com.chetan.jobnepal.screens.dashboard
 
+
+import JobsApplyDialog
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -20,7 +22,6 @@ import androidx.compose.material.icons.filled.YoutubeSearchedFor
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -34,19 +35,29 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.chetan.jobnepal.data.models.param.UploadNewVideoLink
 import com.chetan.jobnepal.ui.component.dropdown.DropdownJobNepal
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardItem(
-    data: UploadNewVideoLink.DataColl,
+    index: Int,
     isApplied: Boolean,
-    onEvent: (event: DashboardEvent) -> Unit
+    onEvent: (event: DashboardEvent) -> Unit,
+    state: DashboardState
 ) {
     var isVisible by remember {
         mutableStateOf(false)
     }
+    if (state.showApplyDialog){
+        JobsApplyDialog(
+            listOfJobs = state.videoListResponse.dataColl[index].academicList.map { academicList ->
+                academicList.listName to academicList.jobList.map { availableJobs ->
+                    availableJobs.jobName
+                }
+            },
+            onEvent = onEvent
+        )
+    }
+
     Card(
         modifier = Modifier.fillMaxWidth().animateContentSize(),
         elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
@@ -70,7 +81,7 @@ fun DashboardItem(
             verticalAlignment = Alignment.CenterVertically,
 
             ) {
-            Text(text = data.title)
+            Text(text = state.videoListResponse.dataColl[index].title)
             DropdownJobNepal(
                 listOf(
                     Triple("Full Guid" , Icons.Default.YoutubeSearchedFor,true),
@@ -80,10 +91,11 @@ fun DashboardItem(
             ){
                 when (it) {
                     "Apply Now" -> {
-                        onEvent(DashboardEvent.ApplyNow(data))
+                        onEvent(DashboardEvent.ShowApplyDialog(true))
+                        onEvent(DashboardEvent.ApplyNow(state.videoListResponse.dataColl[index]))
                     }
                     "Apply Later" -> {
-                        onEvent(DashboardEvent.ApplyLetter(data))
+                        onEvent(DashboardEvent.ApplyLetter(state.videoListResponse.dataColl[index]))
                     }
                     else -> {
 
@@ -96,7 +108,7 @@ fun DashboardItem(
         AsyncImage(
             modifier = Modifier.fillMaxWidth(),
             contentScale = ContentScale.FillWidth,
-            model = data.videoLink,
+            model = state.videoListResponse.dataColl[index].videoLink,
             contentDescription = "details",
             alignment = Alignment.Center
         )
