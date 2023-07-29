@@ -38,6 +38,7 @@ fun UploadVideoScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
         TextField(
             value = state.id,
             onValueChange = {
@@ -114,7 +115,9 @@ fun UploadVideoScreen(
 
         }
         LazyColumn(
-            modifier = Modifier.size(300.dp).background(Color.Blue),
+            modifier = Modifier
+                .size(300.dp)
+                .background(Color.Blue),
             contentPadding = PaddingValues(2.dp),
             verticalArrangement = Arrangement.spacedBy(5.dp)
         ) {
