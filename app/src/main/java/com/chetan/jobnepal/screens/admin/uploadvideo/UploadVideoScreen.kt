@@ -1,5 +1,6 @@
 package com.chetan.jobnepal.screens.admin.uploadvideo
 
+import JobsSelectionDialog
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -33,6 +34,13 @@ fun UploadVideoScreen(
     state: UploadVideoState,
     onEvent: (event: UploadVideoEvent) -> Unit
 ) {
+    var showDialog by remember {
+        mutableStateOf(false)
+    }
+    if (state.showJobDialog){
+        JobsSelectionDialog(state,onEvent) {
+        }
+    }
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -72,7 +80,7 @@ fun UploadVideoScreen(
                onEvent(UploadVideoEvent.TitleChange(it))
             },
             label = {
-                Text(text = "Titile")
+                Text(text = "Title")
             },
         )
         Spacer(modifier = Modifier.height(5.dp))
@@ -87,6 +95,11 @@ fun UploadVideoScreen(
             }
         )
         Spacer(modifier = Modifier.height(5.dp))
+        Button(onClick = {
+            onEvent(UploadVideoEvent.SetCheckedList(true))
+        }) {
+            Text(text = "Job For")
+        }
         Button(
             onClick = {
                 onEvent(UploadVideoEvent.UploadVideoUrl)

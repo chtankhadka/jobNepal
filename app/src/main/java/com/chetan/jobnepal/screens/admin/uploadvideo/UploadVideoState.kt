@@ -8,6 +8,9 @@ import java.time.LocalDateTime
 
 data class UploadVideoState(
         var videoList: UploadNewVideoLink= UploadNewVideoLink(),
+        val technicalList: List<UploadNewVideoLink.DataColl.AcademicList.TechnicalList> = emptyList(),
+        val nonTechnicalList: List<UploadNewVideoLink.DataColl.AcademicList.NonTechnicalList> = emptyList(),
+        var showJobDialog: Boolean = false,
         var id: String = "",
         var url: String = "",
         var title: String ="",

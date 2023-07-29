@@ -10,12 +10,19 @@ data class UploadNewVideoLink(
         val videoLink: String = "",
         val description: String = "",
         val publishedTime: String = "",
-        val availableJobList: List<JobList> = emptyList()
+        val academicList: AcademicList
     ){
-        data class JobList(
-            val jobName: String = "",
-            val jobId: String = ""
-        )
+        data class AcademicList(
+            val technicalList: List<TechnicalList> = emptyList(),
+            val nonTechnicalList: List<NonTechnicalList> = emptyList()
+        ){
+            data class TechnicalList(
+                val jobName : String =""
+            )
+            data class NonTechnicalList(
+                val jobName: String = ""
+            )
+        }
     }
 }
 

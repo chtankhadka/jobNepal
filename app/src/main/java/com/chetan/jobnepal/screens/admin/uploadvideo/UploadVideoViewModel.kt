@@ -44,19 +44,24 @@ class UploadVideoViewModel @Inject constructor(
                         _state.update {
                             it.copy(progress = Progress(value = 0.0F))
                         }
-                       val resource = repository.uploadNewVideoLink(
-                        UploadNewVideoLink(
-                            dataColl = listOf(
-                                UploadNewVideoLink.DataColl(
-                                    id = state.id + GenerateRandomNumber.generateRandomNumber(111111..999999),
-                                    title = state.title,
-                                    description = state.description,
-                                    videoLink = state.url,
-                                    publishedTime = state.publishedTime
+                        val resource = repository.uploadNewVideoLink(
+                            UploadNewVideoLink(
+                                dataColl = listOf(
+                                    UploadNewVideoLink.DataColl(
+                                        id = state.id + GenerateRandomNumber.generateRandomNumber(
+                                            111111..999999
+                                        ),
+                                        title = state.title,
+                                        description = state.description,
+                                        videoLink = state.url,
+                                        publishedTime = state.publishedTime,
+                                        academicList = UploadNewVideoLink.DataColl.AcademicList(
+                                            technicalList = state.technicalList,
+                                            nonTechnicalList = state.nonTechnicalList)
+                                    )
                                 )
                             )
                         )
-                    )
                         when (resource) {
                             is Resource.Failure -> {
                                 _state.update {
@@ -134,7 +139,39 @@ class UploadVideoViewModel @Inject constructor(
 
                 UploadVideoEvent.Reset -> {
                     viewModelScope.launch {
-                        repository.createJobNepalCollection(listOf("academic","nepal","videoList","appliedList"))
+                        repository.createJobNepalCollection(
+                            listOf(
+                                "academic",
+                                "nepal",
+                                "videoList",
+                                "appliedList"
+                            )
+                        )
+                    }
+                }
+
+                is UploadVideoEvent.UpdateCheckedList -> {
+                    _state.update {
+                        if (event.title == "technicalList") {
+                            it.copy(technicalList = event.value.map { job ->
+                                UploadNewVideoLink.DataColl.AcademicList.TechnicalList(
+                                    jobName = job
+                                )
+                            })
+                        } else {
+                            it.copy(nonTechnicalList = event.value.map { job ->
+                                UploadNewVideoLink.DataColl.AcademicList.NonTechnicalList(
+                                    jobName = job
+                                )
+                            })
+                        }
+                    }
+
+                }
+
+                is UploadVideoEvent.SetCheckedList -> {
+                    _state.update {
+                        it.copy(showJobDialog = event.value)
                     }
                 }
             }
