@@ -48,9 +48,6 @@ import com.chetan.jobnepal.ui.component.CustomTooltipShape
 
 @Composable
 fun JobsSelectionDialog() {
-    var xCoordinate by remember { mutableStateOf(0f) }
-    var yCoordinate by remember { mutableStateOf(0f) }
-
     val listOfJobs = listOf(
         "Technical" to listOf(
             "opal",
@@ -101,16 +98,12 @@ fun JobsSelectionDialog() {
                             Checkbox(checked = true, onCheckedChange = { })
 
                         }
-                        Text(text = xCoordinate.toString())
                         Divider(modifier = Modifier.padding(bottom = 5.dp))
 
                         VerticalGrid(columnCount = 3) {
                             listOfJobs[index].second.map {
                                 {
-                                    checkBox(item = it, onClick = { x, y ->
-                                        xCoordinate = x
-                                        yCoordinate = y
-                                    })
+                                    checkBox(item = it)
                                 }
                             }
                         }
@@ -119,21 +112,6 @@ fun JobsSelectionDialog() {
                     }
                 }
             }
-            Spacer(modifier = Modifier
-                .offset { IntOffset(xCoordinate.toInt(), yCoordinate.toInt()) }
-                .drawWithCache {
-                    val path = Path()
-                    path.moveTo(0f, 0f)
-                    path.lineTo(size.width / 2f, size.height / 2f)
-                    path.lineTo(size.width, 0f)
-                    path.lineTo(size.width, size.height / 2f)
-                    path.lineTo(size.width / 2f, size.height / 4f)
-                    path.lineTo(0f, size.height / 2f)
-                    onDrawWithContent {
-                        drawPath(path, Color.Magenta, style = Stroke(width = 10f))
-                    }
-                }
-            )
         }
 
     }
@@ -142,8 +120,7 @@ fun JobsSelectionDialog() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun checkBox(
-    item: String,
-    onClick: (x: Float, y: Float) -> Unit
+    item: String
 ) {
     var isSelected by remember {
         mutableStateOf(false)
@@ -160,12 +137,7 @@ fun checkBox(
     ) {
         Card(
             modifier = Modifier
-                .tooltipTrigger()
-                .pointerInput(Unit) {
-                    detectTapGestures {
-                        onClick(it.x, it.y)
-                    }
-                },
+                .tooltipTrigger(),
             elevation = CardDefaults.cardElevation(3.dp)
         ) {
             Column(
@@ -180,8 +152,6 @@ fun checkBox(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
-
-
                 Checkbox(checked = isSelected, onCheckedChange = {
                     isSelected = it
                 })
