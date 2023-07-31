@@ -11,7 +11,19 @@ data class DashboardState(
     val videoListResponse: UploadNewVideoLink = UploadNewVideoLink(),
     val appliedListResponse: FormAppliedList= FormAppliedList(),
     val appliedIdsList : List<String> = emptyList(),
-
+    val technicalList: FormAppliedList.DataColl.AcademicList =
+        FormAppliedList.DataColl.AcademicList(
+            jobList = emptyList(),
+            listName = "",
+            levels = emptyList()
+        ),
+    val nonTechnicalList: FormAppliedList.DataColl.AcademicList =
+        FormAppliedList.DataColl.AcademicList(
+            jobList = emptyList(),
+            listName = "",
+            levels = emptyList()
+        ),
+    val academicList: List<FormAppliedList.DataColl.AcademicList> = emptyList(),
     val profileUrl: String = "",
     val showApplyDialog: Boolean = false,
     val currentUserName: String = "",

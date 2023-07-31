@@ -18,6 +18,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.chetan.jobnepal.ui.component.IconJobNepal
 import com.chetan.jobnepal.ui.component.dialogs.AcademicDialog
+import com.chetan.jobnepal.ui.component.dialogs.Message
+import com.chetan.jobnepal.ui.component.dialogs.MessageDialog
 import com.chetan.jobnepal.ui.component.dropdown.CascadeDropdownMenuJobNepal
 
 data class MappedList(
@@ -59,6 +61,19 @@ fun AcademicScreen(
         Column(
             modifier = Modifier.padding(it), verticalArrangement = Arrangement.spacedBy(5.dp)
         ) {
+            state.infoMsg?.let {
+                MessageDialog(
+                    message = it,
+                    onDismissRequest = {
+                        if (onEvent != null && state.infoMsg.isCancellable == true){
+                            onEvent(AcademicEvent.DismissInfoMsg)
+                        }
+                    },
+                    onNegative = {},
+                    onPositive = {}
+                    )
+            }
+
             if (state.academicListResponse.SEE.isNotEmpty()) {
                 AcademicItem(
                     "SEE/SLC",

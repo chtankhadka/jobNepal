@@ -37,7 +37,8 @@ class FirestoreRepositoryImpl @Inject constructor(
         return try {
             val documentRef = firestore.collection("chtankhadka12").document("videoList")
             val newData = mapOf(
-                "dataColl" to FieldValue.arrayUnion(*data.dataColl.toTypedArray()))
+                "dataColl" to FieldValue.arrayUnion(*data.dataColl.toTypedArray())
+            )
             val result = documentRef.update(newData).await()
             Resource.Success(result)
         } catch (e: Exception) {
@@ -64,6 +65,7 @@ class FirestoreRepositoryImpl @Inject constructor(
             Resource.Failure(e)
         }
     }
+
     override suspend fun uploadAcademicData(
         data: UploadAcademicList, selectedLevel: String
     ): Resource<Any> {
@@ -134,10 +136,11 @@ class FirestoreRepositoryImpl @Inject constructor(
 
     override suspend fun uploadProfileData(data: UploadProfileParam): Resource<Any> {
         return try {
-            val documentRef = firestore.collection(preference.dbTable.toString()).document("Profile")
+            val documentRef =
+                firestore.collection(preference.dbTable.toString()).document("Profile")
             val result = documentRef.set(data).await()
             Resource.Success(result)
-        }catch (e: Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
             Resource.Failure(e)
         }
@@ -145,15 +148,16 @@ class FirestoreRepositoryImpl @Inject constructor(
 
     override suspend fun getProfileData(): Resource<UploadProfileParam> {
         return try {
-            val documentRef = firestore.collection(preference.dbTable.toString()).document("Profile")
+            val documentRef =
+                firestore.collection(preference.dbTable.toString()).document("Profile")
             val result = documentRef.get().await().toObject(UploadProfileParam::class.java)
-            if (result != null){
+            if (result != null) {
                 Resource.Success(result)
-            }else{
+            } else {
                 Resource.Failure(java.lang.Exception("No Data yet"))
             }
 
-        }catch (e: Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
             Resource.Failure(e)
         }
@@ -161,19 +165,37 @@ class FirestoreRepositoryImpl @Inject constructor(
 
     override suspend fun uploadAppliedFormData(data: FormAppliedList): Resource<Any> {
         return try {
-            val documentRef = firestore.collection(preference.dbTable.toString()).document("appliedList")
-
+            val documentRef =
+                firestore.collection(preference.dbTable.toString()).document("appliedList")
             val newData = mapOf(
                 "dataColl" to FieldValue.arrayUnion(*data.dataColl.toTypedArray())
             )
             val result = documentRef.update(newData).await()
-
             Resource.Success(result)
         } catch (e: Exception) {
             e.printStackTrace()
             Resource.Failure(e)
         }
 
+    }
+
+    override suspend fun deleteAppliedFormData(id: String) {
+         try {
+            val documentRef =
+                firestore.collection(preference.dbTable.toString()).document("appliedList")
+            val snapshot = documentRef.get().await()
+            if (snapshot != null){
+                val dataList = snapshot.toObject(FormAppliedList::class.java)?.dataColl?.toMutableList()
+                val itemIndex = dataList?.indexOfFirst { it.id == id }
+                if (itemIndex != null && itemIndex != -1){
+                    dataList.removeAt(itemIndex)
+                    documentRef.update("dataColl", dataList).await()
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Resource.Failure(e)
+        }
     }
 
     override suspend fun getAppliedFormData(): Resource<FormAppliedList> {

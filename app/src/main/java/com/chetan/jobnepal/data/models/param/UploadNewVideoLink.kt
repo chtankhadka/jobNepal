@@ -14,10 +14,14 @@ data class UploadNewVideoLink(
     ){
         data class AcademicList(
             val listName: String = "",
-            val jobList: List<AvailableJobs> = emptyList()
+            val jobList: List<AvailableJobs> = emptyList(),
+            val levels: List<AvailableLevels> = emptyList()
         ){
             data class AvailableJobs(
                 val jobName : String =""
+            )
+            data class AvailableLevels(
+                val levelName: String = ""
             )
         }
     }

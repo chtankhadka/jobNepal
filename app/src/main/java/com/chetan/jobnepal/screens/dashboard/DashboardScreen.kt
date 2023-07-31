@@ -49,6 +49,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import com.chetan.jobnepal.Destination
+import com.chetan.jobnepal.screens.academic.AcademicEvent
+import com.chetan.jobnepal.ui.component.dialogs.MessageDialog
+import com.chetan.jobnepal.ui.component.dialogs.ProgressDialog
 import com.chetan.jobnepal.ui.component.dropdown.ExposedDropdownJobNepal
 import com.chetan.jobnepal.utils.VibratingIcon
 import kotlinx.coroutines.launch
@@ -149,6 +152,17 @@ fun DashboardScreen(
                             .padding(it)
                             .padding(horizontal = 7.dp)
                     ) {
+                        state.infoMsg?.let {
+                            MessageDialog(
+                                message = it,
+                                onDismissRequest = {
+                                    if (onEvent != null && state.infoMsg.isCancellable == true){
+                                        onEvent(DashboardEvent.DismissInfoMsg)
+                                    }
+                                },
+                                onPositive = {  },
+                                onNegative = {})
+                        }
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.spacedBy(5.dp)

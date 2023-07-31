@@ -1,13 +1,17 @@
 package com.chetan.jobnepal.screens.academic
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.House
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.chetan.jobnepal.R
 import com.chetan.jobnepal.data.Resource
 import com.chetan.jobnepal.data.models.academic.UploadAcademicList
 import com.chetan.jobnepal.data.repository.firebasestoragerepository.FirebaseStorageRepository
 import com.chetan.jobnepal.data.repository.firestorerepository.FirestoreRepository
 import com.chetan.jobnepal.ui.component.dialogs.Message
 import com.chetan.jobnepal.ui.component.dialogs.Progress
+import com.chetan.jobnepal.utils.StringValue
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -37,13 +41,16 @@ class AcademicViewModel @Inject constructor(
                             it.copy(progress = Progress(value = 0.0F))
                         }
                         val resource = storageRepository.uploadAcademicAttachement(
-                            event.value,state.selectedLevel
+                            event.value, state.selectedLevel
                         )
                         when (resource) {
                             is Resource.Failure -> {
                                 _state.update {
                                     it.copy(
-                                        infoMsg = Message.Error(description = resource.exception.message),
+                                        infoMsg = Message.Error(
+                                            description = resource.exception.message,
+                                            yesNoRequired = true
+                                        ),
                                         progress = null
                                     )
                                 }
@@ -117,7 +124,10 @@ class AcademicViewModel @Inject constructor(
                                         is Resource.Failure -> {
                                             _state.update {
                                                 it.copy(
-                                                    infoMsg = Message.Error(description = "Data Not uploaded"),
+                                                    infoMsg = Message.Error(
+                                                        description = "Data Not uploaded",
+                                                        yesNoRequired = true
+                                                    ),
                                                     progress = null
                                                 )
                                             }
@@ -159,7 +169,7 @@ class AcademicViewModel @Inject constructor(
                 is AcademicEvent.Delete -> {
                     _state.update {
                         it.copy(
-                                progress = Progress(value = 0F)
+                            progress = Progress(value = 0F)
                         )
                     }
 //                    val resource = storageRepository.deleteAcademicAtachements(event.value,event.name)
@@ -180,22 +190,31 @@ class AcademicViewModel @Inject constructor(
 //                    }
 
                     val resource1 = firestoreRepository.deleteAcademicData("", listOf(""))
-                    when (resource1){
+                    when (resource1) {
                         is Resource.Failure -> {
 
                         }
+
                         Resource.Loading -> {
 
                         }
+
                         is Resource.Success -> {
 
                         }
                     }
 
                 }
+
                 is AcademicEvent.ShowEdit -> {
                     _state.update {
                         it.copy(showEdit = event.value)
+                    }
+                }
+
+                AcademicEvent.DismissInfoMsg -> {
+                    _state.update {
+                        it.copy(infoMsg = null)
                     }
                 }
             }
@@ -203,6 +222,17 @@ class AcademicViewModel @Inject constructor(
     }
 
     private fun getAcademicResponse() {
+        _state.update {
+            it.copy(
+                infoMsg = Message.Loading(
+                    lottieImage = R.raw.a1,
+                    image = Icons.Default.House,
+                    title = StringValue.DynamicString("Loading"),
+                    description = "just for test",
+                    isCancellable = false
+                )
+            )
+        }
         viewModelScope.launch {
             val state = state.value
             state.academicListResponse.let {
@@ -220,10 +250,25 @@ class AcademicViewModel @Inject constructor(
                         }
                     }
 
-                    Resource.Loading -> TODO()
+                    Resource.Loading -> {
+                        _state.update {
+                            it.copy(
+                                infoMsg = Message.Loading(
+                                    image = Icons.Default.House,
+                                    title = StringValue.DynamicString("Loading"),
+                                    description = "just for test"
+                                )
+                            )
+                        }
+                    }
+
                     is Resource.Success -> {
                         _state.update {
-                            it.copy(progress = null, academicListResponse = resource.data)
+                            it.copy(
+                                progress = null,
+                                academicListResponse = resource.data,
+                                infoMsg = null
+                            )
 
                         }
                     }

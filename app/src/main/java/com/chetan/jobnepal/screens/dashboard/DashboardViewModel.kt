@@ -2,12 +2,15 @@ package com.chetan.jobnepal.screens.dashboard
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.chetan.jobnepal.R
 import com.chetan.jobnepal.data.Resource
 import com.chetan.jobnepal.data.local.Preference
 import com.chetan.jobnepal.data.models.dashboard.FormAppliedList
+import com.chetan.jobnepal.data.models.param.UploadNewVideoLink
 import com.chetan.jobnepal.data.repository.firebasestoragerepository.FirebaseStorageRepository
 import com.chetan.jobnepal.data.repository.firestorerepository.FirestoreRepository
 import com.chetan.jobnepal.ui.component.dialogs.Message
+import com.chetan.jobnepal.ui.component.dialogs.Progress
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -32,14 +35,19 @@ class DashboardViewModel @Inject constructor(
                 currentUserName = preference.gmailUserName.toString()
             )
         }
+        getNewVideoLink()
+        getAppliedFormData()
 
+
+    }
+    fun getNewVideoLink(){
         viewModelScope.launch {
             val resource1 = firestoreRepository.getNewVideoLink()
             when (resource1) {
                 is Resource.Failure -> {
                     _state.update {
                         it.copy(
-                            infoMsg = Message.Error(description = resource1.exception.message),
+                            infoMsg = null,
                             progress = null
                         )
                     }
@@ -54,9 +62,15 @@ class DashboardViewModel @Inject constructor(
                     }
                 }
             }
-
+        }
+    }
+    fun getAppliedFormData(){
+        viewModelScope.launch {
+            _state.update {
+                it.copy(progress = Progress(value = 0.0F, cancellable = false))
+            }
             val resource2 = firestoreRepository.getAppliedFormData()
-            when (resource2){
+            when (resource2) {
                 is Resource.Failure -> {
                     _state.update {
                         it.copy(
@@ -65,10 +79,12 @@ class DashboardViewModel @Inject constructor(
                         )
                     }
                 }
+
                 Resource.Loading -> TODO()
                 is Resource.Success -> {
                     _state.update {
                         it.copy(
+                            infoMsg = null,
                             appliedListResponse = resource2.data,
                             appliedIdsList = resource2.data.dataColl.map { dataColl -> dataColl.id }
                         )
@@ -83,32 +99,63 @@ class DashboardViewModel @Inject constructor(
         viewModelScope.launch {
             when (event) {
                 is DashboardEvent.ApplyNow -> {
-                    firestoreRepository.uploadAppliedFormData(
-                            FormAppliedList(
-                                dataColl = listOf( FormAppliedList.DataColl(
+                    _state.update {
+                        it.copy(
+                            infoMsg = null
+                        )
+                    }
+                    val list =
+                        state.value.videoListResponse.dataColl.filter { it.id == event.value.id }
+                   val applyNowRequest = firestoreRepository.uploadAppliedFormData(
+                        FormAppliedList(
+                            dataColl = list.map {
+                                FormAppliedList.DataColl(
                                     id = event.value.id,
                                     title = event.value.title,
                                     videoLink = event.value.videoLink,
                                     description = event.value.description,
                                     apply = "applied",
-                                    paymentSuccess = false
-                                ))
+                                    paymentSuccess = false,
+                                    academicList = listOf(
+                                        state.value.technicalList,
+                                        state.value.nonTechnicalList
+                                    )
+                                )
 
-                            )
+                            }
                         )
+                    )
+                    when (applyNowRequest){
+                        is Resource.Failure -> {
+
+                        }
+                        Resource.Loading -> {}
+                        is Resource.Success -> {
+
+                        }
+                    }
                 }
 
                 is DashboardEvent.ApplyLetter -> {
+                    val list =
+                        state.value.videoListResponse.dataColl.filter { it.id == event.value.id }
                     firestoreRepository.uploadAppliedFormData(
                         FormAppliedList(
-                            dataColl =  listOf(FormAppliedList.DataColl(
-                                id = event.value.id,
-                                title = event.value.title,
-                                videoLink = event.value.videoLink,
-                                description = event.value.description,
-                                apply = "applyLater",
-                                paymentSuccess = false
-                            ))
+                            dataColl = list.map {
+                                FormAppliedList.DataColl(
+                                    id = event.value.id,
+                                    title = event.value.title,
+                                    videoLink = event.value.videoLink,
+                                    description = event.value.description,
+                                    apply = "applyLater",
+                                    paymentSuccess = false,
+                                    academicList = listOf(
+                                        state.value.technicalList,
+                                        state.value.nonTechnicalList
+                                    )
+                                )
+
+                            }
                         )
                     )
                 }
@@ -121,8 +168,50 @@ class DashboardViewModel @Inject constructor(
                     }
                 }
 
-                is DashboardEvent.SetCheckedList -> TODO()
-                is DashboardEvent.UpdateCheckedList -> TODO()
+                is DashboardEvent.UpdateCheckedList -> {
+                    _state.update {
+                        if (event.title == "technicalList") {
+                            it.copy(technicalList = FormAppliedList.DataColl.AcademicList(
+                                listName = event.title,
+                                jobList = event.value.map {
+                                    FormAppliedList.DataColl.AcademicList.AvailableJobs(it)
+                                },
+                                levels = event.selectedLevels.map {
+                                    FormAppliedList.DataColl.AcademicList.AvailableLevels(it)
+                                }
+                            ))
+                        } else {
+                            it.copy(nonTechnicalList = FormAppliedList.DataColl.AcademicList(
+                                listName = event.title,
+                                jobList = event.value.map {
+                                    FormAppliedList.DataColl.AcademicList.AvailableJobs(it)
+                                },
+                                levels = event.selectedLevels.map {
+                                    FormAppliedList.DataColl.AcademicList.AvailableLevels(it)
+                                }
+                            ))
+                        }
+                    }
+                }
+
+                is DashboardEvent.DeleteAppliedData -> {
+                    _state.update {
+                        it.copy(infoMsg = Message.Loading(
+                            lottieImage = R.raw.delete_simple,
+                            description = "Deleting...",
+                            yesNoRequired = false
+                            ))
+                    }
+                    firestoreRepository.deleteAppliedFormData(event.value)
+                    getAppliedFormData()
+
+                }
+
+                DashboardEvent.DismissInfoMsg -> {
+                    _state.update {
+                        it.copy(infoMsg = null)
+                    }
+                }
             }
         }
     }

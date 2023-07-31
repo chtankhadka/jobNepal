@@ -8,4 +8,5 @@ sealed interface AcademicEvent{
     class ShowDialog(var value: Boolean) : AcademicEvent
     class ShowEdit(var value: Boolean) : AcademicEvent
     class Delete(var value: String, var name: List<String>) : AcademicEvent
+    object DismissInfoMsg : AcademicEvent
 }

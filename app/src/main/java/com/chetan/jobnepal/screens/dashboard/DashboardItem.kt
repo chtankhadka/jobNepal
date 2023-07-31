@@ -50,12 +50,18 @@ fun DashboardItem(
     if (state.showApplyDialog){
         JobsApplyDialog(
             listOfJobs = state.videoListResponse.dataColl[index].academicList.map { academicList ->
-                academicList.listName to academicList.jobList.map { availableJobs ->
+                Triple(academicList.listName , academicList.jobList.map { availableJobs ->
                     availableJobs.jobName
+                }, academicList.levels.map { availableLevels ->
+                    availableLevels.levelName
                 }
+                )
             },
             onEvent = onEvent
-        )
+        ){
+            onEvent(DashboardEvent.ApplyNow(state.videoListResponse.dataColl[index]))
+            onEvent(DashboardEvent.ShowApplyDialog(false))
+        }
     }
 
     Card(
@@ -92,7 +98,6 @@ fun DashboardItem(
                 when (it) {
                     "Apply Now" -> {
                         onEvent(DashboardEvent.ShowApplyDialog(true))
-                        onEvent(DashboardEvent.ApplyNow(state.videoListResponse.dataColl[index]))
                     }
                     "Apply Later" -> {
                         onEvent(DashboardEvent.ApplyLetter(state.videoListResponse.dataColl[index]))

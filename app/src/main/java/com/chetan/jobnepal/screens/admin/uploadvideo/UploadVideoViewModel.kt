@@ -169,6 +169,9 @@ class UploadVideoViewModel @Inject constructor(
                                 listName = event.title,
                                 jobList = event.value.map {
                                     UploadNewVideoLink.DataColl.AcademicList.AvailableJobs(it)
+                                },
+                                levels = event.selectedLevels.map {
+                                    UploadNewVideoLink.DataColl.AcademicList.AvailableLevels(it)
                                 }
                             ))
                         } else {
@@ -176,6 +179,9 @@ class UploadVideoViewModel @Inject constructor(
                                 listName = event.title,
                                 jobList = event.value.map {
                                     UploadNewVideoLink.DataColl.AcademicList.AvailableJobs(it)
+                                },
+                                levels = event.selectedLevels.map {
+                                    UploadNewVideoLink.DataColl.AcademicList.AvailableLevels(it)
                                 }
                             ))
                         }
