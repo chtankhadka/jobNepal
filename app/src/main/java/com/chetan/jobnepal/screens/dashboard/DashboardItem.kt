@@ -57,11 +57,15 @@ fun DashboardItem(
                 }
                 )
             },
-            onEvent = onEvent
-        ){
-            onEvent(DashboardEvent.ApplyNow(state.videoListResponse.dataColl[index]))
-            onEvent(DashboardEvent.ShowApplyDialog(false))
-        }
+            onEvent = onEvent,
+            onApplied = {
+                onEvent(DashboardEvent.ApplyNow(state.videoListResponse.dataColl[index]))
+                onEvent(DashboardEvent.ShowApplyDialog(false))
+            },
+            onDismissListener = {
+                onEvent(DashboardEvent.ShowApplyDialog(false))
+            }
+        )
     }
 
     Card(
@@ -100,7 +104,7 @@ fun DashboardItem(
                         onEvent(DashboardEvent.ShowApplyDialog(true))
                     }
                     "Apply Later" -> {
-                        onEvent(DashboardEvent.ApplyLetter(state.videoListResponse.dataColl[index]))
+                        onEvent(DashboardEvent.ApplyLater(state.videoListResponse.dataColl[index]))
                     }
                     else -> {
 

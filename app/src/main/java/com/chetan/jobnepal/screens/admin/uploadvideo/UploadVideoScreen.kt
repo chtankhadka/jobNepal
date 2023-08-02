@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.chetan.jobnepal.ui.component.dialogs.MessageDialog
 
 
 @Composable
@@ -34,7 +35,7 @@ fun UploadVideoScreen(
     state: UploadVideoState,
     onEvent: (event: UploadVideoEvent) -> Unit
 ) {
-    if (state.showJobDialog){
+    if (state.showJobDialog) {
         JobsSelectionDialog(onEvent) {
         }
     }
@@ -43,6 +44,16 @@ fun UploadVideoScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        state.infoMsg?.let {
+            MessageDialog(
+                message = it,
+                onDismissRequest = {
+                    onEvent(UploadVideoEvent.DismissInfoMsg)
+                },
+                onPositive = {  }) {
+
+            }
+        }
 
         TextField(
             value = state.id,
@@ -58,7 +69,7 @@ fun UploadVideoScreen(
         )
         Spacer(modifier = Modifier.height(5.dp))
         TextField(
-            value = state.url ,
+            value = state.url,
             onValueChange = {
                 onEvent(UploadVideoEvent.UrlChange(it))
             },
@@ -74,7 +85,7 @@ fun UploadVideoScreen(
         TextField(
             value = state.title,
             onValueChange = {
-               onEvent(UploadVideoEvent.TitleChange(it))
+                onEvent(UploadVideoEvent.TitleChange(it))
             },
             label = {
                 Text(text = "Title")
@@ -83,7 +94,7 @@ fun UploadVideoScreen(
         Spacer(modifier = Modifier.height(5.dp))
 
         TextField(
-            value = state.description ,
+            value = state.description,
             onValueChange = {
                 onEvent(UploadVideoEvent.DescriptionChange(it))
             },
@@ -107,7 +118,7 @@ fun UploadVideoScreen(
         Spacer(modifier = Modifier.height(5.dp))
 
         var clicked by remember {
-         mutableStateOf(false)
+            mutableStateOf(false)
         }
         Button(
             onClick = {
@@ -131,8 +142,8 @@ fun UploadVideoScreen(
             contentPadding = PaddingValues(2.dp),
             verticalArrangement = Arrangement.spacedBy(5.dp)
         ) {
-            items(state.videoList.dataColl){
-                Text(text =it.id)
+            items(state.videoList.dataColl) {
+                Text(text = it.id)
                 Text(text = it.title)
                 Text(text = it.videoLink)
                 Text(text = it.description)

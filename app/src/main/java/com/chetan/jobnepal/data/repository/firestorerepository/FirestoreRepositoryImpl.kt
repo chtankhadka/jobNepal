@@ -88,6 +88,9 @@ class FirestoreRepositoryImpl @Inject constructor(
                 AcademicState.BAC -> {
                     mapOf(selectedLevel to FieldValue.arrayUnion(*data.IAC.toTypedArray()))
                 }
+                AcademicState.CITIZENSHIP ->{
+                    mapOf(selectedLevel to FieldValue.arrayUnion(*data.CITIZENSHIP.toTypedArray()))
+                }
 
                 else -> {
                     mapOf()
@@ -179,8 +182,8 @@ class FirestoreRepositoryImpl @Inject constructor(
 
     }
 
-    override suspend fun deleteAppliedFormData(id: String) {
-         try {
+    override suspend fun deleteAppliedFormData(id: String) : Resource<Any>{
+         return try {
             val documentRef =
                 firestore.collection(preference.dbTable.toString()).document("appliedList")
             val snapshot = documentRef.get().await()
@@ -188,10 +191,12 @@ class FirestoreRepositoryImpl @Inject constructor(
                 val dataList = snapshot.toObject(FormAppliedList::class.java)?.dataColl?.toMutableList()
                 val itemIndex = dataList?.indexOfFirst { it.id == id }
                 if (itemIndex != null && itemIndex != -1){
-                    dataList.removeAt(itemIndex)
+                    val deleteData = dataList.removeAt(itemIndex)
                     documentRef.update("dataColl", dataList).await()
                 }
+
             }
+             Resource.Success("deleteData")
         } catch (e: Exception) {
             e.printStackTrace()
             Resource.Failure(e)

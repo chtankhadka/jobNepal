@@ -1,5 +1,7 @@
 package com.chetan.jobnepal.screens.admin.uploadvideo
 
+import com.chetan.jobnepal.screens.dashboard.DashboardEvent
+
 sealed interface UploadVideoEvent{
     object UploadVideoUrl : UploadVideoEvent
     object DownloadVideoUrl : UploadVideoEvent
@@ -14,4 +16,5 @@ sealed interface UploadVideoEvent{
     class UrlChange(var value: String) : UploadVideoEvent
     class DescriptionChange(var value: String) : UploadVideoEvent
     class TitleChange(var value: String) : UploadVideoEvent
+    object DismissInfoMsg : UploadVideoEvent
 }

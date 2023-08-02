@@ -10,11 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Downloading
-import androidx.compose.material.icons.filled.House
 import androidx.compose.material3.Button
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,13 +19,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import coil.compose.AsyncImage
 import com.chetan.jobnepal.R
 import com.chetan.jobnepal.utils.LoadLottieAnimation
 import com.chetan.jobnepal.utils.StringValue
@@ -58,7 +51,7 @@ sealed class Message(
 
     data class Loading(
         override val image: ImageVector? = null,
-        override val lottieImage: Int? = null,
+        override val lottieImage: Int? = R.raw.loading,
         override val yesNoRequired: Boolean = true,
         override val positiveButton: StringValue = StringValue.DynamicString("Yes"),
         override val negativeButton: StringValue = StringValue.DynamicString("No"),
@@ -69,7 +62,7 @@ sealed class Message(
 
     data class Error(
         override val image: ImageVector? = null,
-        override val lottieImage: Int? = null,
+        override val lottieImage: Int? = R.raw.error_cat,
         override val yesNoRequired: Boolean = true,
         override val positiveButton: StringValue = StringValue.DynamicString("Yes"),
         override val negativeButton: StringValue = StringValue.DynamicString("No"),

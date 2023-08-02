@@ -35,6 +35,10 @@ class AcademicViewModel @Inject constructor(
         viewModelScope.launch {
             when (event) {
                 is AcademicEvent.UploadAttachement -> {
+                    _state.update {
+                        it.copy(
+                            infoMsg = Message.Loading(description = "Uploading your data...", isCancellable = false, yesNoRequired = false))
+                    }
                     val state = state.value
                     state.uploadAttachementList.let {
                         _state.update {
@@ -105,6 +109,18 @@ class AcademicViewModel @Inject constructor(
                                                 selectedLevel = "BSc_CSIT"
                                             )
                                         }
+                                        AcademicState.CITIZENSHIP -> {
+                                            firestoreRepository.uploadAcademicData(
+                                                data = UploadAcademicList(CITIZENSHIP = resource.data.map {
+                                                    UploadAcademicList.citizenship(
+                                                        "CITIZENSHIP",
+                                                        "12",
+                                                        it.first, it.second
+                                                    )
+                                                }),
+                                                selectedLevel = "CITIZENSHIP"
+                                            )
+                                        }
 
                                         else -> {
                                             firestoreRepository.uploadAcademicData(
@@ -137,6 +153,7 @@ class AcademicViewModel @Inject constructor(
                                         is Resource.Success -> {
                                             _state.update {
                                                 it.copy(
+                                                    infoMsg = null,
                                                     progress = null,
                                                     downloadAttachementUrl = resource.data,
                                                     showDialog = false
@@ -225,11 +242,10 @@ class AcademicViewModel @Inject constructor(
         _state.update {
             it.copy(
                 infoMsg = Message.Loading(
-                    lottieImage = R.raw.a1,
-                    image = Icons.Default.House,
-                    title = StringValue.DynamicString("Loading"),
-                    description = "just for test",
-                    isCancellable = false
+                    lottieImage = R.raw.loading,
+                    description = "Please Wait",
+                    isCancellable = false,
+                    yesNoRequired = false
                 )
             )
         }

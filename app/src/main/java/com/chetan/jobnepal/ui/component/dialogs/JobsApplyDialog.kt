@@ -1,3 +1,4 @@
+import android.widget.AutoCompleteTextView.OnDismissListener
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -47,12 +48,13 @@ import com.chetan.jobnepal.ui.component.IconJobNepal
 fun JobsApplyDialog(
     listOfJobs: List<Triple<String, List<String>, List<String>>>,
     onEvent: (event: DashboardEvent) -> Unit,
-    onApplied: () -> Unit
+    onApplied: () -> Unit,
+    onDismissListener: () -> Unit
 ) {
 
     Dialog(
         properties = DialogProperties(),
-        onDismissRequest = {}
+        onDismissRequest = {onDismissListener}
     ) {
         Card(
             modifier = Modifier

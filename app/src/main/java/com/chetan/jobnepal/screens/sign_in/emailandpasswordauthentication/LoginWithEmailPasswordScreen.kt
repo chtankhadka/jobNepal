@@ -110,8 +110,8 @@ fun LoginWithEmailPasswordScreen(
             Resource.Loading -> CircularProgressIndicator()
             is Resource.Success -> {
                 LaunchedEffect(Unit) {
-                    navController?.navigate(Destination.Screen.Start.route) {
-                        popUpTo(Destination.Screen.Start.route) { inclusive = true }
+                    navController?.navigate(Destination.Screen.Dashboard.route) {
+                        popUpTo(Destination.Screen.Dashboard.route) { inclusive = true }
                     }
                 }
 

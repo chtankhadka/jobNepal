@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.chetan.jobnepal.data.Resource
 import com.chetan.jobnepal.data.repository.firestorerepository.FirestoreRepository
 import com.chetan.jobnepal.data.models.param.UploadNewVideoLink
+import com.chetan.jobnepal.screens.dashboard.DashboardEvent
 import com.chetan.jobnepal.ui.component.dialogs.Message
 import com.chetan.jobnepal.ui.component.dialogs.Progress
 import com.chetan.jobnepal.utils.GenerateRandomNumber
@@ -40,6 +41,11 @@ class UploadVideoViewModel @Inject constructor(
             when (event) {
                 is UploadVideoEvent.UploadVideoUrl -> {
                     val state = state.value
+                    _state.update {
+                        it.copy(
+                            infoMsg = Message.Loading(description = "Uploading...", isCancellable = false, yesNoRequired = false)
+                        )
+                    }
                     state.videoList.let {
                         _state.update {
                             it.copy(progress = Progress(value = 0.0F))
@@ -78,6 +84,7 @@ class UploadVideoViewModel @Inject constructor(
                             is Resource.Success -> {
                                 _state.update {
                                     it.copy(
+                                        infoMsg = null,
                                         progress = null,
                                         technicalList = UploadNewVideoLink.DataColl.AcademicList(
                                             jobList = emptyList(),
@@ -150,16 +157,40 @@ class UploadVideoViewModel @Inject constructor(
                 }
 
                 UploadVideoEvent.Reset -> {
-                    viewModelScope.launch {
-                        repository.createJobNepalCollection(
-                            listOf(
-                                "academic",
-                                "nepal",
-                                "videoList",
-                                "appliedList"
-                            )
+                    _state.update {
+                        it.copy(
+                            infoMsg = Message.Loading(description = "Reseting...")
                         )
                     }
+                  viewModelScope.launch {
+                      val reseting =  repository.createJobNepalCollection(
+                            listOf(
+                                "academic",
+                                "videoList",
+                                "appliedList",
+                                "Profile"
+                            )
+                        )
+                      when (reseting){
+                          is Resource.Failure -> {
+                              _state.update {
+                                  it.copy(
+                                      infoMsg = Message.Error(description = "Resetting", isCancellable = false)
+                                  )
+                              }
+                          }
+                          Resource.Loading -> {}
+                          is Resource.Success -> {
+                              _state.update {
+                                  it.copy(
+                                      infoMsg = null
+                                  )
+                              }
+                          }
+                      }
+                    }
+
+
                 }
 
                 is UploadVideoEvent.UpdateCheckedList -> {
@@ -191,6 +222,11 @@ class UploadVideoViewModel @Inject constructor(
                 is UploadVideoEvent.SetCheckedList -> {
                     _state.update {
                         it.copy(showJobDialog = event.value)
+                    }
+                }
+                UploadVideoEvent.DismissInfoMsg -> {
+                    _state.update {
+                        it.copy(infoMsg = null)
                     }
                 }
             }

@@ -6,7 +6,6 @@ import com.chetan.jobnepal.R
 import com.chetan.jobnepal.data.Resource
 import com.chetan.jobnepal.data.local.Preference
 import com.chetan.jobnepal.data.models.dashboard.FormAppliedList
-import com.chetan.jobnepal.data.models.param.UploadNewVideoLink
 import com.chetan.jobnepal.data.repository.firebasestoragerepository.FirebaseStorageRepository
 import com.chetan.jobnepal.data.repository.firestorerepository.FirestoreRepository
 import com.chetan.jobnepal.ui.component.dialogs.Message
@@ -101,7 +100,7 @@ class DashboardViewModel @Inject constructor(
                 is DashboardEvent.ApplyNow -> {
                     _state.update {
                         it.copy(
-                            infoMsg = null
+                            infoMsg = Message.Loading(lottieImage = R.raw.pencil_walking, isCancellable = false, yesNoRequired = false, description = "Great!!!")
                         )
                     }
                     val list =
@@ -127,19 +126,39 @@ class DashboardViewModel @Inject constructor(
                     )
                     when (applyNowRequest){
                         is Resource.Failure -> {
+                            _state.update {
+                                it.copy(
+                                    infoMsg = Message.Error(
+                                        lottieImage = R.raw.loading,
+                                        description = applyNowRequest.exception.message,
+                                    )
+                                )
+                            }
+                        }
+                        Resource.Loading -> {
 
                         }
-                        Resource.Loading -> {}
                         is Resource.Success -> {
-
+                            _state.update {
+                                it.copy(
+                                    infoMsg = null
+                                )
+                            }
+                            getNewVideoLink()
+                            getAppliedFormData()
                         }
                     }
                 }
 
-                is DashboardEvent.ApplyLetter -> {
+                is DashboardEvent.ApplyLater -> {
+                    _state.update {
+                        it.copy(
+                            infoMsg = Message.Loading(lottieImage = R.raw.pencil_walking, isCancellable = false, yesNoRequired = false, description = "Great!!!")
+                        )
+                    }
                     val list =
                         state.value.videoListResponse.dataColl.filter { it.id == event.value.id }
-                    firestoreRepository.uploadAppliedFormData(
+                    val applyLater = firestoreRepository.uploadAppliedFormData(
                         FormAppliedList(
                             dataColl = list.map {
                                 FormAppliedList.DataColl(
@@ -158,6 +177,30 @@ class DashboardViewModel @Inject constructor(
                             }
                         )
                     )
+                    when (applyLater){
+                        is Resource.Failure -> {
+                            _state.update {
+                                it.copy(
+                                    infoMsg = Message.Error(
+                                        lottieImage = R.raw.loading,
+                                        description = applyLater.exception.message,
+                                        )
+                                )
+                            }
+                        }
+                        Resource.Loading -> {
+
+                        }
+                        is Resource.Success -> {
+                            getNewVideoLink()
+                            getAppliedFormData()
+                            _state.update {
+                                it.copy(
+                                    infoMsg = null
+                                )
+                            }
+                        }
+                    }
                 }
 
                 is DashboardEvent.ShowApplyDialog -> {
@@ -196,13 +239,38 @@ class DashboardViewModel @Inject constructor(
 
                 is DashboardEvent.DeleteAppliedData -> {
                     _state.update {
-                        it.copy(infoMsg = Message.Loading(
-                            lottieImage = R.raw.delete_simple,
-                            description = "Deleting...",
-                            yesNoRequired = false
-                            ))
+                        it.copy(
+                            infoMsg = Message.Loading(
+                                yesNoRequired = false,
+                                isCancellable = false,
+                                description = "Deleting...")
+                        )
                     }
-                    firestoreRepository.deleteAppliedFormData(event.value)
+                    val deleteAppliedData = firestoreRepository.deleteAppliedFormData(event.value)
+                    when (deleteAppliedData){
+                        is Resource.Failure -> {
+                            _state.update {
+                                it.copy(
+                                    infoMsg = Message.Error(
+                                        lottieImage = R.raw.delete_simple,
+                                        yesNoRequired = false,
+                                        isCancellable = false,
+                                        description = "Deleting...")
+                                )
+
+                            }
+                        }
+                        Resource.Loading -> {
+
+                        }
+                        is Resource.Success ->{
+                            _state.update {
+                                it.copy(
+                                    infoMsg = null
+                                )
+                            }
+                        }
+                    }
                     getAppliedFormData()
 
                 }

@@ -22,5 +22,8 @@ data class AcademicState(
         const val IAC = "IAC"
         const val BAC = "BAC"
         const val BSc_CSIT = "BSc_CSIT"
+
+//        others
+        const val CITIZENSHIP = "CITIZENSHIP"
     }
 }

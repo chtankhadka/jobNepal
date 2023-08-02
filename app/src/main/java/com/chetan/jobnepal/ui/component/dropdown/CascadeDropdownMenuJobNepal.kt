@@ -69,7 +69,7 @@ fun CascadeDropdownMenuJobNepal(
 
             //Bachelors
 
-            DropdownMenuItem(text = { Text(text = "2.Bachelors") }, children = {
+            DropdownMenuItem(text = { Text(text = "3.Bachelors") }, children = {
                 DropdownMenuItem(text = { Text(text = "1.Technical") }, children = {
                     androidx.compose.material3.DropdownMenuItem(text = { Text(text = "1.BSc.CSIT") },
                         onClick = {
@@ -95,6 +95,16 @@ fun CascadeDropdownMenuJobNepal(
                             expanded = false
                         })
                 })
+            })
+            DropdownMenuItem(text = { Text(text = "4.Other Docs") }, children = {
+                androidx.compose.material3.DropdownMenuItem(
+                    text = {
+                        Text(text = "1.Citizenship")
+                    },
+                    onClick = {
+                        onLevelSelected("CITIZENSHIP")
+                        expanded = false
+                    })
             })
         }
     }

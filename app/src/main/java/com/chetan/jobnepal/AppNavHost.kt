@@ -2,10 +2,12 @@ package com.chetan.jobnepal
 
 import android.app.Activity.RESULT_OK
 import android.content.Context
+import android.os.Build
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -34,6 +36,7 @@ import com.chetan.jobnepal.screens.sign_in.newlogin.SignInScreen
 import com.chetan.jobnepal.screens.sign_in.newlogin.SignInViewModel
 import kotlinx.coroutines.launch
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AppNavHost(
     modifier: Modifier,
@@ -54,7 +57,7 @@ fun AppNavHost(
             val state by viewModel.state.collectAsStateWithLifecycle()
             LaunchedEffect(key1 = Unit) {
                 if(googleAuthUiClient.getSignedInUser() != null) {
-                    navController.navigate("dashboard")
+                    navController.cleanNavigate(Destination.Screen.Dashboard.route)
                 }
             }
 
@@ -126,7 +129,7 @@ fun AppNavHost(
                         lifecycleScope.launch {
                             googleAuthUiClient.signOut()
                             navController.navigate("sign_in"){
-                                popUpTo(Destination.Screen.SignWithEmailPassword.route){inclusive = true}
+                                popUpTo(Destination.Screen.GoogleSignIn.route){inclusive = true}
                             }
                         }
 

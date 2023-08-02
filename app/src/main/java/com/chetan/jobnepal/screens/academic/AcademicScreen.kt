@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -59,7 +61,10 @@ fun AcademicScreen(
             })
     }, bottomBar = {}, content = {
         Column(
-            modifier = Modifier.padding(it), verticalArrangement = Arrangement.spacedBy(5.dp)
+            modifier = Modifier
+                .padding(it)
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(5.dp)
         ) {
             state.infoMsg?.let {
                 MessageDialog(
@@ -136,6 +141,24 @@ fun AcademicScreen(
                     } else {
                         onEvent(
                             AcademicEvent.Delete("BSc_CSIT", names)
+                        )
+                    }
+                }, showEdit = state.showEdit
+                )
+            }
+            if (state.academicListResponse.CITIZENSHIP.isNotEmpty()){
+                AcademicItem("Citizenship", data = state.academicListResponse.CITIZENSHIP.map {
+                    MappedList(id = it.id, date = it.date, name = it.name, url = it.url)
+                }.toMutableList(), onClick = { task: String?, names: List<String> ->
+                    if (task == "Delete") {
+                        onEvent(
+                            AcademicEvent.Delete("Citizenship", names)
+                        )
+                    } else if (task == "Edit") {
+                        onEvent(AcademicEvent.ShowEdit(true))
+                    } else {
+                        onEvent(
+                            AcademicEvent.Delete("Citizenship", names)
                         )
                     }
                 }, showEdit = state.showEdit

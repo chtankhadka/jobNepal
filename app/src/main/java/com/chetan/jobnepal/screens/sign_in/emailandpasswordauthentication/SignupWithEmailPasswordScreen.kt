@@ -1,6 +1,5 @@
 package com.chetan.jobnepal.screens.sign_in.emailandpasswordauthentication
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -9,7 +8,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -137,8 +135,8 @@ fun SignupWithEmailPasswordScreen(
             Resource.Loading -> CircularProgressIndicator()
             is Resource.Success -> {
                 LaunchedEffect(Unit ){
-                    navController.navigate(Destination.Screen.Start.route){
-                        popUpTo(Destination.Screen.Start.route){inclusive = true}
+                    navController.navigate(Destination.Screen.Dashboard.route){
+                        popUpTo(Destination.Screen.Dashboard.route){inclusive = true}
                     }
                 }
 
