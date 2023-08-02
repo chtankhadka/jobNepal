@@ -120,7 +120,7 @@ class UploadVideoViewModel @Inject constructor(
                         is Resource.Success -> {
                             _state.update {
                                 it.copy(
-                                    videoList = resource.data
+                                    videoList = UploadNewVideoLink(resource.data)
                                 )
                             }
 

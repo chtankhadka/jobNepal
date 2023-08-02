@@ -47,7 +47,7 @@ class FirestoreRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getNewVideoLink(): Resource<UploadNewVideoLink> {
+    override suspend fun getNewVideoLink(): Resource<List<UploadNewVideoLink.DataColl>> {
         return try {
             val result = firestore.collection("chtankhadka12")
                 .document("videoList")
@@ -55,7 +55,7 @@ class FirestoreRepositoryImpl @Inject constructor(
                 .await()
                 .toObject(UploadNewVideoLink::class.java)
             if (result != null) {
-                Resource.Success(result)
+                Resource.Success(result.dataColl.reversed())
             } else {
                 Resource.Failure(java.lang.Exception("No Data yet"))
             }

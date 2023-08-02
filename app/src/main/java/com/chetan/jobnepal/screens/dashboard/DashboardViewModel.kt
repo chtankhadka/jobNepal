@@ -104,7 +104,7 @@ class DashboardViewModel @Inject constructor(
                         )
                     }
                     val list =
-                        state.value.videoListResponse.dataColl.filter { it.id == event.value.id }
+                        state.value.videoListResponse.filter { it.id == event.value.id }
                    val applyNowRequest = firestoreRepository.uploadAppliedFormData(
                         FormAppliedList(
                             dataColl = list.map {
@@ -157,7 +157,7 @@ class DashboardViewModel @Inject constructor(
                         )
                     }
                     val list =
-                        state.value.videoListResponse.dataColl.filter { it.id == event.value.id }
+                        state.value.videoListResponse.filter { it.id == event.value.id }
                     val applyLater = firestoreRepository.uploadAppliedFormData(
                         FormAppliedList(
                             dataColl = list.map {

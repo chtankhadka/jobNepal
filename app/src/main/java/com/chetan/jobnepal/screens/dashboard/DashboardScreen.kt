@@ -197,12 +197,12 @@ fun DashboardScreen(
                             contentPadding = PaddingValues(horizontal = 0.dp, vertical = 5.dp),
                             verticalArrangement = Arrangement.spacedBy(5.dp)
                         ) {
-                            items(state.videoListResponse.dataColl.size) { position ->
+                            items(state.videoListResponse.size) { position ->
 
                                 DashboardItem(
                                     state = state,
                                     index = position,
-                                    isApplied = state.appliedIdsList.contains(state.videoListResponse.dataColl[position].id),
+                                    isApplied = state.appliedIdsList.contains(state.videoListResponse[position].id),
                                     onEvent = onEvent)
                             }
                         }

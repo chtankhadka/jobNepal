@@ -49,7 +49,7 @@ fun DashboardItem(
     }
     if (state.showApplyDialog){
         JobsApplyDialog(
-            listOfJobs = state.videoListResponse.dataColl[index].academicList.map { academicList ->
+            listOfJobs = state.videoListResponse[index].academicList.map { academicList ->
                 Triple(academicList.listName , academicList.jobList.map { availableJobs ->
                     availableJobs.jobName
                 }, academicList.levels.map { availableLevels ->
@@ -59,7 +59,7 @@ fun DashboardItem(
             },
             onEvent = onEvent,
             onApplied = {
-                onEvent(DashboardEvent.ApplyNow(state.videoListResponse.dataColl[index]))
+                onEvent(DashboardEvent.ApplyNow(state.videoListResponse[index]))
                 onEvent(DashboardEvent.ShowApplyDialog(false))
             },
             onDismissListener = {
@@ -91,7 +91,7 @@ fun DashboardItem(
             verticalAlignment = Alignment.CenterVertically,
 
             ) {
-            Text(text = state.videoListResponse.dataColl[index].title)
+            Text(text = state.videoListResponse[index].title)
             DropdownJobNepal(
                 listOf(
                     Triple("Full Guid" , Icons.Default.YoutubeSearchedFor,true),
@@ -104,7 +104,7 @@ fun DashboardItem(
                         onEvent(DashboardEvent.ShowApplyDialog(true))
                     }
                     "Apply Later" -> {
-                        onEvent(DashboardEvent.ApplyLater(state.videoListResponse.dataColl[index]))
+                        onEvent(DashboardEvent.ApplyLater(state.videoListResponse[index]))
                     }
                     else -> {
 
@@ -117,7 +117,7 @@ fun DashboardItem(
         AsyncImage(
             modifier = Modifier.fillMaxWidth(),
             contentScale = ContentScale.FillWidth,
-            model = state.videoListResponse.dataColl[index].videoLink,
+            model = state.videoListResponse[index].videoLink,
             contentDescription = "details",
             alignment = Alignment.Center
         )
