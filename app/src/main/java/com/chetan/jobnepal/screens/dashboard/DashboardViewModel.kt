@@ -39,7 +39,8 @@ class DashboardViewModel @Inject constructor(
 
 
     }
-    fun getNewVideoLink(){
+
+    fun getNewVideoLink() {
         viewModelScope.launch {
             val resource1 = firestoreRepository.getNewVideoLink()
             when (resource1) {
@@ -63,7 +64,8 @@ class DashboardViewModel @Inject constructor(
             }
         }
     }
-    fun getAppliedFormData(){
+
+    fun getAppliedFormData() {
         viewModelScope.launch {
             _state.update {
                 it.copy(progress = Progress(value = 0.0F, cancellable = false))
@@ -85,7 +87,7 @@ class DashboardViewModel @Inject constructor(
                         it.copy(
                             infoMsg = null,
                             appliedListResponse = resource2.data,
-                            appliedIdsList = resource2.data.dataColl.map { dataColl -> dataColl.id }
+                            appliedIdsList = resource2.data.map { dataColl -> dataColl.id }
                         )
                     }
                 }
@@ -100,12 +102,17 @@ class DashboardViewModel @Inject constructor(
                 is DashboardEvent.ApplyNow -> {
                     _state.update {
                         it.copy(
-                            infoMsg = Message.Loading(lottieImage = R.raw.pencil_walking, isCancellable = false, yesNoRequired = false, description = "Great!!!")
+                            infoMsg = Message.Loading(
+                                lottieImage = R.raw.pencil_walking,
+                                isCancellable = false,
+                                yesNoRequired = false,
+                                description = "Great!!!"
+                            )
                         )
                     }
                     val list =
                         state.value.videoListResponse.filter { it.id == event.value.id }
-                   val applyNowRequest = firestoreRepository.uploadAppliedFormData(
+                    val applyNowRequest = firestoreRepository.uploadAppliedFormData(
                         FormAppliedList(
                             dataColl = list.map {
                                 FormAppliedList.DataColl(
@@ -124,7 +131,7 @@ class DashboardViewModel @Inject constructor(
                             }
                         )
                     )
-                    when (applyNowRequest){
+                    when (applyNowRequest) {
                         is Resource.Failure -> {
                             _state.update {
                                 it.copy(
@@ -135,9 +142,11 @@ class DashboardViewModel @Inject constructor(
                                 )
                             }
                         }
+
                         Resource.Loading -> {
 
                         }
+
                         is Resource.Success -> {
                             _state.update {
                                 it.copy(
@@ -153,7 +162,12 @@ class DashboardViewModel @Inject constructor(
                 is DashboardEvent.ApplyLater -> {
                     _state.update {
                         it.copy(
-                            infoMsg = Message.Loading(lottieImage = R.raw.pencil_walking, isCancellable = false, yesNoRequired = false, description = "Great!!!")
+                            infoMsg = Message.Loading(
+                                lottieImage = R.raw.pencil_walking,
+                                isCancellable = false,
+                                yesNoRequired = false,
+                                description = "Great!!!"
+                            )
                         )
                     }
                     val list =
@@ -177,20 +191,22 @@ class DashboardViewModel @Inject constructor(
                             }
                         )
                     )
-                    when (applyLater){
+                    when (applyLater) {
                         is Resource.Failure -> {
                             _state.update {
                                 it.copy(
                                     infoMsg = Message.Error(
                                         lottieImage = R.raw.loading,
                                         description = applyLater.exception.message,
-                                        )
+                                    )
                                 )
                             }
                         }
+
                         Resource.Loading -> {
 
                         }
+
                         is Resource.Success -> {
                             getNewVideoLink()
                             getAppliedFormData()
@@ -243,11 +259,12 @@ class DashboardViewModel @Inject constructor(
                             infoMsg = Message.Loading(
                                 yesNoRequired = false,
                                 isCancellable = false,
-                                description = "Deleting...")
+                                description = "Deleting..."
+                            )
                         )
                     }
                     val deleteAppliedData = firestoreRepository.deleteAppliedFormData(event.value)
-                    when (deleteAppliedData){
+                    when (deleteAppliedData) {
                         is Resource.Failure -> {
                             _state.update {
                                 it.copy(
@@ -255,15 +272,18 @@ class DashboardViewModel @Inject constructor(
                                         lottieImage = R.raw.delete_simple,
                                         yesNoRequired = false,
                                         isCancellable = false,
-                                        description = "Deleting...")
+                                        description = "Deleting..."
+                                    )
                                 )
 
                             }
                         }
+
                         Resource.Loading -> {
 
                         }
-                        is Resource.Success ->{
+
+                        is Resource.Success -> {
                             _state.update {
                                 it.copy(
                                     infoMsg = null
@@ -278,6 +298,22 @@ class DashboardViewModel @Inject constructor(
                 DashboardEvent.DismissInfoMsg -> {
                     _state.update {
                         it.copy(infoMsg = null)
+                    }
+                }
+
+                is DashboardEvent.JobsForDialog -> {
+                    _state.update {
+                        it.copy(jobsForDialog = event.value.academicList.map { academicList ->
+                            Triple(
+                                academicList.listName,
+                                academicList.jobList.map { availableJobs ->
+                                    availableJobs.jobName
+                                },
+                                academicList.levels.map { availableLevels ->
+                                    availableLevels.levelName
+                                }
+                            )
+                        })
                     }
                 }
             }

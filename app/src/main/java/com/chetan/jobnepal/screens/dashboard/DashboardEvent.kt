@@ -6,6 +6,7 @@ sealed interface DashboardEvent {
     class ApplyNow(val value: UploadNewVideoLink.DataColl) : DashboardEvent
     class ApplyLater(val value: UploadNewVideoLink.DataColl) : DashboardEvent
     class ShowApplyDialog(val value: Boolean) : DashboardEvent
+    class JobsForDialog(val value : UploadNewVideoLink.DataColl): DashboardEvent
     class DeleteAppliedData(val value: String) : DashboardEvent
     class UpdateCheckedList(
         val title: String,

@@ -85,7 +85,7 @@ fun MyForm(state: DashboardState, onEvent: (event: DashboardEvent) -> Unit) {
                         .padding(horizontal = 5.dp)
                 ) {
                     MyFormItem(
-                        state.appliedListResponse.dataColl.filter { it.apply == "applyLater" },
+                        state.appliedListResponse.filter { it.apply == "applyLater" },
                         listOf(
                             Triple("Apply", Icons.Default.AppRegistration, true),
                             Triple("Full Guid", Icons.Default.Link, true),
@@ -112,7 +112,7 @@ fun MyForm(state: DashboardState, onEvent: (event: DashboardEvent) -> Unit) {
                         .padding(horizontal = 5.dp)
                 ) {
                     MyFormItem(
-                        state.appliedListResponse.dataColl.filter { it.apply == "applied" },
+                        state.appliedListResponse.filter { it.apply == "applied" },
                         listOf(
                             Triple("Pay", Icons.Default.QrCode, true),
                             Triple("Edit", Icons.Default.Edit, true),
@@ -136,7 +136,7 @@ fun MyForm(state: DashboardState, onEvent: (event: DashboardEvent) -> Unit) {
                         .padding(horizontal = 5.dp)
                 ) {
                     MyFormItem(
-                        state.appliedListResponse.dataColl.filter { it.apply == "paid" },
+                        state.appliedListResponse.filter { it.apply == "paid" },
                         listOf(
                             Triple("Refund", Icons.Default.Undo, true),
                             Triple("Download", Icons.Default.Download, true)

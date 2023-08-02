@@ -203,7 +203,7 @@ class FirestoreRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getAppliedFormData(): Resource<FormAppliedList> {
+    override suspend fun getAppliedFormData(): Resource<List<FormAppliedList.DataColl>> {
         return try {
             val result = firestore.collection(preference.dbTable.toString())
                 .document("appliedList")
@@ -211,7 +211,7 @@ class FirestoreRepositoryImpl @Inject constructor(
                 .await()
                 .toObject(FormAppliedList::class.java)
             if (result != null) {
-                Resource.Success(result)
+                Resource.Success(result.dataColl)
             } else {
                 Resource.Failure(java.lang.Exception("No Data yet"))
             }

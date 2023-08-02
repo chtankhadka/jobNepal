@@ -42,6 +42,6 @@ interface FirestoreRepository {
     suspend fun deleteAppliedFormData(
         id: String
     ): Resource<Any>
-    suspend fun getAppliedFormData() : Resource<FormAppliedList>
+    suspend fun getAppliedFormData() : Resource<List<FormAppliedList.DataColl>>
 
 }

@@ -54,7 +54,7 @@ fun JobsApplyDialog(
 
     Dialog(
         properties = DialogProperties(),
-        onDismissRequest = {onDismissListener}
+        onDismissRequest = {onDismissListener()}
     ) {
         Card(
             modifier = Modifier
@@ -79,7 +79,7 @@ fun JobsApplyDialog(
                 modifier = Modifier.padding(10.dp),
                 verticalArrangement = Arrangement.spacedBy(5.dp)
             ) {
-                items(listOfJobs.size) { index ->
+                items(listOfJobs) {tipleList->
                     var selectedList by remember { mutableStateOf(listOf<String>()) }
                     var selectedLevels by remember {
                         mutableStateOf(listOf<String>())
@@ -97,7 +97,7 @@ fun JobsApplyDialog(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = listOfJobs[index].first,
+                                text = tipleList.first,
                                 modifier = Modifier.padding(horizontal = 2.dp),
                                 style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
                             )
@@ -107,21 +107,21 @@ fun JobsApplyDialog(
                             ) {
                                 Text(text = "Select All")
                                 Checkbox(
-                                    checked = selectedList.containsAll(listOfJobs[index].second),
+                                    checked = selectedList.containsAll(tipleList.second),
                                     onCheckedChange = {
                                         if (it) {
-                                            selectedList = listOfJobs[index].second.toMutableList()
+                                            selectedList = tipleList.second.toMutableList()
                                         } else {
                                             selectedList = emptyList()
                                         }
-                                        onEvent(DashboardEvent.UpdateCheckedList(listOfJobs[index].first,selectedList,selectedLevels))
+                                        onEvent(DashboardEvent.UpdateCheckedList(tipleList.first,selectedList,selectedLevels))
                                     })
                             }
                         }
                         Divider(modifier = Modifier.padding(bottom = 5.dp))
 
                         VerticalGrid(columnCount = 3) {
-                            listOfJobs[index].second.map { item ->
+                            tipleList.second.map { item ->
                                 {
                                     checkBox(
                                         item = item,
@@ -132,7 +132,7 @@ fun JobsApplyDialog(
                                             } else {
                                                 selectedList - item
                                             }
-                                            onEvent(DashboardEvent.UpdateCheckedList(listOfJobs[index].first,selectedList,selectedLevels))
+                                            onEvent(DashboardEvent.UpdateCheckedList(tipleList.first,selectedList,selectedLevels))
                                         }
                                     )
                                 }
@@ -148,7 +148,7 @@ fun JobsApplyDialog(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = listOfJobs[index].first,
+                                text = tipleList.first,
                                 modifier = Modifier.padding(horizontal = 2.dp),
                                 style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
                             )
@@ -171,7 +171,7 @@ fun JobsApplyDialog(
                                 contentPadding = PaddingValues(5.dp),
                                 horizontalArrangement = Arrangement.spacedBy(10.dp),
                                 content = {
-                                    items(listOfJobs[index].third) { value ->
+                                    items(tipleList.third) { value ->
                                         LevelSelectionCheckBox(
                                             item = value,
                                             onChange = {
@@ -183,7 +183,7 @@ fun JobsApplyDialog(
                                                     }
                                                 onEvent(
                                                     DashboardEvent.UpdateCheckedList(
-                                                        listOfJobs[index].first,
+                                                        tipleList.first,
                                                         selectedList,
                                                         selectedLevels
                                                     )

@@ -9,7 +9,8 @@ import com.chetan.jobnepal.ui.component.dialogs.Progress
 
 data class DashboardState(
     val videoListResponse: List<UploadNewVideoLink.DataColl> = emptyList(),
-    val appliedListResponse: FormAppliedList= FormAppliedList(),
+    val appliedListResponse: List<FormAppliedList.DataColl> = emptyList(),
+    val jobsForDialog: List<Triple<String, List<String>, List<String>>> = emptyList(),
     val appliedIdsList : List<String> = emptyList(),
     val technicalList: FormAppliedList.DataColl.AcademicList =
         FormAppliedList.DataColl.AcademicList(

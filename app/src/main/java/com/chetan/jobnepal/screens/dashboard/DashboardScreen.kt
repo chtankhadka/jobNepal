@@ -15,7 +15,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material.icons.filled.Close
@@ -49,9 +52,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import com.chetan.jobnepal.Destination
-import com.chetan.jobnepal.screens.academic.AcademicEvent
 import com.chetan.jobnepal.ui.component.dialogs.MessageDialog
-import com.chetan.jobnepal.ui.component.dialogs.ProgressDialog
 import com.chetan.jobnepal.ui.component.dropdown.ExposedDropdownJobNepal
 import com.chetan.jobnepal.utils.VibratingIcon
 import kotlinx.coroutines.launch
@@ -87,7 +88,7 @@ fun DashboardScreen(
         drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet {
-                ModalDrawerSheetPage(navController,state,onClick,onEvent)
+                ModalDrawerSheetPage(navController, state, onClick, onEvent)
             }
 
         }) {
@@ -132,7 +133,7 @@ fun DashboardScreen(
                                     .background(MaterialTheme.colorScheme.onPrimary),
                                 contentAlignment = Alignment.Center
                             ) {
-                                VibratingIcon(Icons.Default.NotificationsActive){
+                                VibratingIcon(Icons.Default.NotificationsActive) {
                                     navController.navigate(Destination.Screen.UploadVideoScreen.route)
                                 }
                             }
@@ -156,11 +157,11 @@ fun DashboardScreen(
                             MessageDialog(
                                 message = it,
                                 onDismissRequest = {
-                                    if (onEvent != null && state.infoMsg.isCancellable == true){
+                                    if (onEvent != null && state.infoMsg.isCancellable == true) {
                                         onEvent(DashboardEvent.DismissInfoMsg)
                                     }
                                 },
-                                onPositive = {  },
+                                onPositive = { },
                                 onNegative = {})
                         }
                         Row(
@@ -197,13 +198,13 @@ fun DashboardScreen(
                             contentPadding = PaddingValues(horizontal = 0.dp, vertical = 5.dp),
                             verticalArrangement = Arrangement.spacedBy(5.dp)
                         ) {
-                            items(state.videoListResponse.size) { position ->
-
+                            items(state.videoListResponse) { videoList ->
                                 DashboardItem(
                                     state = state,
-                                    index = position,
-                                    isApplied = state.appliedIdsList.contains(state.videoListResponse[position].id),
-                                    onEvent = onEvent)
+                                    list = videoList,
+                                    isApplied = state.appliedIdsList.contains(videoList.id),
+                                    onEvent = onEvent
+                                )
                             }
                         }
 

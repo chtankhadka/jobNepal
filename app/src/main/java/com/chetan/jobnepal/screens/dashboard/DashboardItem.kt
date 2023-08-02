@@ -35,11 +35,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.chetan.jobnepal.data.models.param.UploadNewVideoLink
 import com.chetan.jobnepal.ui.component.dropdown.DropdownJobNepal
 
 @Composable
 fun DashboardItem(
-    index: Int,
+    list: UploadNewVideoLink.DataColl,
     isApplied: Boolean,
     onEvent: (event: DashboardEvent) -> Unit,
     state: DashboardState
@@ -49,17 +50,10 @@ fun DashboardItem(
     }
     if (state.showApplyDialog){
         JobsApplyDialog(
-            listOfJobs = state.videoListResponse[index].academicList.map { academicList ->
-                Triple(academicList.listName , academicList.jobList.map { availableJobs ->
-                    availableJobs.jobName
-                }, academicList.levels.map { availableLevels ->
-                    availableLevels.levelName
-                }
-                )
-            },
+            listOfJobs = state.jobsForDialog,
             onEvent = onEvent,
             onApplied = {
-                onEvent(DashboardEvent.ApplyNow(state.videoListResponse[index]))
+                onEvent(DashboardEvent.ApplyNow(list))
                 onEvent(DashboardEvent.ShowApplyDialog(false))
             },
             onDismissListener = {
@@ -91,7 +85,7 @@ fun DashboardItem(
             verticalAlignment = Alignment.CenterVertically,
 
             ) {
-            Text(text = state.videoListResponse[index].title)
+            Text(text = list.title)
             DropdownJobNepal(
                 listOf(
                     Triple("Full Guid" , Icons.Default.YoutubeSearchedFor,true),
@@ -101,10 +95,11 @@ fun DashboardItem(
             ){
                 when (it) {
                     "Apply Now" -> {
+                        onEvent(DashboardEvent.JobsForDialog(list))
                         onEvent(DashboardEvent.ShowApplyDialog(true))
                     }
                     "Apply Later" -> {
-                        onEvent(DashboardEvent.ApplyLater(state.videoListResponse[index]))
+                        onEvent(DashboardEvent.ApplyLater(list))
                     }
                     else -> {
 
@@ -117,7 +112,7 @@ fun DashboardItem(
         AsyncImage(
             modifier = Modifier.fillMaxWidth(),
             contentScale = ContentScale.FillWidth,
-            model = state.videoListResponse[index].videoLink,
+            model = list.videoLink,
             contentDescription = "details",
             alignment = Alignment.Center
         )
@@ -156,7 +151,7 @@ fun DashboardItem(
             Divider(modifier = Modifier.padding(top = 5.dp, bottom = 5.dp))
             if (isVisible){
                 Text(
-                    text = "240",
+                    text = list.academicList.toString(),
                     modifier = Modifier.padding(horizontal = 2.dp).fillMaxWidth(),
                     style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
                 )
