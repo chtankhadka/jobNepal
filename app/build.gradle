@@ -21,6 +21,10 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+
+        Properties properties = new Properties()
+        properties.load(project.rootProject.file("local.properties").newDataInputStream())
+        buildConfigField "String", "OneSignal_API_Key", "\"${properties.getProperty("OneSignal_API_Key")}\""
     }
 //    flavorDimensions = "user-type"
 //    productFlavors {
@@ -39,7 +43,7 @@ android {
             applicationIdSuffix ".debug"
         }
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.debug
         }
@@ -141,6 +145,9 @@ dependencies {
 
     implementation "com.maxkeppeler.sheets-compose-dialogs:core:1.0.2"
     implementation "com.maxkeppeler.sheets-compose-dialogs:calendar:1.0.2"
+
+    //Onesignal
+    implementation 'com.onesignal:OneSignal:[4.0.0, 4.99.99]'
 
 }
 kapt {
