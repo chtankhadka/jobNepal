@@ -27,6 +27,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.chetan.jobnepal.ui.component.dialogs.MessageDialog
+import com.chetan.jobnepal.utils.youtubePlayer.WebContent
 
 
 @Composable
@@ -135,19 +136,13 @@ fun UploadVideoScreen(
             Text(text = "get Data")
 
         }
-        LazyColumn(
+        Column(
             modifier = Modifier
                 .size(300.dp)
                 .background(Color.Blue),
-            contentPadding = PaddingValues(2.dp),
             verticalArrangement = Arrangement.spacedBy(5.dp)
         ) {
-            items(state.videoList.dataColl) {
-                Text(text = it.id)
-                Text(text = it.title)
-                Text(text = it.videoLink)
-                Text(text = it.description)
-            }
+            WebContent(videoId = "cvgZ8qkuIxA")
 
         }
 

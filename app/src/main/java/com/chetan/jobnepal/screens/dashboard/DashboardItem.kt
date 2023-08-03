@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.chetan.jobnepal.data.models.param.UploadNewVideoLink
 import com.chetan.jobnepal.ui.component.dropdown.DropdownJobNepal
+import com.chetan.jobnepal.utils.youtubePlayer.WebContent
 
 @Composable
 fun DashboardItem(
@@ -63,7 +64,9 @@ fun DashboardItem(
     }
 
     Card(
-        modifier = Modifier.fillMaxWidth().animateContentSize(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .animateContentSize(),
         elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
     ) {
         Row(
@@ -109,13 +112,14 @@ fun DashboardItem(
 
             }
         }
-        AsyncImage(
-            modifier = Modifier.fillMaxWidth(),
-            contentScale = ContentScale.FillWidth,
-            model = list.videoLink,
-            contentDescription = "details",
-            alignment = Alignment.Center
-        )
+        WebContent(videoId = list.videoLink)
+//        AsyncImage(
+//            modifier = Modifier.fillMaxWidth(),
+//            contentScale = ContentScale.FillWidth,
+//            model = list.videoLink,
+//            contentDescription = "details",
+//            alignment = Alignment.Center
+//        )
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -152,7 +156,9 @@ fun DashboardItem(
             if (isVisible){
                 Text(
                     text = list.academicList.toString(),
-                    modifier = Modifier.padding(horizontal = 2.dp).fillMaxWidth(),
+                    modifier = Modifier
+                        .padding(horizontal = 2.dp)
+                        .fillMaxWidth(),
                     style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
                 )
             }
