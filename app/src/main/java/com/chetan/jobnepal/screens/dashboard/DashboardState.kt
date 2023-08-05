@@ -11,6 +11,7 @@ data class DashboardState(
     val videoListResponse: List<UploadNewVideoLink.DataColl> = emptyList(),
     val appliedListResponse: List<FormAppliedList.DataColl> = emptyList(),
     val jobsForDialog: List<Triple<String, List<String>, List<String>>> = emptyList(),
+    val nepaliLanguage: Boolean = false,
     val appliedIdsList : List<String> = emptyList(),
     val technicalList: FormAppliedList.DataColl.AcademicList =
         FormAppliedList.DataColl.AcademicList(

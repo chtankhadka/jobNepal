@@ -23,9 +23,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.chetan.jobnepal.R
 import com.chetan.jobnepal.ui.component.dialogs.MessageDialog
 import com.chetan.jobnepal.utils.youtubePlayer.WebContent
 
@@ -113,7 +115,7 @@ fun UploadVideoScreen(
             onClick = {
                 onEvent(UploadVideoEvent.UploadVideoUrl)
             }) {
-            Text(text = "Upload Data")
+            Text(text = stringResource(id = R.string.upload_data))
 
         }
         Spacer(modifier = Modifier.height(5.dp))

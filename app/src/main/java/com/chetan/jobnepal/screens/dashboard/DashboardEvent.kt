@@ -8,6 +8,7 @@ sealed interface DashboardEvent {
     class ShowApplyDialog(val value: Boolean) : DashboardEvent
     class JobsForDialog(val value : UploadNewVideoLink.DataColl): DashboardEvent
     class DeleteAppliedData(val value: String) : DashboardEvent
+    class ChangeLanguage(val value: Boolean): DashboardEvent
     class UpdateCheckedList(
         val title: String,
         val value: List<String>,

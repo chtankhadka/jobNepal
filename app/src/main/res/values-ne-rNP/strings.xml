@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">JobNepal</string>
-    <string name="profile">toto</string>
+    <string name="profile">प्रोफाइल</string>
+    <string name="upload_data">डाटा अपलोड गर्नुहोस्</string>
 </resources>

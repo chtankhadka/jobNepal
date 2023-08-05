@@ -20,6 +20,7 @@ class Preference @Inject constructor(
         private const val DB_TABLE = "DB_TABLE"
         private const val GMAIL_PROFILE = "GMAIL_PROFILE"
         private const val GMAIL_USER_NAME = "GMAIL_USER_NAME"
+        private const val NEPALI = "NEPALI"
     }
 
     private val sharedPreferences: SharedPreferences =
@@ -46,4 +47,8 @@ class Preference @Inject constructor(
         set(value){
             sharedPreferences.edit().putString(GMAIL_USER_NAME, value).apply()
         }
+
+    var isNepaliLanguage
+        get() = sharedPreferences.getBoolean(NEPALI, false)
+        set(value) {sharedPreferences.edit().putBoolean(NEPALI, value).apply()}
 }

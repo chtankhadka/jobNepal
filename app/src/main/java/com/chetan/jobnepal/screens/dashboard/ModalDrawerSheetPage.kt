@@ -13,6 +13,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Contacts
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ElevatedCard
@@ -24,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.chetan.jobnepal.Destination
 import com.chetan.jobnepal.screens.dashboard.myForm.MyForm
-import com.chetan.jobnepal.ui.component.dropdown.DropdownJobNepal
+import com.chetan.jobnepal.ui.component.dropdown.DropdownJobNepalSetting
 import com.chetan.jobnepal.utils.ProfileAnimation
 
 @Composable
@@ -55,13 +56,17 @@ fun ModalDrawerSheetPage(
                 Text(text = "Attend Exam: 1")
             }
             val list = listOf(
+                Triple("Nepali", Icons.Default.Language,true),
                 Triple("Contacts" , Icons.Default.Contacts,true),
-                Triple("Logout" , Icons.Default.Logout,true))
-            DropdownJobNepal(list){
-                if (it == "Logout"){
-                    onClick("logout")
-                }
-            }
+                Triple("Logout" , Icons.Default.Logout,true),
+                )
+            DropdownJobNepalSetting(list,state,onEvent,onClick ={
+                    if (it == "Logout"){
+                        onClick("logout")
+                    }else if (it=="Nepali"){
+                        onClick("Nepali")
+                    }
+            })
 
         }
         Divider(

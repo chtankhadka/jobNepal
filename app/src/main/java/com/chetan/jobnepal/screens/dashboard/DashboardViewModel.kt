@@ -31,7 +31,8 @@ class DashboardViewModel @Inject constructor(
         _state.update {
             it.copy(
                 profileUrl = preference.gmailProfile.toString(),
-                currentUserName = preference.gmailUserName.toString()
+                currentUserName = preference.gmailUserName.toString(),
+                nepaliLanguage = preference.isNepaliLanguage
             )
         }
         getNewVideoLink()
@@ -315,6 +316,13 @@ class DashboardViewModel @Inject constructor(
                             )
                         })
                     }
+                }
+
+                is DashboardEvent.ChangeLanguage ->{
+                    _state.update {
+                        it.copy(nepaliLanguage = event.value)
+                    }
+                    preference.isNepaliLanguage = event.value
                 }
             }
         }

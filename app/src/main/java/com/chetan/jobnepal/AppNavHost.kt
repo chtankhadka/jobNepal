@@ -2,6 +2,7 @@ package com.chetan.jobnepal
 
 import android.app.Activity.RESULT_OK
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -12,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.core.app.ActivityCompat.recreate
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -134,6 +136,11 @@ fun AppNavHost(
                         }
 
 
+                    }
+                    else if (it=="Nepali"){
+                        val intent = Intent(applicationContext, MainActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        applicationContext.startActivity(intent)
                     }
                 }
                 )
