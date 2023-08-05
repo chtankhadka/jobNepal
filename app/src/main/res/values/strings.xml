@@ -1,9 +1,11 @@
 <resources>
-    <string name="app_name">jobNepal</string>
-    <string name="web_client_id">229968047952-eqef9jkpdu1dvokee7svkrhso0nfendd.apps.googleusercontent.com</string>
-    <string name="take_a_selfie">Take a selfie</string>
-    <string name="upload_from_storage">Upload from Storage</string>
-    <string name="upload_from_gallery">Upload from Gallery</string>
+    <string name="app_name" translatable="false">jobNepal</string>
+    <string name="web_client_id" translatable="false">229968047952-eqef9jkpdu1dvokee7svkrhso0nfendd.apps.googleusercontent.com</string>
+    <string name="take_a_selfie" translatable="false">Take a selfie</string>
+    <string name="upload_from_storage" translatable="false">Upload from Storage</string>
+    <string name="upload_from_gallery" translatable="false">Upload from Gallery</string>
     <string name="male">Male</string>
     <string name="female">Female</string>
+    <string name="upload_data">Upload Data</string>
+    <string name="profile">Profile</string>
 </resources>
