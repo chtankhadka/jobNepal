@@ -9,6 +9,9 @@ sealed interface DashboardEvent {
     class JobsForDialog(val value : UploadNewVideoLink.DataColl): DashboardEvent
     class DeleteAppliedData(val value: String) : DashboardEvent
     class ChangeLanguage(val value: Boolean): DashboardEvent
+    class OnQueryChangeOnSearch(val value: String): DashboardEvent
+    class OnQuerySearchOnSearch(val value: String): DashboardEvent
+    class OnQuerySearchDelete(val value: String): DashboardEvent
     class UpdateCheckedList(
         val title: String,
         val value: List<String>,

@@ -186,7 +186,7 @@ class AcademicViewModel @Inject constructor(
                 is AcademicEvent.Delete -> {
                     _state.update {
                         it.copy(
-                            progress = Progress(value = 0F)
+                            infoMsg = Message.Loading(description = "deleting")
                         )
                     }
 //                    val resource = storageRepository.deleteAcademicAtachements(event.value,event.name)
@@ -200,13 +200,13 @@ class AcademicViewModel @Inject constructor(
 //                            }
 //                        }
 //
-//                        is Resource.Loading -> TODO()
+//                        is Resource.Loading ->
 //                        is Resource.Success -> {
 //                            getAcademicResponse()
 //                        }
 //                    }
 
-                    val resource1 = firestoreRepository.deleteAcademicData("", listOf(""))
+                    val resource1 = firestoreRepository.deleteAcademicData(level = "SEE")
                     when (resource1) {
                         is Resource.Failure -> {
 
@@ -217,7 +217,11 @@ class AcademicViewModel @Inject constructor(
                         }
 
                         is Resource.Success -> {
-
+                            _state.update {
+                                it.copy(
+                                    infoMsg = null
+                                )
+                            }
                         }
                     }
 

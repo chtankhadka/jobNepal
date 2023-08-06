@@ -5,6 +5,7 @@ import com.chetan.jobnepal.data.models.academic.UploadAcademicList
 import com.chetan.jobnepal.data.models.dashboard.FormAppliedList
 import com.chetan.jobnepal.data.models.param.UploadNewVideoLink
 import com.chetan.jobnepal.data.models.profile.UploadProfileParam
+import com.chetan.jobnepal.data.models.searchhistory.SearchHistoryRequestResponse
 
 interface FirestoreRepository {
 
@@ -26,7 +27,7 @@ interface FirestoreRepository {
 
     suspend fun getAcademicData() : Resource<UploadAcademicList>
 
-    suspend fun deleteAcademicData(level: String, names: List<String>): Resource<Any>
+    suspend fun deleteAcademicData(level: String): Resource<Any>
 
     suspend fun uploadProfileData(
         data: UploadProfileParam
@@ -43,5 +44,14 @@ interface FirestoreRepository {
         id: String
     ): Resource<Any>
     suspend fun getAppliedFormData() : Resource<List<FormAppliedList.DataColl>>
+
+    suspend fun getSearchHistory(): Resource<List<SearchHistoryRequestResponse.DataColl>>
+    suspend fun postSearchHistory(
+        data: SearchHistoryRequestResponse
+    ): Resource<Any>
+
+    suspend fun deleteSearchHistory(
+        data: SearchHistoryRequestResponse
+    ): Resource<Any>
 
 }

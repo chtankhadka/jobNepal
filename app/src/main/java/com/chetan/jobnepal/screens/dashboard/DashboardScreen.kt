@@ -216,14 +216,14 @@ fun DashboardScreen(
                     .fillMaxWidth(0.75f)
                     .padding(top = 4.dp)
                     .zIndex(1f),
-                query = searchText,
+                query = state.searchText,
                 onQueryChange = {
-                    searchText = it
+                    onEvent(DashboardEvent.OnQueryChangeOnSearch(it))
                 },
                 onSearch = {
+                    onEvent(DashboardEvent.OnQuerySearchOnSearch(it))
                     items.add(it)
                     active = false
-                    searchText = ""
                 },
                 active = active,
                 onActiveChange = {
@@ -265,38 +265,41 @@ fun DashboardScreen(
 
                 },
                 content = {
-                    items.forEach {
-                        Spacer(modifier = Modifier.height(5.dp))
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 10.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
+                    LazyColumn() {
+                        items(state.searchListResponse) {
+                            Spacer(modifier = Modifier.height(5.dp))
                             Row(
-                                modifier = Modifier.fillMaxWidth(0.7f)
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 10.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(0.7f)
+                                ) {
+                                    Icon(
+                                        modifier = Modifier.padding(end = 5.dp),
+                                        imageVector = Icons.Default.History,
+                                        contentDescription = ""
+                                    )
+                                    Text(text = it.searchValue)
+                                }
                                 Icon(
-                                    modifier = Modifier.padding(end = 5.dp),
-                                    imageVector = Icons.Default.History,
+                                    modifier = Modifier
+                                        .size(15.dp)
+                                        .clickable {
+                                            onEvent(DashboardEvent.OnQuerySearchDelete(it.searchTime))
+                                        },
+                                    imageVector = Icons.Default.Close,
                                     contentDescription = ""
                                 )
-                                Text(text = it)
+
+
                             }
-                            Icon(
-                                modifier = Modifier
-                                    .size(15.dp)
-                                    .clickable {
-
-                                    },
-                                imageVector = Icons.Default.Close,
-                                contentDescription = ""
-                            )
-
-
                         }
                     }
+
                 }
             )
         }

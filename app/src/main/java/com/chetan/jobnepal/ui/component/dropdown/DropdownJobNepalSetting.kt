@@ -62,7 +62,8 @@ fun DropdownJobNepalSetting(
                             )
                         },
                         onClick = {
-
+                                  if (tripleValue.first !="Nepali")
+                                      onClick(tripleValue.first)
                         },
                     )
                     if (tripleValue.first == "Nepali"){

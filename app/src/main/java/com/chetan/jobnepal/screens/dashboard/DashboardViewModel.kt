@@ -1,11 +1,14 @@
 package com.chetan.jobnepal.screens.dashboard
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chetan.jobnepal.R
 import com.chetan.jobnepal.data.Resource
 import com.chetan.jobnepal.data.local.Preference
 import com.chetan.jobnepal.data.models.dashboard.FormAppliedList
+import com.chetan.jobnepal.data.models.searchhistory.SearchHistoryRequestResponse
 import com.chetan.jobnepal.data.repository.firebasestoragerepository.FirebaseStorageRepository
 import com.chetan.jobnepal.data.repository.firestorerepository.FirestoreRepository
 import com.chetan.jobnepal.ui.component.dialogs.Message
@@ -15,6 +18,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -37,8 +41,34 @@ class DashboardViewModel @Inject constructor(
         }
         getNewVideoLink()
         getAppliedFormData()
+        getSearchHistory()
 
 
+    }
+
+    private fun getSearchHistory() {
+        viewModelScope.launch {
+            val resource1 = firestoreRepository.getSearchHistory()
+            when (resource1) {
+                is Resource.Failure -> {
+                    _state.update {
+                        it.copy(
+                            infoMsg = null,
+                            progress = null
+                        )
+                    }
+                }
+
+                Resource.Loading -> TODO()
+                is Resource.Success -> {
+                    _state.update {
+                        it.copy(
+                            searchListResponse = resource1.data
+                        )
+                    }
+                }
+            }
+        }
     }
 
     fun getNewVideoLink() {
@@ -97,6 +127,7 @@ class DashboardViewModel @Inject constructor(
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
     val onEvent: (event: DashboardEvent) -> Unit = { event ->
         viewModelScope.launch {
             when (event) {
@@ -318,11 +349,51 @@ class DashboardViewModel @Inject constructor(
                     }
                 }
 
-                is DashboardEvent.ChangeLanguage ->{
+                is DashboardEvent.ChangeLanguage -> {
                     _state.update {
                         it.copy(nepaliLanguage = event.value)
                     }
                     preference.isNepaliLanguage = event.value
+                }
+
+                is DashboardEvent.OnQueryChangeOnSearch -> {
+                    _state.update {
+                        it.copy(searchText = event.value)
+                    }
+                }
+
+                is DashboardEvent.OnQuerySearchOnSearch -> {
+                    val resource = firestoreRepository.postSearchHistory(
+                        SearchHistoryRequestResponse(
+                            dataColl = listOf(
+                                SearchHistoryRequestResponse.DataColl(
+                                    searchValue = event.value,
+                                    searchTime = LocalDateTime.now().toString()
+                                )
+                            )
+                        )
+                    )
+                    when (resource){
+                        is Resource.Failure -> {}
+                        Resource.Loading -> {}
+                        is Resource.Success -> {
+                            getSearchHistory()
+                        }
+                    }
+                }
+
+                is DashboardEvent.OnQuerySearchDelete -> {
+                    val list = state.value.searchListResponse.toMutableList()
+                    val filterListIndex = list.indexOfFirst { it.searchTime == event.value }
+                    if (filterListIndex != null && filterListIndex != -1){
+                        firestoreRepository.deleteSearchHistory(
+                            SearchHistoryRequestResponse(
+                                dataColl =list.filter { it.searchTime != event.value }
+
+                            )
+                        )
+                    }
+
                 }
             }
         }

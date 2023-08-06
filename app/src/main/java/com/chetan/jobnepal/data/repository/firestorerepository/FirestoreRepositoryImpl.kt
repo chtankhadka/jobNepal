@@ -6,9 +6,11 @@ import com.chetan.jobnepal.data.models.academic.UploadAcademicList
 import com.chetan.jobnepal.data.models.dashboard.FormAppliedList
 import com.chetan.jobnepal.data.models.param.UploadNewVideoLink
 import com.chetan.jobnepal.data.models.profile.UploadProfileParam
+import com.chetan.jobnepal.data.models.searchhistory.SearchHistoryRequestResponse
 import com.chetan.jobnepal.screens.academic.AcademicState
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.toObject
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -88,7 +90,8 @@ class FirestoreRepositoryImpl @Inject constructor(
                 AcademicState.BAC -> {
                     mapOf(selectedLevel to FieldValue.arrayUnion(*data.IAC.toTypedArray()))
                 }
-                AcademicState.CITIZENSHIP ->{
+
+                AcademicState.CITIZENSHIP -> {
                     mapOf(selectedLevel to FieldValue.arrayUnion(*data.CITIZENSHIP.toTypedArray()))
                 }
 
@@ -121,13 +124,17 @@ class FirestoreRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun deleteAcademicData(level: String, names: List<String>): Resource<Any> {
+    override suspend fun deleteAcademicData(level: String ): Resource<Any> {
         return try {
             val documentRef =
-                firestore.collection(preference.dbTable.toString()).document("academic")
-                    .update("IAC", FieldValue.arrayRemove("1000011340336")).await()
+                firestore.collection(preference.dbTable.toString())
+                    .document("academic")
 
-
+            val newData =
+                //IAC: [{url:"https:"}]
+                mapOf("SEE" to FieldValue.delete())
+//                mapOf("IAC" to FieldValue.arrayRemove("https:"))
+            documentRef.update(newData).await()
             Resource.Success(Unit)
 
 
@@ -182,21 +189,22 @@ class FirestoreRepositoryImpl @Inject constructor(
 
     }
 
-    override suspend fun deleteAppliedFormData(id: String) : Resource<Any>{
-         return try {
+    override suspend fun deleteAppliedFormData(id: String): Resource<Any> {
+        return try {
             val documentRef =
                 firestore.collection(preference.dbTable.toString()).document("appliedList")
             val snapshot = documentRef.get().await()
-            if (snapshot != null){
-                val dataList = snapshot.toObject(FormAppliedList::class.java)?.dataColl?.toMutableList()
+            if (snapshot != null) {
+                val dataList =
+                    snapshot.toObject(FormAppliedList::class.java)?.dataColl?.toMutableList()
                 val itemIndex = dataList?.indexOfFirst { it.id == id }
-                if (itemIndex != null && itemIndex != -1){
+                if (itemIndex != null && itemIndex != -1) {
                     val deleteData = dataList.removeAt(itemIndex)
-                    documentRef.update("dataColl", dataList).await()
+                    documentRef.update("dataColl", deleteData).await()
                 }
 
             }
-             Resource.Success("deleteData")
+            Resource.Success("deleteData")
         } catch (e: Exception) {
             e.printStackTrace()
             Resource.Failure(e)
@@ -216,6 +224,55 @@ class FirestoreRepositoryImpl @Inject constructor(
                 Resource.Failure(java.lang.Exception("No Data yet"))
             }
         } catch (e: Exception) {
+            e.printStackTrace()
+            Resource.Failure(e)
+        }
+    }
+
+    override suspend fun getSearchHistory(): Resource<List<SearchHistoryRequestResponse.DataColl>> {
+        return try {
+            val result =
+                firestore.collection(preference.dbTable.toString())
+                    .document("searchHistory")
+                    .get()
+                    .await()
+                    .toObject(SearchHistoryRequestResponse::class.java)
+            if (result != null) {
+                Resource.Success(result.dataColl.reversed())
+            } else {
+                Resource.Failure(java.lang.Exception("No Data yet"))
+            }
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Resource.Failure(e)
+        }
+
+    }
+
+    override suspend fun postSearchHistory(data: SearchHistoryRequestResponse): Resource<Any> {
+        return try {
+            val documentRef = firestore.collection(preference.dbTable.toString())
+                .document("searchHistory")
+            val newData = mapOf(
+                "dataColl" to FieldValue.arrayUnion(*data.dataColl.toTypedArray())
+            )
+            val result = documentRef.update(newData).await()
+            Resource.Success(result)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Resource.Failure(e)
+        }
+    }
+    override suspend fun deleteSearchHistory(data: SearchHistoryRequestResponse):Resource<Any>{
+        return try {
+            val documentRef = firestore.collection(preference.dbTable.toString())
+                .document("searchHistory")
+                .set(data)
+                .await()
+            Resource.Success(documentRef)
+
+        }catch (e: Exception){
             e.printStackTrace()
             Resource.Failure(e)
         }
