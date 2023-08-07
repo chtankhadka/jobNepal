@@ -10,6 +10,7 @@ data class UploadNewVideoLink(
         val videoLink: String = "",
         val description: String = "",
         val publishedTime: String = "",
+        val province: String = "",
         val academicList: List<AcademicList> = emptyList()
     ){
         data class AcademicList(

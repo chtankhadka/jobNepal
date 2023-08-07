@@ -11,7 +11,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Alarm
@@ -69,11 +72,13 @@ fun DashboardItem(
             .animateContentSize(),
         elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
     ) {
+        var sizeWidth = 0f
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 10.dp, vertical = 5.dp)
                 .drawBehind {
+                     sizeWidth = size.width
                     drawLine(
                         color = Color.White, // Set the desired color of the border
                         start = Offset(0f, size.height), // Starting point at the bottom-left corner
@@ -112,7 +117,7 @@ fun DashboardItem(
 
             }
         }
-        WebContent(videoId = list.videoLink)
+        WebContent(videoId = list.videoLink, modifier = Modifier.height(380.dp))
 //        AsyncImage(
 //            modifier = Modifier.fillMaxWidth(),
 //            contentScale = ContentScale.FillWidth,

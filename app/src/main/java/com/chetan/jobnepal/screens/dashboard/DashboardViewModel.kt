@@ -8,6 +8,7 @@ import com.chetan.jobnepal.R
 import com.chetan.jobnepal.data.Resource
 import com.chetan.jobnepal.data.local.Preference
 import com.chetan.jobnepal.data.models.dashboard.FormAppliedList
+import com.chetan.jobnepal.data.models.param.UploadNewVideoLink
 import com.chetan.jobnepal.data.models.searchhistory.SearchHistoryRequestResponse
 import com.chetan.jobnepal.data.repository.firebasestoragerepository.FirebaseStorageRepository
 import com.chetan.jobnepal.data.repository.firestorerepository.FirestoreRepository
@@ -88,7 +89,8 @@ class DashboardViewModel @Inject constructor(
                 is Resource.Success -> {
                     _state.update {
                         it.copy(
-                            videoListResponse = resource1.data
+                            videoListResponse = resource1.data,
+                            originalVideoListResponse = resource1.data
                         )
                     }
                 }
@@ -104,12 +106,12 @@ class DashboardViewModel @Inject constructor(
             val resource2 = firestoreRepository.getAppliedFormData()
             when (resource2) {
                 is Resource.Failure -> {
-                    _state.update {
-                        it.copy(
-                            infoMsg = Message.Error(description = resource2.exception.message),
-                            progress = null
-                        )
-                    }
+//                    _state.update {
+//                        it.copy(
+//                            infoMsg = Message.Error(description = "Please "),
+//                            progress = null
+//                        )
+//                    }
                 }
 
                 Resource.Loading -> TODO()
@@ -351,15 +353,22 @@ class DashboardViewModel @Inject constructor(
 
                 is DashboardEvent.ChangeLanguage -> {
                     _state.update {
-                        it.copy(nepaliLanguage = event.value)
+                        it.copy(
+                            nepaliLanguage = event.value
+                        )
                     }
                     preference.isNepaliLanguage = event.value
                 }
 
                 is DashboardEvent.OnQueryChangeOnSearch -> {
+                    val search_list = state.value.videoListResponse.filter { it.title.contains(event.value) }
                     _state.update {
-                        it.copy(searchText = event.value)
+                        it.copy(
+                            searchText = event.value,
+                            videoListResponse = search_list + state.value.videoListResponse.filter { !it.title.contains(event.value) }
+                            )
                     }
+
                 }
 
                 is DashboardEvent.OnQuerySearchOnSearch -> {
@@ -374,7 +383,8 @@ class DashboardViewModel @Inject constructor(
                         )
                     )
                     when (resource){
-                        is Resource.Failure -> {}
+                        is Resource.Failure -> {
+                        }
                         Resource.Loading -> {}
                         is Resource.Success -> {
                             getSearchHistory()
@@ -386,16 +396,53 @@ class DashboardViewModel @Inject constructor(
                     val list = state.value.searchListResponse.toMutableList()
                     val filterListIndex = list.indexOfFirst { it.searchTime == event.value }
                     if (filterListIndex != null && filterListIndex != -1){
-                        firestoreRepository.deleteSearchHistory(
+                        val resource =firestoreRepository.deleteSearchHistory(
                             SearchHistoryRequestResponse(
                                 dataColl =list.filter { it.searchTime != event.value }
 
                             )
                         )
+                        when (resource){
+                            is Resource.Failure -> {}
+                            Resource.Loading -> {}
+                            is Resource.Success -> {
+                                getSearchHistory()
+                            }
+                        }
                     }
 
                 }
+
+                is DashboardEvent.OnFieldFilter ->{
+                    val search_list = state.value.videoListResponse
+                    _state.update {
+                        it.copy(
+                            videoListResponse = search_list.filter { it.title == event.value })
+                    }
+                }
+                is DashboardEvent.OnProvinceFilter -> {
+                    val search_list = state.value.videoListResponse
+                    _state.update {
+                        it.copy(
+                            videoListResponse = search_list.filter { it.title == event.value })
+                    }
+
+                }
+
+                DashboardEvent.OnRefresh -> {
+                    _state.update {
+                        it.copy(infoMsg = Message.Loading(description = "Fetching Data", isCancellable = false, yesNoRequired = false))
+                    }
+                    getNewVideoLink()
+                    getAppliedFormData()
+
+                }
             }
+        }
+    }
+    fun doesMatchSearchQuery(query: String) : Boolean{
+        return state.value.videoListResponse.any{
+            it.title.contains(query, ignoreCase = true)
         }
     }
 }

@@ -206,7 +206,7 @@ class AcademicViewModel @Inject constructor(
 //                        }
 //                    }
 
-                    val resource1 = firestoreRepository.deleteAcademicData(level = "SEE")
+                    val resource1 = firestoreRepository.deleteAcademicData(level = event.value)
                     when (resource1) {
                         is Resource.Failure -> {
 

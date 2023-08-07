@@ -132,7 +132,7 @@ class FirestoreRepositoryImpl @Inject constructor(
 
             val newData =
                 //IAC: [{url:"https:"}]
-                mapOf("SEE" to FieldValue.delete())
+                mapOf(level to FieldValue.delete())
 //                mapOf("IAC" to FieldValue.arrayRemove("https:"))
             documentRef.update(newData).await()
             Resource.Success(Unit)

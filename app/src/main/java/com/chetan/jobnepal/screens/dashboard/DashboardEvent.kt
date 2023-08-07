@@ -12,6 +12,9 @@ sealed interface DashboardEvent {
     class OnQueryChangeOnSearch(val value: String): DashboardEvent
     class OnQuerySearchOnSearch(val value: String): DashboardEvent
     class OnQuerySearchDelete(val value: String): DashboardEvent
+    class OnProvinceFilter(val value: String) : DashboardEvent
+    class OnFieldFilter(val value: String) : DashboardEvent
+    object OnRefresh : DashboardEvent
     class UpdateCheckedList(
         val title: String,
         val value: List<String>,

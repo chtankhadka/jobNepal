@@ -20,7 +20,8 @@ import androidx.compose.ui.text.font.FontWeight
 @Composable
 fun ExposedDropdownJobNepal(
     modifier: Modifier = Modifier,
-    list: Array<String>
+    list: Array<String>,
+    onClick: (String) ->Unit
 ) {
     val context = LocalContext.current
     var expanded by remember {
@@ -57,6 +58,7 @@ fun ExposedDropdownJobNepal(
                             )
                         },
                         onClick = {
+                            onClick(item)
                             selectedItemIndex = index
                             expanded = false
                         })

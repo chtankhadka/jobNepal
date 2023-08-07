@@ -168,7 +168,8 @@ class UploadVideoViewModel @Inject constructor(
                                 "academic",
                                 "videoList",
                                 "appliedList",
-                                "Profile"
+                                "Profile",
+                                "searchHistory"
                             )
                         )
                       when (reseting){

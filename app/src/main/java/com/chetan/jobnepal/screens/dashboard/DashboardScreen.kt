@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material.icons.filled.Close
@@ -24,6 +25,11 @@ import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.NotificationsActive
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material.rememberSwipeableState
+import androidx.compose.material.swipeable
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DockedSearchBar
 import androidx.compose.material3.DrawerValue
@@ -46,9 +52,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.chetan.jobnepal.Destination
 import com.chetan.jobnepal.ui.component.dialogs.MessageDialog
 import com.chetan.jobnepal.ui.component.dropdown.ExposedDropdownJobNepal
@@ -56,7 +64,7 @@ import com.chetan.jobnepal.utils.VibratingIcon
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
 fun DashboardScreen(
     navController: NavHostController,
@@ -82,6 +90,16 @@ fun DashboardScreen(
     }
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
+    val refreshScope = rememberCoroutineScope()
+    var refreshing by remember { mutableStateOf(false) }
+    fun refresh() = refreshScope.launch {
+        refreshing = true
+        onEvent(DashboardEvent.OnRefresh)
+        refreshing = false
+    }
+
+    val refreshState = rememberPullRefreshState(refreshing, ::refresh)
+
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
@@ -91,126 +109,141 @@ fun DashboardScreen(
 
         }) {
         Box(
+            modifier = Modifier.fillMaxSize().pullRefresh(refreshState).background(Color.Magenta),
             contentAlignment = Alignment.TopCenter
         ) {
-            Scaffold(
-                topBar = {
-                    CenterAlignedTopAppBar(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 5.dp),
-                        navigationIcon = {
-                            Box(
-                                modifier = Modifier
-                                    .shadow(4.dp, shape = RoundedCornerShape(20))
-                                    .clip(RoundedCornerShape(20))
-                                    .background(MaterialTheme.colorScheme.onPrimary)
-                                    .clickable {
-                                        scope.launch {
-                                            drawerState.open()
-                                        }
-                                    },
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Icon(
-                                    modifier = Modifier.size(32.dp),
-                                    imageVector = Icons.Default.Menu,
-                                    contentDescription = "Close"
-                                )
-                            }
-                        },
-                        title = {
+            if (!refreshing) {
+                Scaffold(
+                    topBar = {
+                        CenterAlignedTopAppBar(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 5.dp),
+                            navigationIcon = {
+                                Box(
+                                    modifier = Modifier
+                                        .shadow(4.dp, shape = RoundedCornerShape(20))
+                                        .clip(RoundedCornerShape(20))
+                                        .background(MaterialTheme.colorScheme.onPrimary)
+                                        .clickable {
+                                            scope.launch {
+                                                drawerState.open()
+                                            }
+                                        },
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Icon(
+                                        modifier = Modifier.size(32.dp),
+                                        imageVector = Icons.Default.Menu,
+                                        contentDescription = "Close"
+                                    )
+                                }
+                            },
+                            title = {
 
 
-                        },
-                        actions = {
-                            Box(
-                                modifier = Modifier
-                                    .shadow(4.dp, shape = RoundedCornerShape(20))
-                                    .clip(RoundedCornerShape(20))
-                                    .background(MaterialTheme.colorScheme.onPrimary),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                VibratingIcon(Icons.Default.NotificationsActive) {
-                                    navController.navigate(Destination.Screen.UploadVideoScreen.route)
+                            },
+                            actions = {
+                                Box(
+                                    modifier = Modifier
+                                        .shadow(4.dp, shape = RoundedCornerShape(20))
+                                        .clip(RoundedCornerShape(20))
+                                        .background(MaterialTheme.colorScheme.onPrimary),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    VibratingIcon(Icons.Default.NotificationsActive) {
+                                        navController.navigate(Destination.Screen.UploadVideoScreen.route)
+                                    }
                                 }
                             }
-                        }
-                    )
+                        )
 
-                },
-                bottomBar = {
+                    },
+                    bottomBar = {
 
-                },
+                    },
 
-                //Dashboard Content
-                content = {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(it)
-                            .padding(horizontal = 7.dp)
-                    ) {
-                        state.infoMsg?.let {
-                            MessageDialog(
-                                message = it,
-                                onDismissRequest = {
-                                    if (onEvent != null && state.infoMsg.isCancellable == true) {
-                                        onEvent(DashboardEvent.DismissInfoMsg)
-                                    }
-                                },
-                                onPositive = { },
-                                onNegative = {})
-                        }
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(5.dp)
+                    //Dashboard Content
+                    content = {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(it)
+                                .padding(horizontal = 7.dp)
                         ) {
-                            ExposedDropdownJobNepal(
-                                modifier = Modifier.weight(0.5f),
-                                list = arrayOf(
-                                    "Province",
-                                    "Province 1",
-                                    "Province 2",
-                                    "Province 3"
-                                )
-                            )
-                            ExposedDropdownJobNepal(
-                                modifier = Modifier.weight(0.5f),
-                                list = arrayOf(
-                                    "Field",
-                                    "IT",
-                                    "Health",
-                                    "Bank"
-                                )
-
-                            )
-                            ExposedDropdownJobNepal(
-                                modifier = Modifier.weight(0.5f),
-                                list = arrayOf("All", "Technical", "Non Technical"),
-                            )
-
-                        }
-                        LazyColumn(
-                            modifier = Modifier,
-                            contentPadding = PaddingValues(horizontal = 0.dp, vertical = 5.dp),
-                            verticalArrangement = Arrangement.spacedBy(5.dp)
-                        ) {
-                            items(state.videoListResponse) { videoList ->
-                                DashboardItem(
-                                    state = state,
-                                    list = videoList,
-                                    isApplied = state.appliedIdsList.contains(videoList.id),
-                                    onEvent = onEvent
-                                )
+                            state.infoMsg?.let {
+                                MessageDialog(
+                                    message = it,
+                                    onDismissRequest = {
+                                        if (onEvent != null && state.infoMsg.isCancellable == true) {
+                                            onEvent(DashboardEvent.DismissInfoMsg)
+                                        }
+                                    },
+                                    onPositive = { },
+                                    onNegative = {})
                             }
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(5.dp)
+                            ) {
+                                ExposedDropdownJobNepal(
+                                    modifier = Modifier.weight(0.5f),
+                                    list = arrayOf(
+                                        "Province",
+                                        "Province 1",
+                                        "Province 2",
+                                        "Province 3"
+                                    ),
+                                    onClick = {
+                                        onEvent(DashboardEvent.OnProvinceFilter(it))
+                                    }
+                                )
+                                ExposedDropdownJobNepal(
+                                    modifier = Modifier.weight(0.5f),
+                                    list = arrayOf(
+                                        "Field",
+                                        "IT",
+                                        "Health",
+                                        "Bank"
+                                    ),
+                                    onClick = {
+                                        onEvent(DashboardEvent.OnFieldFilter(it))
+                                    }
+
+                                )
+                                ExposedDropdownJobNepal(
+                                    modifier = Modifier.weight(0.5f),
+                                    list = arrayOf("All", "Technical", "Non Technical"),
+                                    onClick = {
+//                                    onEvent(DashboardEvent.OnProvinceFilter(it))
+                                    }
+                                )
+
+                            }
+                            LazyColumn(
+                                modifier = Modifier.fillMaxSize(),
+                                contentPadding = PaddingValues(horizontal = 0.dp, vertical = 5.dp),
+                                verticalArrangement = Arrangement.spacedBy(5.dp)
+                            ) {
+
+                                items(state.videoListResponse) { videoList ->
+                                    DashboardItem(
+                                        state = state,
+                                        list = videoList,
+                                        isApplied = state.appliedIdsList.contains(videoList.id),
+                                        onEvent = onEvent
+                                    )
+
+                                }
+
+                            }
+
                         }
 
                     }
 
-                }
-
-            )
+                )
+            }
             DockedSearchBar(
                 modifier = Modifier
                     .fillMaxWidth(0.75f)
@@ -300,7 +333,12 @@ fun DashboardScreen(
                         }
                     }
 
-                }
+                },
+            )
+            PullRefreshIndicator(
+                refreshing = refreshing, state = refreshState, modifier = Modifier.align(
+                    Alignment.TopCenter
+                )
             )
         }
     }
