@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">JobNepal</string>
+    <string name="app_name">Online Form</string>
     <string name="profile">प्रोफाइल</string>
     <string name="upload_data">डाटा अपलोड गर्नुहोस्</string>
+    <string name="primary_level">"प्राथमिक तह "</string>
+    <string name="secondary_level">"निम्न माध्यमिक तह "</string>
+    <string name="higher_secondary_level">माध्यमिक तह</string>
+    <string name="primary_level_license">"प्राथमिक तह लाइसेन्स "</string>
+    <string name="secondary_level_license">निम्न प्राथमिक तह लाइसेन्स</string>
+    <string name="higher_secondary_level_license">माध्यमिक तह लाइसेन्स</string>
+    <string name="teacher_service_commission">"शिक्षक सेवा आयोग "</string>
+    <string name="physically_disabled">"शारीरिक रूपमा अशक्त "</string>
+    <string name="ethnic_group">"जातीय समूह "</string>
 </resources>

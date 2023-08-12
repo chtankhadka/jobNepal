@@ -1,5 +1,10 @@
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.DefaultMarqueeIterations
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.MarqueeAnimationMode
+import androidx.compose.foundation.basicMarquee
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -34,12 +39,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.chetan.jobnepal.R
 import com.chetan.jobnepal.screens.admin.uploadvideo.UploadVideoEvent
 import com.chetan.jobnepal.ui.component.CustomTooltipShape
 import com.chetan.jobnepal.ui.component.IconJobNepal
@@ -51,19 +60,27 @@ fun JobsSelectionDialog(
     onEvent: (event: UploadVideoEvent) -> Unit,
     onDissmiss: () -> Unit
 ) {
-    val listOfAvailableLevels = listOf("1", "2", "3", "4", "5", "6", "7", "8")
+    val listOfAvailableLevels = listOf("1", "2", "3", "4", "5", "6", "7", "8","9",
+        stringResource(R.string.physically_disabled),
+        stringResource(R.string.ethnic_group),
+    )
     val listOfJobs = listOf(
         Triple(
-            "technicalList", listOf(
-                "1",
-                "2",
-                "3",
-                "4",
-                "5",
-                "6"
-            ), listOfAvailableLevels
+            first = stringResource(R.string.teacher_service_commission),
+            second = listOf(
+                stringResource(R.string.primary_level),
+                stringResource(R.string.secondary_level),
+                stringResource(R.string.higher_secondary_level),
+                stringResource(R.string.primary_level_license),
+                stringResource(R.string.secondary_level_license),
+                stringResource(R.string.higher_secondary_level_license)
+            ), third = listOfAvailableLevels
         ),
-        Triple("nonTechnicalList", listOf("1", "2", "3"), listOfAvailableLevels)
+        Triple(
+            first = stringResource(R.string.nontechnicallist),
+            second = listOf("1", "2", "3"),
+            third = listOfAvailableLevels
+        )
 
 
     )
@@ -231,7 +248,7 @@ fun JobsSelectionDialog(
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun jobSelectionCheckBox(
     item: String,
@@ -251,16 +268,21 @@ fun jobSelectionCheckBox(
             modifier = Modifier.tooltipTrigger(),
             elevation = CardDefaults.cardElevation(3.dp)
         ) {
+            val focusRequester = remember { FocusRequester() }
             Column(
                 modifier = Modifier.width(70.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
+                    modifier = Modifier
+                        .basicMarquee(
+                            iterations = 10
+                        )
+                        ,
                     text = item,
                     textAlign = TextAlign.Center,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
                 )
                 Checkbox(checked = isSelected, onCheckedChange = {
                     onChange(it)
@@ -270,7 +292,7 @@ fun jobSelectionCheckBox(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun LevelSelectionCheckBox(
     item: String,
@@ -298,10 +320,10 @@ fun LevelSelectionCheckBox(
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
+                    modifier = Modifier.basicMarquee(),
                     text = item,
                     textAlign = TextAlign.Center,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
                 )
                 Checkbox(checked = isSelected, onCheckedChange = {
                     isSelected = it
