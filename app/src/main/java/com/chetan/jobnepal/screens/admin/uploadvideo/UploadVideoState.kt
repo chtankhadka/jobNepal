@@ -7,13 +7,20 @@ import com.chetan.jobnepal.ui.component.dialogs.Progress
 
 data class UploadVideoState(
     var videoList: UploadNewVideoLink = UploadNewVideoLink(),
-    val technicalList: UploadNewVideoLink.DataColl.AcademicList =
+    val shikashakSewaAayog: UploadNewVideoLink.DataColl.AcademicList =
         UploadNewVideoLink.DataColl.AcademicList(
             jobList = emptyList(),
             listName = "",
             levels = emptyList()
         ),
-    val nonTechnicalList: UploadNewVideoLink.DataColl.AcademicList =
+    val lokSewaAayog: UploadNewVideoLink.DataColl.AcademicList =
+        UploadNewVideoLink.DataColl.AcademicList(
+            jobList = emptyList(),
+            listName = "",
+            levels = emptyList()
+        ),
+
+    val rastriyaAnusandhanBibhag: UploadNewVideoLink.DataColl.AcademicList =
         UploadNewVideoLink.DataColl.AcademicList(
             jobList = emptyList(),
             listName = "",

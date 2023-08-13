@@ -9,7 +9,7 @@
     <string name="primary_level_license">"प्राथमिक तह लाइसेन्स "</string>
     <string name="secondary_level_license">निम्न प्राथमिक तह लाइसेन्स</string>
     <string name="higher_secondary_level_license">माध्यमिक तह लाइसेन्स</string>
-    <string name="teacher_service_commission">"शिक्षक सेवा आयोग "</string>
+    <string name="teacher">शिक्षक</string>
     <string name="physically_disabled">"शारीरिक रूपमा अशक्त "</string>
     <string name="ethnic_group">"जातीय समूह "</string>
 </resources>

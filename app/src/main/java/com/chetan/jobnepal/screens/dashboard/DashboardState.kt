@@ -16,13 +16,20 @@ data class DashboardState(
     val searchListResponse: List<SearchHistoryRequestResponse.DataColl> = emptyList(),
     val nepaliLanguage: Boolean = false,
     val appliedIdsList : List<String> = emptyList(),
-    val technicalList: FormAppliedList.DataColl.AcademicList =
+    val selectedVideoId: String = "",
+    val shikashakSewaAayog: FormAppliedList.DataColl.AcademicList =
         FormAppliedList.DataColl.AcademicList(
             jobList = emptyList(),
             listName = "",
             levels = emptyList()
         ),
-    val nonTechnicalList: FormAppliedList.DataColl.AcademicList =
+    val lokSewaAayog: FormAppliedList.DataColl.AcademicList =
+        FormAppliedList.DataColl.AcademicList(
+            jobList = emptyList(),
+            listName = "",
+            levels = emptyList()
+        ),
+    val rastriyaAnusandhanBibhag: FormAppliedList.DataColl.AcademicList =
         FormAppliedList.DataColl.AcademicList(
             jobList = emptyList(),
             listName = "",

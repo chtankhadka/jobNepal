@@ -56,8 +56,6 @@ fun TextFieldJobNepal(
         singleLine = singleLine,
         enabled = enabled,
         colors = TextFieldDefaults.textFieldColors(
-
-
         ),
         value = value,
         onValueChange = onValueChange,

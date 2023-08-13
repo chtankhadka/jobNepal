@@ -9,11 +9,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -192,7 +194,9 @@ fun DashboardScreen(
                                         "Province",
                                         "Province 1",
                                         "Province 2",
-                                        "Province 3"
+                                        "Province 3",
+                                        "Province 4",
+                                        "Province 5"
                                     ),
                                     onClick = {
                                         onEvent(DashboardEvent.OnProvinceFilter(it))
@@ -225,7 +229,6 @@ fun DashboardScreen(
                                 contentPadding = PaddingValues(horizontal = 0.dp, vertical = 5.dp),
                                 verticalArrangement = Arrangement.spacedBy(5.dp)
                             ) {
-
                                 items(state.videoListResponse) { videoList ->
                                     DashboardItem(
                                         state = state,
@@ -246,8 +249,8 @@ fun DashboardScreen(
             }
             DockedSearchBar(
                 modifier = Modifier
-                    .fillMaxWidth(0.75f)
                     .padding(top = 4.dp)
+                    .fillMaxWidth(0.75f)
                     .zIndex(1f),
                 query = state.searchText,
                 onQueryChange = {

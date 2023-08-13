@@ -47,7 +47,7 @@ fun AcademicItem(
             Text(text = title)
             DropdownJobNepal(
                 list = listOf(
-                    Triple("Edit" , Icons.Default.Edit,true),
+//                    Triple("Edit" , Icons.Default.Edit,true)
                     Triple("Delete" , Icons.Default.Delete,true)
                 )
             ){

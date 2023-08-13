@@ -43,7 +43,11 @@ class UploadVideoViewModel @Inject constructor(
                     val state = state.value
                     _state.update {
                         it.copy(
-                            infoMsg = Message.Loading(description = "Uploading...", isCancellable = false, yesNoRequired = false)
+                            infoMsg = Message.Loading(
+                                description = "Uploading...",
+                                isCancellable = false,
+                                yesNoRequired = false
+                            )
                         )
                     }
                     state.videoList.let {
@@ -62,8 +66,9 @@ class UploadVideoViewModel @Inject constructor(
                                         videoLink = state.url,
                                         publishedTime = state.publishedTime,
                                         academicList = listOf(
-                                            state.technicalList,
-                                            state.nonTechnicalList
+                                            state.shikashakSewaAayog,
+                                            state.lokSewaAayog,
+                                            state.rastriyaAnusandhanBibhag
                                         )
 
                                     )
@@ -86,11 +91,15 @@ class UploadVideoViewModel @Inject constructor(
                                     it.copy(
                                         infoMsg = null,
                                         progress = null,
-                                        technicalList = UploadNewVideoLink.DataColl.AcademicList(
+                                        shikashakSewaAayog = UploadNewVideoLink.DataColl.AcademicList(
                                             jobList = emptyList(),
                                             listName = ""
                                         ),
-                                        nonTechnicalList = UploadNewVideoLink.DataColl.AcademicList(
+                                        lokSewaAayog = UploadNewVideoLink.DataColl.AcademicList(
+                                            jobList = emptyList(),
+                                            listName = ""
+                                        ),
+                                        rastriyaAnusandhanBibhag = UploadNewVideoLink.DataColl.AcademicList(
                                             jobList = emptyList(),
                                             listName = ""
                                         )
@@ -162,8 +171,8 @@ class UploadVideoViewModel @Inject constructor(
                             infoMsg = Message.Loading(description = "Reseting...")
                         )
                     }
-                  viewModelScope.launch {
-                      val reseting =  repository.createJobNepalCollection(
+                    viewModelScope.launch {
+                        val reseting = repository.createJobNepalCollection(
                             listOf(
                                 "academic",
                                 "videoList",
@@ -172,23 +181,27 @@ class UploadVideoViewModel @Inject constructor(
                                 "searchHistory"
                             )
                         )
-                      when (reseting){
-                          is Resource.Failure -> {
-                              _state.update {
-                                  it.copy(
-                                      infoMsg = Message.Error(description = "Resetting", isCancellable = false)
-                                  )
-                              }
-                          }
-                          Resource.Loading -> {}
-                          is Resource.Success -> {
-                              _state.update {
-                                  it.copy(
-                                      infoMsg = null
-                                  )
-                              }
-                          }
-                      }
+                        when (reseting) {
+                            is Resource.Failure -> {
+                                _state.update {
+                                    it.copy(
+                                        infoMsg = Message.Error(
+                                            description = "Resetting",
+                                            isCancellable = false
+                                        )
+                                    )
+                                }
+                            }
+
+                            Resource.Loading -> {}
+                            is Resource.Success -> {
+                                _state.update {
+                                    it.copy(
+                                        infoMsg = null
+                                    )
+                                }
+                            }
+                        }
                     }
 
 
@@ -196,27 +209,73 @@ class UploadVideoViewModel @Inject constructor(
 
                 is UploadVideoEvent.UpdateCheckedList -> {
                     _state.update {
-                        if (event.title == "technicalList") {
-                            it.copy(technicalList = UploadNewVideoLink.DataColl.AcademicList(
-                                listName = event.title,
-                                jobList = event.value.map {
-                                    UploadNewVideoLink.DataColl.AcademicList.AvailableJobs(it)
-                                },
-                                levels = event.selectedLevels.map {
-                                    UploadNewVideoLink.DataColl.AcademicList.AvailableLevels(it)
-                                }
-                            ))
-                        } else {
-                            it.copy(nonTechnicalList = UploadNewVideoLink.DataColl.AcademicList(
-                                listName = event.title,
-                                jobList = event.value.map {
-                                    UploadNewVideoLink.DataColl.AcademicList.AvailableJobs(it)
-                                },
-                                levels = event.selectedLevels.map {
-                                    UploadNewVideoLink.DataColl.AcademicList.AvailableLevels(it)
-                                }
-                            ))
+                        when (event.title) {
+                            "शिक्षक सेवा आयोग" -> {
+                                it.copy(shikashakSewaAayog = UploadNewVideoLink.DataColl.AcademicList(
+                                    listName = event.title,
+                                    jobList = event.value.map {
+                                        UploadNewVideoLink.DataColl.AcademicList.AvailableJobs(
+                                            it
+                                        )
+                                    },
+                                    levels = event.selectedLevels.map {
+                                        UploadNewVideoLink.DataColl.AcademicList.AvailableLevels(
+                                            it
+                                        )
+                                    }
+                                ))
+                            }
+
+                            "लोकसेवा आयोग" -> {
+                                it.copy(lokSewaAayog = UploadNewVideoLink.DataColl.AcademicList(
+                                    listName = event.title,
+                                    jobList = event.value.map {
+                                        UploadNewVideoLink.DataColl.AcademicList.AvailableJobs(
+                                            it
+                                        )
+                                    },
+                                    levels = event.selectedLevels.map {
+                                        UploadNewVideoLink.DataColl.AcademicList.AvailableLevels(
+                                            it
+                                        )
+                                    }
+                                ))
+                            }
+
+                            "राष्ट्रिय अनुसन्धान विभाग" -> {
+                                it.copy(rastriyaAnusandhanBibhag = UploadNewVideoLink.DataColl.AcademicList(
+                                    listName = event.title,
+                                    jobList = event.value.map {
+                                        UploadNewVideoLink.DataColl.AcademicList.AvailableJobs(
+                                            it
+                                        )
+                                    },
+                                    levels = event.selectedLevels.map {
+                                        UploadNewVideoLink.DataColl.AcademicList.AvailableLevels(
+                                            it
+                                        )
+                                    }
+                                ))
+                            }
+
+
+                            else -> {
+                                it.copy(lokSewaAayog = UploadNewVideoLink.DataColl.AcademicList(
+                                    listName = event.title,
+                                    jobList = event.value.map {
+                                        UploadNewVideoLink.DataColl.AcademicList.AvailableJobs(
+                                            it
+                                        )
+                                    },
+                                    levels = event.selectedLevels.map {
+                                        UploadNewVideoLink.DataColl.AcademicList.AvailableLevels(
+                                            it
+                                        )
+                                    }
+                                ))
+                            }
                         }
+
                     }
                 }
 
@@ -225,6 +284,7 @@ class UploadVideoViewModel @Inject constructor(
                         it.copy(showJobDialog = event.value)
                     }
                 }
+
                 UploadVideoEvent.DismissInfoMsg -> {
                     _state.update {
                         it.copy(infoMsg = null)

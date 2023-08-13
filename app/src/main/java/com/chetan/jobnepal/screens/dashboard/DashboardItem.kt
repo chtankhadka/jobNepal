@@ -29,6 +29,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -52,12 +53,15 @@ fun DashboardItem(
     var isVisible by remember {
         mutableStateOf(false)
     }
-    if (state.showApplyDialog){
+    val id = remember {
+        mutableStateOf(list.id)
+    }
+    if (state.showApplyDialog) {
         JobsApplyDialog(
             listOfJobs = state.jobsForDialog,
             onEvent = onEvent,
             onApplied = {
-                onEvent(DashboardEvent.ApplyNow(list))
+                onEvent(DashboardEvent.ApplyNow(id.value))
                 onEvent(DashboardEvent.ShowApplyDialog(false))
             },
             onDismissListener = {
@@ -78,7 +82,7 @@ fun DashboardItem(
                 .fillMaxWidth()
                 .padding(horizontal = 10.dp, vertical = 5.dp)
                 .drawBehind {
-                     sizeWidth = size.width
+                    sizeWidth = size.width
                     drawLine(
                         color = Color.White, // Set the desired color of the border
                         start = Offset(0f, size.height), // Starting point at the bottom-left corner
@@ -96,21 +100,20 @@ fun DashboardItem(
             Text(text = list.title)
             DropdownJobNepal(
                 listOf(
-                    Triple("Full Guid" , Icons.Default.YoutubeSearchedFor,true),
-                    Triple("Apply Now" , Icons.Default.FastForward, !isApplied),
-                    Triple("Apply Later", Icons.Default.Alarm, !isApplied)
+                    Triple("Full Guid", Icons.Default.YoutubeSearchedFor, true),
+                    Triple("Apply Now", Icons.Default.FastForward, !isApplied)
                 )
-            ){
+            ) {
                 when (it) {
                     "Apply Now" -> {
+                        onEvent(DashboardEvent.SelectVideo(list.id))
                         onEvent(DashboardEvent.JobsForDialog(list))
+
                         onEvent(DashboardEvent.ShowApplyDialog(true))
                     }
-                    "Apply Later" -> {
-                        onEvent(DashboardEvent.ApplyLater(list))
-                    }
-                    else -> {
 
+                    else -> {
+                        println(list.id)
                     }
                 }
 
@@ -158,7 +161,7 @@ fun DashboardItem(
                 )
             }
             Divider(modifier = Modifier.padding(top = 5.dp, bottom = 5.dp))
-            if (isVisible){
+            if (isVisible) {
                 Text(
                     text = list.academicList.toString(),
                     modifier = Modifier
@@ -167,8 +170,6 @@ fun DashboardItem(
                     style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
                 )
             }
-
-
 
 
 //            Row(

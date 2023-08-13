@@ -40,8 +40,8 @@ class DashboardViewModel @Inject constructor(
                 nepaliLanguage = preference.isNepaliLanguage
             )
         }
-        getNewVideoLink()
         getAppliedFormData()
+        getNewVideoLink()
         getSearchHistory()
 
 
@@ -69,6 +69,28 @@ class DashboardViewModel @Inject constructor(
                     }
                 }
             }
+        }
+    }
+    fun resetApplyingList(){
+        _state.update {
+            it.copy(
+                appliedIdsList = emptyList(),
+                shikashakSewaAayog = FormAppliedList.DataColl.AcademicList(
+                    jobList = emptyList(),
+                    listName = "",
+                    levels = emptyList()
+                ),
+                lokSewaAayog =FormAppliedList.DataColl.AcademicList(
+                    jobList = emptyList(),
+                    listName = "",
+                    levels = emptyList()
+                ) ,
+                rastriyaAnusandhanBibhag = FormAppliedList.DataColl.AcademicList(
+                    jobList = emptyList(),
+                    listName = "",
+                    levels = emptyList()
+                )
+            )
         }
     }
 
@@ -144,21 +166,22 @@ class DashboardViewModel @Inject constructor(
                             )
                         )
                     }
-                    val list =
-                        state.value.videoListResponse.filter { it.id == event.value.id }
+                    val applylist =
+                        state.value.videoListResponse.filter { it.id == state.value.selectedVideoId }
                     val applyNowRequest = firestoreRepository.uploadAppliedFormData(
                         FormAppliedList(
-                            dataColl = list.map {
+                            dataColl = applylist.map {
                                 FormAppliedList.DataColl(
-                                    id = event.value.id,
-                                    title = event.value.title,
-                                    videoLink = event.value.videoLink,
-                                    description = event.value.description,
+                                    id = it.id,
+                                    title = it.title,
+                                    videoLink = it.videoLink,
+                                    description = it.description,
                                     apply = "applied",
                                     paymentSuccess = false,
                                     academicList = listOf(
-                                        state.value.technicalList,
-                                        state.value.nonTechnicalList
+                                        state.value.shikashakSewaAayog,
+                                        state.value.lokSewaAayog,
+                                        state.value.rastriyaAnusandhanBibhag
                                     )
                                 )
 
@@ -184,71 +207,12 @@ class DashboardViewModel @Inject constructor(
                         is Resource.Success -> {
                             _state.update {
                                 it.copy(
-                                    infoMsg = null
+                                    infoMsg = null,
                                 )
                             }
-                            getNewVideoLink()
+                            resetApplyingList()
                             getAppliedFormData()
-                        }
-                    }
-                }
-
-                is DashboardEvent.ApplyLater -> {
-                    _state.update {
-                        it.copy(
-                            infoMsg = Message.Loading(
-                                lottieImage = R.raw.pencil_walking,
-                                isCancellable = false,
-                                yesNoRequired = false,
-                                description = "Great!!!"
-                            )
-                        )
-                    }
-                    val list =
-                        state.value.videoListResponse.filter { it.id == event.value.id }
-                    val applyLater = firestoreRepository.uploadAppliedFormData(
-                        FormAppliedList(
-                            dataColl = list.map {
-                                FormAppliedList.DataColl(
-                                    id = event.value.id,
-                                    title = event.value.title,
-                                    videoLink = event.value.videoLink,
-                                    description = event.value.description,
-                                    apply = "applyLater",
-                                    paymentSuccess = false,
-                                    academicList = listOf(
-                                        state.value.technicalList,
-                                        state.value.nonTechnicalList
-                                    )
-                                )
-
-                            }
-                        )
-                    )
-                    when (applyLater) {
-                        is Resource.Failure -> {
-                            _state.update {
-                                it.copy(
-                                    infoMsg = Message.Error(
-                                        lottieImage = R.raw.loading,
-                                        description = applyLater.exception.message,
-                                    )
-                                )
-                            }
-                        }
-
-                        Resource.Loading -> {
-
-                        }
-
-                        is Resource.Success -> {
                             getNewVideoLink()
-                            getAppliedFormData()
-                            _state.update {
-                                it.copy(
-                                    infoMsg = null
-                                )
-                            }
                         }
                     }
                 }
@@ -263,26 +227,72 @@ class DashboardViewModel @Inject constructor(
 
                 is DashboardEvent.UpdateCheckedList -> {
                     _state.update {
-                        if (event.title == "technicalList") {
-                            it.copy(technicalList = FormAppliedList.DataColl.AcademicList(
-                                listName = event.title,
-                                jobList = event.value.map {
-                                    FormAppliedList.DataColl.AcademicList.AvailableJobs(it)
-                                },
-                                levels = event.selectedLevels.map {
-                                    FormAppliedList.DataColl.AcademicList.AvailableLevels(it)
-                                }
-                            ))
-                        } else {
-                            it.copy(nonTechnicalList = FormAppliedList.DataColl.AcademicList(
-                                listName = event.title,
-                                jobList = event.value.map {
-                                    FormAppliedList.DataColl.AcademicList.AvailableJobs(it)
-                                },
-                                levels = event.selectedLevels.map {
-                                    FormAppliedList.DataColl.AcademicList.AvailableLevels(it)
-                                }
-                            ))
+
+                        when (event.title) {
+                            "शिक्षक सेवा आयोग" -> {
+                                it.copy(shikashakSewaAayog = FormAppliedList.DataColl.AcademicList(
+                                    listName = event.title,
+                                    jobList = event.value.map {
+                                        FormAppliedList.DataColl.AcademicList.AvailableJobs(
+                                            it
+                                        )
+                                    },
+                                    levels = event.selectedLevels.map {
+                                        FormAppliedList.DataColl.AcademicList.AvailableLevels(
+                                            it
+                                        )
+                                    }
+                                ))
+                            }
+
+                            "लोकसेवा आयोग" -> {
+                                it.copy(lokSewaAayog = FormAppliedList.DataColl.AcademicList(
+                                    listName = event.title,
+                                    jobList = event.value.map {
+                                        FormAppliedList.DataColl.AcademicList.AvailableJobs(
+                                            it
+                                        )
+                                    },
+                                    levels = event.selectedLevels.map {
+                                        FormAppliedList.DataColl.AcademicList.AvailableLevels(
+                                            it
+                                        )
+                                    }
+                                ))
+                            }
+
+                            "राष्ट्रिय अनुसन्धान विभाग" -> {
+                                it.copy(rastriyaAnusandhanBibhag = FormAppliedList.DataColl.AcademicList(
+                                    listName = event.title,
+                                    jobList = event.value.map {
+                                        FormAppliedList.DataColl.AcademicList.AvailableJobs(
+                                            it
+                                        )
+                                    },
+                                    levels = event.selectedLevels.map {
+                                        FormAppliedList.DataColl.AcademicList.AvailableLevels(
+                                            it
+                                        )
+                                    }
+                                ))
+                            }
+
+
+                            else -> {
+                                it.copy(lokSewaAayog = FormAppliedList.DataColl.AcademicList(
+                                    listName = event.title,
+                                    jobList = event.value.map {
+                                        FormAppliedList.DataColl.AcademicList.AvailableJobs(
+                                            it
+                                        )
+                                    },
+                                    levels = event.selectedLevels.map {
+                                        FormAppliedList.DataColl.AcademicList.AvailableLevels(
+                                            it
+                                        )
+                                    }
+                                ))
+                            }
                         }
                     }
                 }
@@ -435,7 +445,16 @@ class DashboardViewModel @Inject constructor(
                     }
                     getNewVideoLink()
                     getAppliedFormData()
+                    resetApplyingList()
 
+                }
+
+                is DashboardEvent.SelectVideo -> {
+                    _state.update {
+                        it.copy(
+                            selectedVideoId = event.value
+                        )
+                    }
                 }
             }
         }

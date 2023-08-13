@@ -1,4 +1,6 @@
 import android.widget.AutoCompleteTextView.OnDismissListener
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,6 +14,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DownloadDone
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -75,133 +79,137 @@ fun JobsApplyDialog(
                     icon = Icons.Default.DownloadDone
                 )
             }
-            LazyColumn(
-                modifier = Modifier.padding(10.dp),
-                verticalArrangement = Arrangement.spacedBy(5.dp)
+            Column(
+                modifier = Modifier
+                    .padding(10.dp)
+                    .verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(5.dp)
             ) {
-                items(listOfJobs) {tipleList->
-                    var selectedList by remember { mutableStateOf(listOf<String>()) }
-                    var selectedLevels by remember {
-                        mutableStateOf(listOf<String>())
-                    }
-                    var isShowLevels by remember {
-                        mutableStateOf(false)
-                    }
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
+                listOfJobs.forEach {tipleList->
+                    if (tipleList.second.isNotEmpty()){
+                        var selectedList by remember { mutableStateOf(listOf<String>()) }
+                        var selectedLevels by remember {
+                            mutableStateOf(listOf<String>())
+                        }
+                        var isShowLevels by remember {
+                            mutableStateOf(false)
+                        }
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
                         ) {
-                            Text(
-                                text = tipleList.first,
-                                modifier = Modifier.padding(horizontal = 2.dp),
-                                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
-                            )
                             Row(
-                                modifier = Modifier,
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Text(text = "Select All")
-                                Checkbox(
-                                    checked = selectedList.containsAll(tipleList.second),
-                                    onCheckedChange = {
-                                        if (it) {
-                                            selectedList = tipleList.second.toMutableList()
-                                        } else {
-                                            selectedList = emptyList()
+                                Text(
+                                    text = tipleList.first,
+                                    modifier = Modifier.padding(horizontal = 2.dp),
+                                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
+                                )
+                                Row(
+                                    modifier = Modifier,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(text = "Select All")
+                                    Checkbox(
+                                        checked = selectedList.containsAll(tipleList.second),
+                                        onCheckedChange = {
+                                            if (it) {
+                                                selectedList = tipleList.second.toMutableList()
+                                            } else {
+                                                selectedList = emptyList()
+                                            }
+                                            onEvent(DashboardEvent.UpdateCheckedList(tipleList.first,selectedList,selectedLevels))
+                                        })
+                                }
+                            }
+                            Divider(modifier = Modifier.padding(bottom = 5.dp))
+
+                            VerticalGrid(columnCount = 3) {
+                                tipleList.second.map { item ->
+                                    {
+                                        checkBox(
+                                            item = item,
+                                            isSelected = selectedList.contains(item),
+                                            onChange = { changed ->
+                                                selectedList = if (changed) {
+                                                    selectedList + item
+                                                } else {
+                                                    selectedList - item
+                                                }
+                                                onEvent(DashboardEvent.UpdateCheckedList(tipleList.first,selectedList,selectedLevels))
+                                            }
+                                        )
+                                    }
+                                }
+                            }
+                            Spacer(modifier = Modifier.height(5.dp))
+                            Divider()
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 5.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = tipleList.first,
+                                    modifier = Modifier.padding(horizontal = 2.dp),
+                                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
+                                )
+                                IconButton(
+                                    onClick = {
+                                        isShowLevels = !isShowLevels
+                                    },
+                                    content = {
+                                        Icon(
+                                            imageVector = if (isShowLevels) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                                            contentDescription = ""
+                                        )
+                                    },
+                                )
+
+                            }
+                            Divider(modifier = Modifier.padding(bottom = 10.dp))
+                            if (isShowLevels) {
+                                LazyRow(
+                                    contentPadding = PaddingValues(5.dp),
+                                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                                    content = {
+                                        items(tipleList.third) { value ->
+                                            LevelSelectionCheckBox(
+                                                item = value,
+                                                onChange = {
+                                                    selectedLevels =
+                                                        if (it) {
+                                                            selectedLevels + value
+                                                        } else {
+                                                            selectedLevels - value
+                                                        }
+                                                    onEvent(
+                                                        DashboardEvent.UpdateCheckedList(
+                                                            tipleList.first,
+                                                            selectedList,
+                                                            selectedLevels
+                                                        )
+                                                    )
+                                                }
+                                            )
+
                                         }
-                                        onEvent(DashboardEvent.UpdateCheckedList(tipleList.first,selectedList,selectedLevels))
                                     })
                             }
                         }
-                        Divider(modifier = Modifier.padding(bottom = 5.dp))
-
-                        VerticalGrid(columnCount = 3) {
-                            tipleList.second.map { item ->
-                                {
-                                    checkBox(
-                                        item = item,
-                                        isSelected = selectedList.contains(item),
-                                        onChange = { changed ->
-                                            selectedList = if (changed) {
-                                                selectedList + item
-                                            } else {
-                                                selectedList - item
-                                            }
-                                            onEvent(DashboardEvent.UpdateCheckedList(tipleList.first,selectedList,selectedLevels))
-                                        }
-                                    )
-                                }
-                            }
-                        }
-                        Spacer(modifier = Modifier.height(5.dp))
-                        Divider()
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 5.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = tipleList.first,
-                                modifier = Modifier.padding(horizontal = 2.dp),
-                                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
-                            )
-                            IconButton(
-                                onClick = {
-                                    isShowLevels = !isShowLevels
-                                },
-                                content = {
-                                    Icon(
-                                        imageVector = if (isShowLevels) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
-                                        contentDescription = ""
-                                    )
-                                },
-                            )
-
-                        }
-                        Divider(modifier = Modifier.padding(bottom = 10.dp))
-                        if (isShowLevels) {
-                            LazyRow(
-                                contentPadding = PaddingValues(5.dp),
-                                horizontalArrangement = Arrangement.spacedBy(10.dp),
-                                content = {
-                                    items(tipleList.third) { value ->
-                                        LevelSelectionCheckBox(
-                                            item = value,
-                                            onChange = {
-                                                selectedLevels =
-                                                    if (it) {
-                                                        selectedLevels + value
-                                                    } else {
-                                                        selectedLevels - value
-                                                    }
-                                                onEvent(
-                                                    DashboardEvent.UpdateCheckedList(
-                                                        tipleList.first,
-                                                        selectedList,
-                                                        selectedLevels
-                                                    )
-                                                )
-                                            }
-                                        )
-
-                                    }
-                                })
-                        }
                     }
+
                 }
             }
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun checkBox(
     item: String,
@@ -228,6 +236,7 @@ fun checkBox(
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
+                    modifier = Modifier.basicMarquee(iterations = 10),
                     text = item,
                     textAlign = TextAlign.Center,
                     maxLines = 1,
