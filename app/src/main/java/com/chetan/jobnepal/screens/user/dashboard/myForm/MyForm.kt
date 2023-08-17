@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalFoundationApi::class)
 
-package com.chetan.jobnepal.screens.dashboard.myForm
+package com.chetan.jobnepal.screens.user.dashboard.myForm
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
@@ -38,9 +39,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.chetan.jobnepal.data.models.dashboard.FormAppliedList
-import com.chetan.jobnepal.screens.dashboard.DashboardEvent
-import com.chetan.jobnepal.screens.dashboard.DashboardState
+import com.chetan.jobnepal.screens.user.dashboard.DashboardEvent
+import com.chetan.jobnepal.screens.user.dashboard.DashboardState
 import com.chetan.jobnepal.ui.component.dropdown.DropdownJobNepal
+import com.chetan.jobnepal.utils.youtubePlayer.WebContent
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -164,12 +166,12 @@ fun MyFormItem(
         items(data.size) {
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
+                elevation = CardDefaults.cardElevation()
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 10.dp, vertical = 5.dp)
+                        .padding(horizontal = 10.dp)
                         .drawBehind {
                             drawLine(
                                 color = Color.White, // Set the desired color of the border
@@ -195,13 +197,14 @@ fun MyFormItem(
                         onClickedDropdownItem(item, data[it].id)
                     }
                 }
-                AsyncImage(
-                    modifier = Modifier.fillMaxWidth(),
-                    contentScale = ContentScale.FillWidth,
-                    model = data[it].videoLink,
-                    contentDescription = "details",
-                    alignment = Alignment.Center
-                )
+                WebContent(videoId = data[it].videoLink, modifier = Modifier.height(380.dp))
+//                AsyncImage(
+//                    modifier = Modifier.fillMaxWidth(),
+//                    contentScale = ContentScale.FillWidth,
+//                    model = data[it].videoLink,
+//                    contentDescription = "details",
+//                    alignment = Alignment.Center
+//                )
             }
         }
     }

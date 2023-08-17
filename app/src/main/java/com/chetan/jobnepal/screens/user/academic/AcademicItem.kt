@@ -1,4 +1,4 @@
-package com.chetan.jobnepal.screens.academic
+package com.chetan.jobnepal.screens.user.academic
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box

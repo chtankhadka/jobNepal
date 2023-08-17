@@ -7,7 +7,7 @@ import com.chetan.jobnepal.data.models.dashboard.FormAppliedList
 import com.chetan.jobnepal.data.models.param.UploadNewVideoLink
 import com.chetan.jobnepal.data.models.profile.UploadProfileParam
 import com.chetan.jobnepal.data.models.searchhistory.SearchHistoryRequestResponse
-import com.chetan.jobnepal.screens.academic.AcademicState
+import com.chetan.jobnepal.screens.user.academic.AcademicState
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.toObject
@@ -94,6 +94,12 @@ class FirestoreRepositoryImpl @Inject constructor(
 
                 AcademicState.CITIZENSHIP -> {
                     mapOf(selectedLevel to FieldValue.arrayUnion(*data.CITIZENSHIP.toTypedArray()))
+                }
+                AcademicState.EXPERIENCE -> {
+                    mapOf(selectedLevel to FieldValue.arrayUnion(*data.experience.toTypedArray()))
+                }
+                AcademicState.TRAINING -> {
+                    mapOf(selectedLevel to FieldValue.arrayUnion(*data.training.toTypedArray()))
                 }
 
                 else -> {

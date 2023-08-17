@@ -1,4 +1,4 @@
-package com.chetan.jobnepal.screens.dashboard
+package com.chetan.jobnepal.screens.user.dashboard
 
 
 import JobsApplyDialog
@@ -74,13 +74,14 @@ fun DashboardItem(
         modifier = Modifier
             .fillMaxWidth()
             .animateContentSize(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
+        elevation = CardDefaults.cardElevation(),
+        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primaryContainer)
     ) {
         var sizeWidth = 0f
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 10.dp, vertical = 5.dp)
+                .padding(horizontal = 10.dp)
                 .drawBehind {
                     sizeWidth = size.width
                     drawLine(
@@ -132,14 +133,7 @@ fun DashboardItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 10.dp, vertical = 5.dp)
-                .drawBehind {
-                    drawLine(
-                        color = Color.White,
-                        start = Offset(0f, 0f),
-                        end = Offset(size.width, 0f),
-                        strokeWidth = 1.dp.toPx()
-                    )
-                },
+                ,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Row(

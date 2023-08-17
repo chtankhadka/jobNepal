@@ -1,4 +1,4 @@
-package com.chetan.jobnepal.screens.academic
+package com.chetan.jobnepal.screens.user.academic
 
 import android.net.Uri
 

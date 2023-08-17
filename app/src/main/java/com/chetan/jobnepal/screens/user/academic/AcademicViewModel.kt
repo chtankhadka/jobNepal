@@ -1,4 +1,4 @@
-package com.chetan.jobnepal.screens.academic
+package com.chetan.jobnepal.screens.user.academic
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.House
@@ -119,6 +119,30 @@ class AcademicViewModel @Inject constructor(
                                                     )
                                                 }),
                                                 selectedLevel = "CITIZENSHIP"
+                                            )
+                                        }
+                                        AcademicState.EXPERIENCE -> {
+                                            firestoreRepository.uploadAcademicData(
+                                                data = UploadAcademicList(experience = resource.data.map {
+                                                    UploadAcademicList.Experience(
+                                                        "Experience",
+                                                        "12",
+                                                        it.first, it.second
+                                                    )
+                                                }),
+                                                selectedLevel = "experience"
+                                            )
+                                        }
+                                        AcademicState.TRAINING -> {
+                                            firestoreRepository.uploadAcademicData(
+                                                data = UploadAcademicList(training = resource.data.map {
+                                                    UploadAcademicList.Training(
+                                                        "Training",
+                                                        "12",
+                                                        it.first,it.second
+                                                    )
+                                                }),
+                                                selectedLevel = "training"
                                             )
                                         }
 
@@ -260,6 +284,7 @@ class AcademicViewModel @Inject constructor(
                     it.copy(progress = Progress(value = 0.0F))
                 }
                 val resource = firestoreRepository.getAcademicData()
+                println(resource.toString())
                 when (resource) {
                     is Resource.Failure -> {
                         _state.update {

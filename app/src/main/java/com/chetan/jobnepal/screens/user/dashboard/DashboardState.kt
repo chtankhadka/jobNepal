@@ -1,4 +1,4 @@
-package com.chetan.jobnepal.screens.dashboard
+package com.chetan.jobnepal.screens.user.dashboard
 
 
 import com.chetan.jobnepal.data.models.dashboard.FormAppliedList

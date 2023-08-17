@@ -15,6 +15,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.chetan.jobnepal.ui.component.IconJobNepal
+import com.maxkeppeker.sheets.core.icons.twotone.ExpandMore
 import me.saket.cascade.CascadeDropdownMenu
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -103,6 +104,18 @@ fun CascadeDropdownMenuJobNepal(
                     },
                     onClick = {
                         onLevelSelected("CITIZENSHIP")
+                        expanded = false
+                    })
+                androidx.compose.material3.DropdownMenuItem(
+                    text = { Text(text = "2.Experience") },
+                    onClick = {
+                        onLevelSelected("Experience")
+                        expanded = false
+                    })
+
+                androidx.compose.material3.DropdownMenuItem(
+                    text = { Text(text = "3.Training") },
+                    onClick = { onLevelSelected("TRAINING")
                         expanded = false
                     })
             })

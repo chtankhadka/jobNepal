@@ -48,7 +48,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import coil.compose.AsyncImage
-import com.chetan.jobnepal.screens.academic.AcademicState
+import com.chetan.jobnepal.screens.user.academic.AcademicState
 import com.chetan.jobnepal.ui.component.IconJobNepal
 
 @Composable

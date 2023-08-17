@@ -1,4 +1,4 @@
-package com.chetan.jobnepal.screens.academic
+package com.chetan.jobnepal.screens.user.academic
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
@@ -50,7 +50,7 @@ fun AcademicScreen(
                 IconJobNepal(onClick = { navController.popBackStack()}, icon = Icons.Default.ArrowBack)
             },
             title = {
-                Text(text = "Academic", style = MaterialTheme.typography.titleLarge)
+                Text(text = "Documents", style = MaterialTheme.typography.titleLarge)
             },
             actions = {
                 CascadeDropdownMenuJobNepal(onLevelSelected = {
@@ -159,6 +159,43 @@ fun AcademicScreen(
                     } else {
                         onEvent(
                             AcademicEvent.Delete("Citizenship", names)
+                        )
+                    }
+                }, showEdit = state.showEdit
+                )
+            }
+            if (state.academicListResponse.experience.isNotEmpty()){
+                AcademicItem("Experience", data = state.academicListResponse.experience.map {
+                    MappedList(id = it.id, date = it.date, name = it.name, url = it.url)
+                }.toMutableList(), onClick = { task: String?, names: List<String> ->
+                    if (task == "Delete") {
+                        onEvent(
+                            AcademicEvent.Delete("Experience", names)
+                        )
+                    } else if (task == "Edit") {
+                        onEvent(AcademicEvent.ShowEdit(true))
+                    } else {
+                        onEvent(
+                            AcademicEvent.Delete("Experience", names)
+                        )
+                    }
+                }, showEdit = state.showEdit
+                )
+            }
+
+            if (state.academicListResponse.training.isNotEmpty()){
+                AcademicItem("Training", data = state.academicListResponse.training.map {
+                    MappedList(id = it.id, date = it.date, name = it.name, url = it.url)
+                }.toMutableList(), onClick = { task: String?, names: List<String> ->
+                    if (task == "Delete") {
+                        onEvent(
+                            AcademicEvent.Delete("Training", names)
+                        )
+                    } else if (task == "Edit") {
+                        onEvent(AcademicEvent.ShowEdit(true))
+                    } else {
+                        onEvent(
+                            AcademicEvent.Delete("Training", names)
                         )
                     }
                 }, showEdit = state.showEdit

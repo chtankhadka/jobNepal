@@ -1,4 +1,4 @@
-package com.chetan.jobnepal.screens.dashboard
+package com.chetan.jobnepal.screens.admin.dashboard
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -22,19 +22,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
-import com.chetan.jobnepal.Destination
-import com.chetan.jobnepal.screens.dashboard.myForm.MyForm
 import com.chetan.jobnepal.ui.component.dropdown.DropdownJobNepalSetting
 import com.chetan.jobnepal.utils.ProfileAnimation
 
 @Composable
 fun ModalDrawerSheetPage(
-    navController: NavHostController,
-    state: DashboardState,
+    state: AdminDashboardState,
+    onEvent: (event: AdminDashboardEvent) -> Unit,
     onClick: (String) -> Unit,
-    onEvent: (event: DashboardEvent) -> Unit,
-
     ) {
     Column(
         modifier = Modifier
@@ -55,18 +50,6 @@ fun ModalDrawerSheetPage(
                 Text(text = "Form Requested: 4")
                 Text(text = "Attend Exam: 1")
             }
-            val list = listOf(
-                Triple("Nepali", Icons.Default.Language,true),
-                Triple("Contacts" , Icons.Default.Contacts,true),
-                Triple("Logout" , Icons.Default.Logout,true),
-                )
-            DropdownJobNepalSetting(list,state,onEvent,onClick ={
-                    if (it == "Logout"){
-                        onClick("logout")
-                    }else if (it=="Nepali"){
-                        onClick("Nepali")
-                    }
-            })
 
         }
         Divider(
@@ -75,20 +58,17 @@ fun ModalDrawerSheetPage(
                 .height(2.dp)
         )
         val menuList = listOf(
-            Icons.Default.Home to "Profile",
-            Icons.Default.Contacts to "Academic"
+            Icons.Default.Home to "Add Video",
+            Icons.Default.Contacts to "Documents"
         )
 
         menuList.forEach {
             Spacer(modifier = Modifier.height(5.dp))
             ElevatedCard(
                 modifier = Modifier.clickable {
-                  if (it.second == "Academic")  {
-                      navController.navigate(Destination.Screen.Academic.route)
+                  if (it.second == "Add Video")  {
+
                   }
-                    if (it.second == "Profile"){
-                        navController.navigate(Destination.Screen.ProfileScreen.route)
-                    }
                 },
                 shape = RoundedCornerShape(5.dp)
             ) {
@@ -105,13 +85,5 @@ fun ModalDrawerSheetPage(
 
         }
         Spacer(modifier = Modifier.height(5.dp))
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(),
-            Arrangement.Bottom
-        ) {
-            MyForm(state,onEvent)
-        }
     }
 }

@@ -1,7 +1,6 @@
-package com.chetan.jobnepal.screens.account
+package com.chetan.jobnepal.screens.user.account
 
 import android.net.Uri
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -35,7 +34,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,7 +43,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
@@ -52,9 +50,11 @@ import com.chetan.jobnepal.R
 import com.chetan.jobnepal.data.enums.Gender
 import com.chetan.jobnepal.ui.component.IconJobNepal
 import com.chetan.jobnepal.ui.component.animation.YouCannotClickMe
+import com.chetan.jobnepal.ui.component.dialogs.AddressDialog
 import com.chetan.jobnepal.ui.component.textfield.EnumTextFieldJobNepal
 import com.chetan.jobnepal.ui.component.textfield.ReadonlyJobNepalTextField
 import com.chetan.jobnepal.ui.component.textfield.TextFieldJobNepal
+import com.chetan.jobnepal.utils.JsonReader
 import com.maxkeppeker.sheets.core.models.base.rememberSheetState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarConfig
@@ -68,8 +68,37 @@ fun ProfileScreen(
     state: ProfileState,
     onEvent: (event: ProfileEvent) -> Unit
 ) {
-    val ctx = LocalContext.current
+    var addressDialog by remember {
+        mutableStateOf(false)
+    }
+    var addressList by remember { mutableStateOf(mutableListOf<String>()) }
 
+    var addressListIndicator by remember {
+        mutableStateOf("pp")
+    }
+
+
+    val ctx = LocalContext.current
+    val address = JsonReader.readAndDeserializeJson(ctx,"nepal.json")?.provinces?.toMutableList()
+
+
+    if (addressDialog){
+        AddressDialog(addressList = addressList, onDismissRequest = {  }, onClick = {
+            when (addressListIndicator){
+                "pp" -> {
+                    onEvent(ProfileEvent.PermanentProvince(it))
+                }
+                "pd" -> {
+                    onEvent(ProfileEvent.PermanentDistrict(it))
+                }
+                "pm" ->{
+                    onEvent(ProfileEvent.PermanentMunicipality(it))
+                }
+            }
+            addressDialog = false
+
+        })
+    }
     var selectedImageUri by remember {
         mutableStateOf<Uri?>(null)
     }
@@ -222,6 +251,88 @@ fun ProfileScreen(
                 }
                 Spacer(modifier = Modifier.height(5.dp))
 
+
+                //Permanent Address
+
+
+
+
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth(0.9f)
+                        .animateContentSize(),
+                    colors = CardDefaults.cardColors(MaterialTheme.colorScheme.secondaryContainer),
+                ) {
+                    Column(
+                        modifier = Modifier.padding(7.dp),
+                        verticalArrangement = Arrangement.spacedBy(5.dp)
+                    ) {
+
+                        Spacer(modifier = Modifier.height(10.dp))
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(text = "Permanent Address")
+                            Icon(
+                                imageVector = if (!state.isOtherVisible) Icons.Default.KeyboardArrowDown else Icons.Default.KeyboardArrowUp,
+                                contentDescription = null,
+                                modifier = Modifier.clickable {
+                                    onEvent(ProfileEvent.OnOtherDetailsClicked(!state.isOtherVisible))
+                                }
+                            )
+                        }
+                        Divider(modifier = Modifier.padding(top = 20.dp, bottom = 10.dp))
+                        if (state.isOtherVisible) {
+
+                            ReadonlyJobNepalTextField(
+                                label = "State",
+                                value = state.provience,
+                                onClick = {
+
+                                    if (address != null){
+                                        addressList = address.map { it.name }.toMutableList()
+                                        addressListIndicator = "pp"
+                                        addressDialog = true
+                                    }
+                                })
+                            if (state.provience.isNotBlank()){
+                                ReadonlyJobNepalTextField(
+                                    value = state.district,
+                                    label = "District",
+                                    onClick = {
+                                        if (address != null){
+                                            addressList = address.find { it.name == state.provience }?.districts?.map { it.name }?.toMutableList() ?: mutableListOf()
+                                            addressListIndicator = "pd"
+                                            addressDialog = true
+                                        }
+                                    }
+                                )
+                            }
+                            if (state.district.isNotBlank()){
+                                ReadonlyJobNepalTextField(
+                                    label = "Municipality",
+                                    value = state.municipality,
+                                    onClick = {
+                                        if (address != null){
+                                            addressList = address.find { it.name == state.provience }?.districts?.find { it.name == state.district }?.municipalities?.toMutableList() ?: mutableListOf()
+                                            addressListIndicator = "pm"
+                                            addressDialog = true
+                                        }
+                                    }
+                                )
+                            }
+                        }
+
+                    }
+                }
+                Spacer(modifier = Modifier.height(5.dp))
+
+
+
+                //Family Details
                 Card(
                     modifier = Modifier
                         .fillMaxWidth(0.9f)
@@ -282,6 +393,10 @@ fun ProfileScreen(
 
                     }
                 }
+
+
+
+
 
                 Spacer(modifier = Modifier.height(5.dp))
                 YouCannotClickMe(

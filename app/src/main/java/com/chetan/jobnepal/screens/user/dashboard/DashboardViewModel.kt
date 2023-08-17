@@ -1,4 +1,4 @@
-package com.chetan.jobnepal.screens.dashboard
+package com.chetan.jobnepal.screens.user.dashboard
 
 import android.os.Build
 import androidx.annotation.RequiresApi

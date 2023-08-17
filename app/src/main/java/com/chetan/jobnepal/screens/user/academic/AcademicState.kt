@@ -1,4 +1,4 @@
-package com.chetan.jobnepal.screens.academic
+package com.chetan.jobnepal.screens.user.academic
 
 import android.net.Uri
 import com.chetan.jobnepal.data.models.academic.UploadAcademicList
@@ -25,5 +25,7 @@ data class AcademicState(
 
 //        others
         const val CITIZENSHIP = "CITIZENSHIP"
+        const val TRAINING = "training"
+        const val EXPERIENCE = "experience"
     }
 }

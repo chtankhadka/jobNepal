@@ -44,7 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.chetan.jobnepal.screens.admin.uploadvideo.UploadVideoEvent
-import com.chetan.jobnepal.screens.dashboard.DashboardEvent
+import com.chetan.jobnepal.screens.user.dashboard.DashboardEvent
 import com.chetan.jobnepal.ui.component.CustomTooltipShape
 import com.chetan.jobnepal.ui.component.IconJobNepal
 

@@ -4,7 +4,6 @@ import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -13,21 +12,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.core.app.ActivityCompat.recreate
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.chetan.jobnepal.screens.academic.AcademicScreen
-import com.chetan.jobnepal.screens.academic.AcademicViewModel
-import com.chetan.jobnepal.screens.account.ProfileScreen
-import com.chetan.jobnepal.screens.account.ProfileViewModel
+import com.chetan.jobnepal.screens.admin.dashboard.AdminDashboard
+import com.chetan.jobnepal.screens.admin.dashboard.AdminDashboardViewModel
 import com.chetan.jobnepal.screens.admin.uploadvideo.UploadVideoScreen
 import com.chetan.jobnepal.screens.admin.uploadvideo.UploadVideoViewModel
-import com.chetan.jobnepal.screens.dashboard.DashboardScreen
-import com.chetan.jobnepal.screens.dashboard.DashboardViewModel
 import com.chetan.jobnepal.screens.onboardscreen.OnBoardScreen
 import com.chetan.jobnepal.screens.onboardscreen.OnBoardViewModel
 import com.chetan.jobnepal.screens.sign_in.emailandpasswordauthentication.LoginWithEmailPasswordScreen
@@ -36,6 +30,12 @@ import com.chetan.jobnepal.screens.sign_in.emailandpasswordauthentication.Signup
 import com.chetan.jobnepal.screens.sign_in.newlogin.GoogleAuthUiClient
 import com.chetan.jobnepal.screens.sign_in.newlogin.SignInScreen
 import com.chetan.jobnepal.screens.sign_in.newlogin.SignInViewModel
+import com.chetan.jobnepal.screens.user.academic.AcademicScreen
+import com.chetan.jobnepal.screens.user.academic.AcademicViewModel
+import com.chetan.jobnepal.screens.user.account.ProfileScreen
+import com.chetan.jobnepal.screens.user.account.ProfileViewModel
+import com.chetan.jobnepal.screens.user.dashboard.DashboardScreen
+import com.chetan.jobnepal.screens.user.dashboard.DashboardViewModel
 import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -58,15 +58,20 @@ fun AppNavHost(
             val viewModel = hiltViewModel<SignInViewModel>()
             val state by viewModel.state.collectAsStateWithLifecycle()
             LaunchedEffect(key1 = Unit) {
-                if(googleAuthUiClient.getSignedInUser() != null) {
-                    navController.cleanNavigate(Destination.Screen.Dashboard.route)
+                if (googleAuthUiClient.getSignedInUser() != null) {
+                    if (googleAuthUiClient.getSignedInUser()!!.userEmail == "chetan.dtech@gmail.com" || googleAuthUiClient.getSignedInUser()!!.userEmail == "bheshkshetri58@gmail.com") {
+                        navController.cleanNavigate(Destination.Screen.AdminDashboard.route)
+                    } else {
+                        navController.cleanNavigate(Destination.Screen.Dashboard.route)
+                    }
+
                 }
             }
 
             val launcher = rememberLauncherForActivityResult(
                 contract = ActivityResultContracts.StartIntentSenderForResult(),
                 onResult = { result ->
-                    if(result.resultCode == RESULT_OK) {
+                    if (result.resultCode == RESULT_OK) {
                         lifecycleScope.launch {
                             val signInResult = googleAuthUiClient.signInWithIntent(
                                 intent = result.data ?: return@launch
@@ -78,7 +83,7 @@ fun AppNavHost(
             )
 
             LaunchedEffect(key1 = state.isSignInSuccessful) {
-                if(state.isSignInSuccessful) {
+                if (state.isSignInSuccessful) {
                     navController.navigate("dashboard")
                     viewModel.resetState()
                 }
@@ -99,8 +104,8 @@ fun AppNavHost(
             )
         }
 
-        composable("on-board"){
-            val viewModel= hiltViewModel<OnBoardViewModel>()
+        composable("on-board") {
+            val viewModel = hiltViewModel<OnBoardViewModel>()
             OnBoardScreen(
                 onComplete = {
                     navController.cleanNavigate("sign_in")
@@ -111,13 +116,13 @@ fun AppNavHost(
             )
         }
 
-        composable("sign-with-email-password"){
+        composable("sign-with-email-password") {
             val viewModel = hiltViewModel<LoginWithEmailPasswordViewModel>()
-            LoginWithEmailPasswordScreen(navController,viewModel)
+            LoginWithEmailPasswordScreen(navController, viewModel)
         }
-        composable("signup-with-email-password"){
+        composable("signup-with-email-password") {
             val viewModel = hiltViewModel<LoginWithEmailPasswordViewModel>()
-            SignupWithEmailPasswordScreen(navController,viewModel)
+            SignupWithEmailPasswordScreen(navController, viewModel)
         }
 
         composable("dashboard") {
@@ -127,26 +132,53 @@ fun AppNavHost(
                 state = viewModel.state.collectAsStateWithLifecycle().value,
                 onEvent = viewModel.onEvent,
                 onClick = {
-                    if (it == "logout"){
+                    if (it == "logout") {
                         lifecycleScope.launch {
                             googleAuthUiClient.signOut()
-                            navController.navigate("sign_in"){
-                                popUpTo(Destination.Screen.GoogleSignIn.route){inclusive = true}
+                            navController.navigate("sign_in") {
+                                popUpTo(Destination.Screen.GoogleSignIn.route) { inclusive = true }
                             }
                         }
 
 
-                    }
-                    else if (it=="Nepali"){
+                    } else if (it == "Nepali") {
                         val intent = Intent(applicationContext, MainActivity::class.java)
-                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        intent.flags =
+                            Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                         applicationContext.startActivity(intent)
                     }
                 }
-                )
+            )
 
         }
-        composable("academic"){
+
+        composable(Destination.Screen.AdminDashboard.route) {
+            val viewModel = hiltViewModel<AdminDashboardViewModel>()
+            AdminDashboard(
+                navController,
+                state = viewModel.state.collectAsStateWithLifecycle().value,
+                onEvent = viewModel.onEvent,
+                onClick =
+                {
+                    when (it){
+                        "logout" ->{
+                            lifecycleScope.launch {
+                                googleAuthUiClient.signOut()
+                                navController.navigate("sign_in") {
+                                    popUpTo(Destination.Screen.GoogleSignIn.route) { inclusive = true }
+                                }
+                            }
+                        }
+                        "addVideo" ->{
+                            navController.navigate(Destination.Screen.UploadVideoScreen.route)
+                        }
+                    }
+                })
+        }
+
+
+
+        composable("academic") {
             val viewModel = hiltViewModel<AcademicViewModel>()
             AcademicScreen(
                 navController,
@@ -155,7 +187,7 @@ fun AppNavHost(
             )
         }
 
-        composable("upload-video-screen"){
+        composable("upload-video-screen") {
             val viewModel = hiltViewModel<UploadVideoViewModel>()
             UploadVideoScreen(
                 navController,
@@ -164,7 +196,7 @@ fun AppNavHost(
             )
         }
 
-        composable(Destination.Screen.ProfileScreen.route){
+        composable(Destination.Screen.ProfileScreen.route) {
             val viewModel = hiltViewModel<ProfileViewModel>()
             ProfileScreen(
                 navController,
@@ -172,7 +204,7 @@ fun AppNavHost(
                 onEvent = viewModel.onEvent
             )
         }
-        
+
     }
 }
 

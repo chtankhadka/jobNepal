@@ -5,6 +5,8 @@ data class UploadAcademicList(
     val IAC: List<iacColl> = emptyList(),
     val BSc_CSIT: List<bsccsitColl> = emptyList(),
     val CITIZENSHIP: List<citizenship> = emptyList(),
+    val experience : List<Experience> = emptyList(),
+    val training : List<Training> = emptyList()
 ) {
     data class seeColl(
         val id: String,
@@ -31,6 +33,22 @@ data class UploadAcademicList(
         constructor() : this("", "", "","")
     }
     data class citizenship(
+        val id: String,
+        val date: String,
+        val name: String,
+        val url: String
+    ){
+        constructor() : this("", "", "","")
+    }
+    data class Experience(
+        val id: String,
+        val date: String,
+        val name: String,
+        val url: String
+    ){
+        constructor() : this("", "", "","")
+    }
+    data class Training(
         val id: String,
         val date: String,
         val name: String,

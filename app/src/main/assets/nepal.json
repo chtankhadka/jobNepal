@@ -1,0 +1,31 @@
+{
+  "provinces": [
+    {
+      "name": "Province No. 1",
+      "districts": [
+        {
+          "name": "Ilam",
+          "municipalities": ["Ilam Municipality", "Deumai Municipality"]
+        },
+        {
+          "name": "Jhapa",
+          "municipalities": ["Mechinagar Municipality", "Damak Municipality"]
+        }
+      ]
+    },
+    {
+      "name": "Province No. 2",
+      "districts": [
+        {
+          "name": "Saptari",
+          "municipalities": ["Rajbiraj Municipality", "Kanchanpur Municipality"]
+        },
+        {
+          "name": "Siraha",
+          "municipalities": ["Lahan Municipality", "Siraha Municipality"],
+          "rural_municipalities": ["Bishnupur Municipality", "Golbazar Municipality"]
+        }
+      ]
+    }
+  ]
+}

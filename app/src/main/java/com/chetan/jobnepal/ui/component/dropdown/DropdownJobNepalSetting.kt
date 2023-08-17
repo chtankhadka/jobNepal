@@ -22,8 +22,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import com.chetan.jobnepal.screens.dashboard.DashboardEvent
-import com.chetan.jobnepal.screens.dashboard.DashboardState
+import com.chetan.jobnepal.screens.user.dashboard.DashboardEvent
+import com.chetan.jobnepal.screens.user.dashboard.DashboardState
 
 @Composable
 fun DropdownJobNepalSetting(

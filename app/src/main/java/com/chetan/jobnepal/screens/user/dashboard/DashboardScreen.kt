@@ -1,4 +1,4 @@
-package com.chetan.jobnepal.screens.dashboard
+package com.chetan.jobnepal.screens.user.dashboard
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
@@ -42,6 +42,8 @@ import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarColors
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -60,6 +62,7 @@ import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.chetan.jobnepal.Destination
+import com.chetan.jobnepal.ui.component.CustomSearchBar
 import com.chetan.jobnepal.ui.component.dialogs.MessageDialog
 import com.chetan.jobnepal.ui.component.dropdown.ExposedDropdownJobNepal
 import com.chetan.jobnepal.utils.VibratingIcon
@@ -111,7 +114,10 @@ fun DashboardScreen(
 
         }) {
         Box(
-            modifier = Modifier.fillMaxSize().pullRefresh(refreshState).background(Color.Magenta),
+            modifier = Modifier
+                .fillMaxSize()
+                .pullRefresh(refreshState)
+                .background(Color.Magenta),
             contentAlignment = Alignment.TopCenter
         ) {
             if (!refreshing) {
@@ -120,7 +126,8 @@ fun DashboardScreen(
                         CenterAlignedTopAppBar(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 5.dp),
+                                .padding(horizontal = 5.dp)
+                            ,
                             navigationIcon = {
                                 Box(
                                     modifier = Modifier
@@ -157,7 +164,8 @@ fun DashboardScreen(
                                         navController.navigate(Destination.Screen.UploadVideoScreen.route)
                                     }
                                 }
-                            }
+                            },
+
                         )
 
                     },
@@ -224,9 +232,9 @@ fun DashboardScreen(
                                 )
 
                             }
+                            Spacer(modifier = Modifier.height(5.dp))
                             LazyColumn(
                                 modifier = Modifier.fillMaxSize(),
-                                contentPadding = PaddingValues(horizontal = 0.dp, vertical = 5.dp),
                                 verticalArrangement = Arrangement.spacedBy(5.dp)
                             ) {
                                 items(state.videoListResponse) { videoList ->
@@ -247,6 +255,15 @@ fun DashboardScreen(
 
                 )
             }
+//            var query by remember {
+//                mutableStateOf("")
+//            }
+//            CustomSearchBar(query = query, onQueryChange = {
+//                query = it
+//            },
+//                modifier = Modifier.padding(top = 7.dp),
+//                placeholder = "Search Here"
+//            )
             DockedSearchBar(
                 modifier = Modifier
                     .padding(top = 4.dp)

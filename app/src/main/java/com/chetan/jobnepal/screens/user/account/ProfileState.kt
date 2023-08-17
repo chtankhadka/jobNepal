@@ -1,6 +1,7 @@
-package com.chetan.jobnepal.screens.account
+package com.chetan.jobnepal.screens.user.account
 
 import com.chetan.jobnepal.data.enums.Gender
+import com.chetan.jobnepal.data.models.Address
 import com.chetan.jobnepal.data.models.profile.UploadProfileParam
 import com.chetan.jobnepal.ui.component.JobNepalScreenState
 import com.chetan.jobnepal.ui.component.dialogs.Message
@@ -15,6 +16,17 @@ data class ProfileState(
     val imageUrl: String = "",
     val editGender: Gender? = null,
     val editEmail: String = "",
+
+    //address
+
+    val address: List<Address.Province> = emptyList(),
+    val provience: String = "",
+    val district: String = "",
+    val municipality: String = "",
+    val wardNo: String = "",
+    val villageName: String = "",
+
+
     val editFatherFirstName: String = "",
     val editFatherMiddleName: String = "",
     val editFatherLastNam: String = "",

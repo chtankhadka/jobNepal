@@ -2,14 +2,19 @@ package com.chetan.jobnepal.ui.component.dropdown
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -57,11 +62,13 @@ fun ExposedDropdownJobNepal(
             decorationBox = {innerTextField ->
                 Row (
                     modifier,
-
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                     ){
-                    innerTextField()
+                    Column(modifier = Modifier.fillMaxWidth(0.80f)) {
+                        innerTextField()
+                    }
+
                     ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
 
                 }

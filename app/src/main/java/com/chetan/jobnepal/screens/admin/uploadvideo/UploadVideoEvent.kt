@@ -1,6 +1,6 @@
 package com.chetan.jobnepal.screens.admin.uploadvideo
 
-import com.chetan.jobnepal.screens.dashboard.DashboardEvent
+import com.chetan.jobnepal.screens.user.dashboard.DashboardEvent
 
 sealed interface UploadVideoEvent{
     object UploadVideoUrl : UploadVideoEvent

@@ -1,15 +1,21 @@
-package com.chetan.jobnepal.screens.account
+package com.chetan.jobnepal.screens.user.account
 
+import android.content.Context
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chetan.jobnepal.data.Resource
 import com.chetan.jobnepal.data.enums.Gender
+import com.chetan.jobnepal.data.local.Preference
+import com.chetan.jobnepal.data.models.Address
 import com.chetan.jobnepal.data.models.profile.UploadProfileParam
 import com.chetan.jobnepal.data.repository.firebasestoragerepository.FirebaseStorageRepository
 import com.chetan.jobnepal.data.repository.firestorerepository.FirestoreRepository
 import com.chetan.jobnepal.ui.component.dialogs.Message
 import com.chetan.jobnepal.ui.component.dialogs.Progress
+import com.chetan.jobnepal.utils.JsonReader
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -24,11 +30,10 @@ class ProfileViewModel @Inject constructor(
 ) : ViewModel() {
     private val _state = MutableStateFlow(ProfileState())
     val state: StateFlow<ProfileState> = _state
-
     init {
         getProfileData()
-    }
 
+    }
     val onEvent: (event: ProfileEvent) -> Unit = { event ->
         when (event) {
 
@@ -137,6 +142,29 @@ class ProfileViewModel @Inject constructor(
             is ProfileEvent.OnOtherDetailsClicked -> {
                 _state.update {
                     it.copy(isOtherVisible = event.value)
+                }
+            }
+
+            is ProfileEvent.PermanentDistrict -> {
+                _state.update {
+                    it.copy(
+                        district = event.value
+                    )
+                }
+            }
+            is ProfileEvent.PermanentMunicipality -> {
+                _state.update {
+                    it.copy(
+                        municipality = event.value
+                    )
+                }
+
+            }
+            is ProfileEvent.PermanentProvince -> {
+                _state.update {
+                    it.copy(
+                        provience = event.value
+                    )
                 }
             }
         }
