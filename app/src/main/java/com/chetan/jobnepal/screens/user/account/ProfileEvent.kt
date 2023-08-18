@@ -12,18 +12,34 @@ sealed interface ProfileEvent {
     data class OnEmailChange(val value: String) : ProfileEvent
     data class OnGenderChange(val value: Gender?) : ProfileEvent
 
-    // address
+    // Permanent address
     data class PermanentProvince(val value: String): ProfileEvent
     data class PermanentDistrict(val value: String): ProfileEvent
     data class PermanentMunicipality(val value: String): ProfileEvent
+    data class PermanentVillage(val value: String): ProfileEvent
+    data class PermanentWard(val value: String): ProfileEvent
 
+    data class TemporaryProvince(val value: String): ProfileEvent
+    data class TemporaryDistrict(val value: String): ProfileEvent
+    data class TemporaryMunicipality(val value: String): ProfileEvent
+    data class TemporaryVillage(val value: String): ProfileEvent
+    data class TemporaryWard(val value: String): ProfileEvent
 
-
+    //fathers details
 
     data class OnFatherFirstNameChange(val value: String) : ProfileEvent
     data class OnFatherMiddleNameChange(val value: String) : ProfileEvent
     data class OnFatherLastNameChange(val value: String) : ProfileEvent
 
-    data class OnOtherDetailsClicked(val value: Boolean) : ProfileEvent
+    //Grand father
+    data class GrandFathersFirstName(val value: String) : ProfileEvent
+    data class GrandFathersMiddleName(val value: String) : ProfileEvent
+    data class GrandFathersLastName(val value: String): ProfileEvent
+
+    // Husband Wife
+    data class HusbandWifeFirstName(val value: String) : ProfileEvent
+    data class HusbandWifeMiddleName(val value: String) : ProfileEvent
+    data class HusbandWifeLastName(val value: String): ProfileEvent
+
     data class Upload(val value: Uri) : ProfileEvent
 }

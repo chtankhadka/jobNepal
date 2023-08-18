@@ -1,21 +1,15 @@
 package com.chetan.jobnepal.screens.user.account
 
-import android.content.Context
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chetan.jobnepal.data.Resource
 import com.chetan.jobnepal.data.enums.Gender
-import com.chetan.jobnepal.data.local.Preference
-import com.chetan.jobnepal.data.models.Address
 import com.chetan.jobnepal.data.models.profile.UploadProfileParam
 import com.chetan.jobnepal.data.repository.firebasestoragerepository.FirebaseStorageRepository
 import com.chetan.jobnepal.data.repository.firestorerepository.FirestoreRepository
 import com.chetan.jobnepal.ui.component.dialogs.Message
 import com.chetan.jobnepal.ui.component.dialogs.Progress
-import com.chetan.jobnepal.utils.JsonReader
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -139,12 +133,6 @@ class ProfileViewModel @Inject constructor(
 
             }
 
-            is ProfileEvent.OnOtherDetailsClicked -> {
-                _state.update {
-                    it.copy(isOtherVisible = event.value)
-                }
-            }
-
             is ProfileEvent.PermanentDistrict -> {
                 _state.update {
                     it.copy(
@@ -164,6 +152,100 @@ class ProfileViewModel @Inject constructor(
                 _state.update {
                     it.copy(
                         provience = event.value
+                    )
+                }
+            }
+
+            is ProfileEvent.PermanentVillage -> {
+                _state.update {
+                    it.copy(
+                        villageName = event.value
+                    )
+                }
+
+            }
+            is ProfileEvent.PermanentWard -> {
+                _state.update {
+                    it.copy(
+                        wardNo = event.value
+                    )
+                }
+            }
+            is ProfileEvent.TemporaryDistrict -> {
+                _state.update {
+                    it.copy(
+                        tdistrict = event.value
+                    )
+                }
+            }
+            is ProfileEvent.TemporaryMunicipality -> {
+                _state.update {
+                    it.copy(
+                        tmunicipality = event.value
+                    )
+                }
+            }
+            is ProfileEvent.TemporaryProvince -> {
+                _state.update {
+                    it.copy(
+                        tprovience = event.value
+                    )
+                }
+            }
+            is ProfileEvent.TemporaryVillage -> {
+                _state.update {
+                    it.copy(
+                        tvillageName = event.value
+                    )
+                }
+            }
+            is ProfileEvent.TemporaryWard -> {
+                _state.update {
+                    it.copy(
+                        twardNo = event.value
+                    )
+                }
+            }
+
+            is ProfileEvent.GrandFathersFirstName -> {
+                _state.update {
+                    it.copy(
+                        editGrandFatherFirstName = event.value
+                    )
+                }
+            }
+            is ProfileEvent.GrandFathersLastName -> {
+                _state.update {
+                    it.copy(
+                        editGrandFatherLastNam = event.value
+                    )
+                }
+            }
+            is ProfileEvent.GrandFathersMiddleName -> {
+                _state.update {
+                    it.copy(
+                        editGrandFatherMiddleName = event.value
+                    )
+                }
+            }
+            is ProfileEvent.HusbandWifeFirstName -> {
+                _state.update {
+                    it.copy(
+                        editHusbandWifeFirstName = event.value
+                    )
+                }
+            }
+            is ProfileEvent.HusbandWifeLastName -> {
+                _state.update {
+                    it.copy(
+                        editHusbandWifeLastName = event.value
+                    )
+                }
+            }
+            is ProfileEvent.HusbandWifeMiddleName -> {
+                _state.update {
+                    it.copy(
+                        editHusbandWifeMiddleName = event.value
                     )
                 }
             }

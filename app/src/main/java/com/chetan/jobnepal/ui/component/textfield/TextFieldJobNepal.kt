@@ -8,7 +8,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.MaterialTheme
+
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material3.Text
@@ -55,8 +56,7 @@ fun TextFieldJobNepal(
         isError = isError,
         singleLine = singleLine,
         enabled = enabled,
-        colors = TextFieldDefaults.textFieldColors(
-        ),
+        colors = TextFieldDefaults.textFieldColors(backgroundColor = MaterialTheme.colorScheme.primaryContainer),
         value = value,
         onValueChange = onValueChange,
         trailingIcon = trailingIcon,

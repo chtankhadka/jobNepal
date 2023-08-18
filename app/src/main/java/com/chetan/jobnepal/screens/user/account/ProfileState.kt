@@ -17,7 +17,7 @@ data class ProfileState(
     val editGender: Gender? = null,
     val editEmail: String = "",
 
-    //address
+    //Permanent address
 
     val address: List<Address.Province> = emptyList(),
     val provience: String = "",
@@ -25,11 +25,28 @@ data class ProfileState(
     val municipality: String = "",
     val wardNo: String = "",
     val villageName: String = "",
+    //Temporary address
+    val tprovience: String = "",
+    val tdistrict: String = "",
+    val tmunicipality: String = "",
+    val twardNo: String = "",
+    val tvillageName: String = "",
 
-
+//fathers details
     val editFatherFirstName: String = "",
     val editFatherMiddleName: String = "",
     val editFatherLastNam: String = "",
+
+    //GrandFathers Details
+    val editGrandFatherFirstName: String = "",
+    val editGrandFatherMiddleName: String = "",
+    val editGrandFatherLastNam: String = "",
+
+    //Husband Wife Details
+    val editHusbandWifeFirstName: String = "",
+    val editHusbandWifeMiddleName: String = "",
+    val editHusbandWifeLastName: String = "",
+
     var isOtherVisible: Boolean = false,
     override val infoMsg: Message? = null,
     override val progress: Progress? = null

@@ -34,7 +34,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -64,9 +63,7 @@ import com.maxkeppeler.sheets.calendar.models.CalendarSelection
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
-    navController: NavHostController,
-    state: ProfileState,
-    onEvent: (event: ProfileEvent) -> Unit
+    navController: NavHostController, state: ProfileState, onEvent: (event: ProfileEvent) -> Unit
 ) {
     var addressDialog by remember {
         mutableStateOf(false)
@@ -79,20 +76,34 @@ fun ProfileScreen(
 
 
     val ctx = LocalContext.current
-    val address = JsonReader.readAndDeserializeJson(ctx,"nepal.json")?.provinces?.toMutableList()
+    val address = JsonReader.readAndDeserializeJson(ctx, "nepal.json")?.provinces?.toMutableList()
 
 
-    if (addressDialog){
-        AddressDialog(addressList = addressList, onDismissRequest = {  }, onClick = {
-            when (addressListIndicator){
+    if (addressDialog) {
+        AddressDialog(addressList = addressList, onDismissRequest = { }, onClick = {
+            when (addressListIndicator) {
                 "pp" -> {
                     onEvent(ProfileEvent.PermanentProvince(it))
                 }
+
                 "pd" -> {
                     onEvent(ProfileEvent.PermanentDistrict(it))
                 }
-                "pm" ->{
+
+                "pm" -> {
                     onEvent(ProfileEvent.PermanentMunicipality(it))
+                }
+
+                "tp" -> {
+                    onEvent(ProfileEvent.TemporaryProvince(it))
+                }
+
+                "td" -> {
+                    onEvent(ProfileEvent.TemporaryDistrict(it))
+                }
+
+                "tm" -> {
+                    onEvent(ProfileEvent.TemporaryMunicipality(it))
                 }
             }
             addressDialog = false
@@ -102,319 +113,520 @@ fun ProfileScreen(
     var selectedImageUri by remember {
         mutableStateOf<Uri?>(null)
     }
-    val photoPickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickVisualMedia(),
-        onResult = { uri ->
-            if (uri != null) {
-                selectedImageUri = uri
-            }
-        })
+    val photoPickerLauncher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.PickVisualMedia(),
+            onResult = { uri ->
+                if (uri != null) {
+                    selectedImageUri = uri
+                }
+            })
 
     val calendarState = rememberSheetState()
-    CalendarDialog(
-        state = calendarState,
-        config = CalendarConfig(
-            monthSelection = true,
-            yearSelection = true
-        ),
-        selection = CalendarSelection.Date{date ->
+    CalendarDialog(state = calendarState, config = CalendarConfig(
+        monthSelection = true, yearSelection = true
+    ), selection = CalendarSelection.Date { date ->
         onEvent(ProfileEvent.OnDobChange(date.toString()))
     })
 
-    Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(5.dp),
-                navigationIcon = {
-                    IconJobNepal(
-                        onClick = {
-                                  navController.popBackStack()
-                        },
-                        icon = Icons.Default.ArrowBack
-                    )
-                },
-                title = {
-                    Text(text = ctx.getString(R.string.profile), style = MaterialTheme.typography.titleLarge)
-                }
+    Scaffold(topBar = {
+        CenterAlignedTopAppBar(modifier = Modifier
+            .fillMaxWidth()
+            .padding(5.dp), navigationIcon = {
+            IconJobNepal(
+                onClick = {
+                    navController.popBackStack()
+                }, icon = Icons.Default.ArrowBack
             )
-        },
-        content = {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(it)
-                    .verticalScroll(state = rememberScrollState()),
-                horizontalAlignment = Alignment.CenterHorizontally
+        }, title = {
+            Text(
+                text = ctx.getString(R.string.profile),
+                style = MaterialTheme.typography.titleLarge
+            )
+        })
+    }, content = {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(it)
+                .verticalScroll(state = rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(5.dp)
+        ) {
+            Box(modifier = Modifier.fillMaxWidth(0.7f)) {
+                AsyncImage(
+                    model = selectedImageUri ?: state.imageUrl, contentDescription = ""
+                )
+            }
+            Card(
+                modifier = Modifier.fillMaxWidth(0.9f),
+                colors = CardDefaults.cardColors(MaterialTheme.colorScheme.inversePrimary),
             ) {
-                Box(modifier = Modifier.fillMaxWidth(0.7f)) {
-                    AsyncImage(
-                        model = selectedImageUri?:state.imageUrl,
-                        contentDescription = ""
-                    )
-                }
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth(0.9f),
-                    colors = CardDefaults.cardColors(MaterialTheme.colorScheme.secondaryContainer),
+                Column(
+                    modifier = Modifier.padding(7.dp),
+                    verticalArrangement = Arrangement.spacedBy(5.dp)
                 ) {
-                    Column(
-                        modifier = Modifier.padding(7.dp),
-                        verticalArrangement = Arrangement.spacedBy(5.dp)
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            TextFieldJobNepal(
-                                modifier = Modifier.weight(0.85f),
-                                label = "First Name",
-                                value = state.editFirstName,
-                                onValueChange = {
-                                    onEvent(ProfileEvent.OnFirstNameChange(it))
-                                },
-                                required = true,
-                            )
-                            Spacer(modifier = Modifier.width(5.dp))
-                            FloatingActionButton(
-                                modifier = Modifier.weight(0.15f),
-                                onClick = {
-                                    photoPickerLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-                                }) {
-                                Icon(
-                                    imageVector = Icons.Default.Camera,
-                                    contentDescription = ""
+                        TextFieldJobNepal(
+                            modifier = Modifier.weight(0.85f),
+                            label = "First Name",
+                            value = state.editFirstName,
+                            onValueChange = {
+                                onEvent(ProfileEvent.OnFirstNameChange(it))
+                            },
+                            required = true,
+                        )
+                        Spacer(modifier = Modifier.width(5.dp))
+                        FloatingActionButton(modifier = Modifier.weight(0.15f), onClick = {
+                            photoPickerLauncher.launch(
+                                PickVisualMediaRequest(
+                                    ActivityResultContracts.PickVisualMedia.ImageOnly
                                 )
+                            )
+                        }) {
+                            Icon(
+                                imageVector = Icons.Default.Camera, contentDescription = ""
+                            )
+                        }
+
+                    }
+                    Row(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        TextFieldJobNepal(modifier = Modifier.weight(1f),
+                            label = "Middle Name",
+                            value = state.editMiddleName,
+                            onValueChange = {
+                                onEvent(ProfileEvent.OnMiddleNameChange(it))
+                            })
+                        Spacer(modifier = Modifier.width(5.dp))
+                        TextFieldJobNepal(
+                            modifier = Modifier.weight(1f),
+                            label = "Last Name",
+                            value = state.editLastName,
+                            onValueChange = {
+                                onEvent(ProfileEvent.OnLastNameChange(it))
+                            },
+                            required = true
+                        )
+                    }
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        EnumTextFieldJobNepal(
+                            modifier = Modifier.fillMaxWidth(0.5f),
+                            options = Gender.values().toList(),
+                            asString = { this?.resId?.let { ctx.getString(it) } ?: "" },
+                            label = "Gender",
+                            value = state.editGender,
+                            onValueChange = { onEvent(ProfileEvent.OnGenderChange(it)) },
+                            required = true
+                        )
+                        Spacer(modifier = Modifier.width(5.dp))
+                        ReadonlyJobNepalTextField(value = state.editDob,
+                            label = "Date of birth",
+                            required = true,
+                            onClick = {
+                                calendarState.show()
                             }
 
+                        )
+                    }
+                    TextFieldJobNepal(
+                        label = "Email", value = state.editEmail, onValueChange = {
+                            onEvent(ProfileEvent.OnEmailChange(it))
+                        }, required = true
+                    )
+
+
+                }
+
+
+            }
+
+            //Permanent Address
+
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth(0.9f)
+                    .animateContentSize(),
+                colors = CardDefaults.cardColors(MaterialTheme.colorScheme.inversePrimary),
+            ) {
+                var isExpand by remember {
+                    mutableStateOf(false)
+                }
+                Column(
+                    modifier = Modifier.padding(7.dp),
+                    verticalArrangement = Arrangement.spacedBy(5.dp)
+                ) {
+
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(text = "Permanent Address")
+                        Icon(imageVector = if (!isExpand) Icons.Default.KeyboardArrowDown else Icons.Default.KeyboardArrowUp,
+                            contentDescription = null,
+                            modifier = Modifier.clickable {
+                                isExpand = !isExpand
+                            })
+                    }
+                    Divider(modifier = Modifier.padding(top = 20.dp, bottom = 10.dp))
+                    if (isExpand) {
+
+                        ReadonlyJobNepalTextField(label = "State",
+                            value = state.provience,
+                            onClick = {
+
+                                if (address != null) {
+                                    addressList = address.map { it.name }.toMutableList()
+                                    addressListIndicator = "pp"
+                                    addressDialog = true
+                                }
+                            })
+                        if (state.provience.isNotBlank()) {
+                            ReadonlyJobNepalTextField(value = state.district,
+                                label = "District",
+                                onClick = {
+                                    if (address != null) {
+                                        addressList =
+                                            address.find { it.name == state.provience }?.districts?.map { it.name }
+                                                ?.toMutableList() ?: mutableListOf()
+                                        addressListIndicator = "pd"
+                                        addressDialog = true
+                                    }
+                                })
+                        }
+                        if (state.district.isNotBlank()) {
+                            ReadonlyJobNepalTextField(label = "Municipality",
+                                value = state.municipality,
+                                onClick = {
+                                    if (address != null) {
+                                        addressList =
+                                            address.find { it.name == state.provience }?.districts?.find { it.name == state.district }?.municipalities?.toMutableList()
+                                                ?: mutableListOf()
+                                        addressListIndicator = "pm"
+                                        addressDialog = true
+                                    }
+                                })
+                        }
+                        Row(modifier = Modifier.fillMaxWidth()) {
+                            TextFieldJobNepal(modifier = Modifier.weight(1f),
+                                value = state.villageName,
+                                label = "Village Name",
+                                onValueChange = {
+                                    onEvent(ProfileEvent.PermanentVillage(it))
+                                })
+                            Spacer(modifier = Modifier.width(5.dp))
+                            TextFieldJobNepal(modifier = Modifier.weight(1f),
+                                value = state.wardNo,
+                                label = "Ward No",
+                                onValueChange = {
+                                    onEvent(ProfileEvent.PermanentWard(it))
+                                })
+
+                        }
+
+
+                    }
+
+                }
+            }
+
+
+            //Temp address
+
+
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth(0.9f)
+                    .animateContentSize(),
+                colors = CardDefaults.cardColors(MaterialTheme.colorScheme.inversePrimary),
+            ) {
+
+                var isExpand by remember {
+                    mutableStateOf(false)
+                }
+                Column(
+                    modifier = Modifier.padding(7.dp),
+                    verticalArrangement = Arrangement.spacedBy(5.dp)
+                ) {
+
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(text = "Temporary Address")
+                        Icon(imageVector = if (!isExpand) Icons.Default.KeyboardArrowDown else Icons.Default.KeyboardArrowUp,
+                            contentDescription = null,
+                            modifier = Modifier.clickable {
+                                isExpand = !isExpand
+                            })
+                    }
+                    Divider(modifier = Modifier.padding(top = 20.dp, bottom = 10.dp))
+                    if (isExpand) {
+                        ReadonlyJobNepalTextField(label = "State",
+                            value = state.tprovience,
+                            onClick = {
+
+                                if (address != null) {
+                                    addressList = address.map { it.name }.toMutableList()
+                                    addressListIndicator = "tp"
+                                    addressDialog = true
+                                }
+                            })
+                        if (state.provience.isNotBlank()) {
+                            ReadonlyJobNepalTextField(value = state.tdistrict,
+                                label = "District",
+                                onClick = {
+                                    if (address != null) {
+                                        addressList =
+                                            address.find { it.name == state.provience }?.districts?.map { it.name }
+                                                ?.toMutableList() ?: mutableListOf()
+                                        addressListIndicator = "td"
+                                        addressDialog = true
+                                    }
+                                })
+                        }
+                        if (state.district.isNotBlank()) {
+                            ReadonlyJobNepalTextField(label = "Municipality",
+                                value = state.tmunicipality,
+                                onClick = {
+                                    if (address != null) {
+                                        addressList =
+                                            address.find { it.name == state.provience }?.districts?.find { it.name == state.district }?.municipalities?.toMutableList()
+                                                ?: mutableListOf()
+                                        addressListIndicator = "tm"
+                                        addressDialog = true
+                                    }
+                                })
                         }
                         Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(5.dp)
                         ) {
-                            TextFieldJobNepal(
-                                modifier = Modifier.weight(1f),
-                                label = "Middle Name",
-                                value = state.editMiddleName,
+                            TextFieldJobNepal(modifier = Modifier.weight(1f),
+                                value = state.tvillageName,
+                                label = "Village Name",
                                 onValueChange = {
-                                    onEvent(ProfileEvent.OnMiddleNameChange(it))
+                                    onEvent(ProfileEvent.TemporaryVillage(it))
+                                })
+                            TextFieldJobNepal(modifier = Modifier.weight(1f),
+                                value = state.twardNo,
+                                label = "Ward No",
+                                onValueChange = {
+                                    onEvent(ProfileEvent.TemporaryWard(it))
+                                })
+                        }
+                    }
+                }
+            }
+
+
+            //Fathers Details
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth(0.9f)
+                    .animateContentSize(),
+                colors = CardDefaults.cardColors(MaterialTheme.colorScheme.inversePrimary),
+            ) {
+
+                var isExpand by remember {
+                    mutableStateOf(false)
+                }
+                Column(
+                    modifier = Modifier.padding(7.dp),
+                    verticalArrangement = Arrangement.spacedBy(5.dp)
+                ) {
+
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(text = "Father's Details")
+                        Icon(imageVector = if (!isExpand) Icons.Default.KeyboardArrowDown else Icons.Default.KeyboardArrowUp,
+                            contentDescription = null,
+                            modifier = Modifier.clickable {
+                                isExpand = !isExpand
+                            })
+                    }
+                    Divider(modifier = Modifier.padding(top = 20.dp, bottom = 10.dp))
+                    if (isExpand) {
+                        TextFieldJobNepal(label = "First Name",
+                            value = state.editFatherFirstName,
+                            onValueChange = {
+                                onEvent(ProfileEvent.OnFatherFirstNameChange(it))
+                            })
+                        Row(
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            TextFieldJobNepal(modifier = Modifier.weight(1f),
+                                label = "Middle Name",
+                                value = state.editFatherMiddleName,
+                                onValueChange = {
+                                    onEvent(ProfileEvent.OnFatherMiddleNameChange(it))
                                 })
                             Spacer(modifier = Modifier.width(5.dp))
                             TextFieldJobNepal(
                                 modifier = Modifier.weight(1f),
                                 label = "Last Name",
-                                value = state.editLastName,
+                                value = state.editFatherLastNam,
                                 onValueChange = {
-                                    onEvent(ProfileEvent.OnLastNameChange(it))
-                                }, required = true
-                            )
-                        }
-
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                        ) {
-                            EnumTextFieldJobNepal(
-                                modifier = Modifier.fillMaxWidth(0.5f),
-                                options = Gender.values().toList(),
-                                asString = { this?.resId?.let { ctx.getString(it) } ?: "" },
-                                label = "Gender",
-                                value = state.editGender,
-                                onValueChange = { onEvent(ProfileEvent.OnGenderChange(it)) },
+                                    onEvent(ProfileEvent.OnFatherLastNameChange(it))
+                                },
                                 required = true
                             )
-                            Spacer(modifier = Modifier.width(5.dp))
-                            ReadonlyJobNepalTextField(
-                                value = state.editDob,
-                                label = "Date of birth",
-                                required = true,
-                                onClick = {
-                                    calendarState.show()
-                                }
-
-                            )
                         }
-                        TextFieldJobNepal(
-                            label = "Email",
-                            value = state.editEmail,
-                            onValueChange = {
-                                onEvent(ProfileEvent.OnEmailChange(it))
-                            }, required = true
-                        )
-
-
-                    }
-
-
-                }
-                Spacer(modifier = Modifier.height(5.dp))
-
-
-                //Permanent Address
-
-
-
-
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth(0.9f)
-                        .animateContentSize(),
-                    colors = CardDefaults.cardColors(MaterialTheme.colorScheme.secondaryContainer),
-                ) {
-                    Column(
-                        modifier = Modifier.padding(7.dp),
-                        verticalArrangement = Arrangement.spacedBy(5.dp)
-                    ) {
-
-                        Spacer(modifier = Modifier.height(10.dp))
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(text = "Permanent Address")
-                            Icon(
-                                imageVector = if (!state.isOtherVisible) Icons.Default.KeyboardArrowDown else Icons.Default.KeyboardArrowUp,
-                                contentDescription = null,
-                                modifier = Modifier.clickable {
-                                    onEvent(ProfileEvent.OnOtherDetailsClicked(!state.isOtherVisible))
-                                }
-                            )
-                        }
-                        Divider(modifier = Modifier.padding(top = 20.dp, bottom = 10.dp))
-                        if (state.isOtherVisible) {
-
-                            ReadonlyJobNepalTextField(
-                                label = "State",
-                                value = state.provience,
-                                onClick = {
-
-                                    if (address != null){
-                                        addressList = address.map { it.name }.toMutableList()
-                                        addressListIndicator = "pp"
-                                        addressDialog = true
-                                    }
-                                })
-                            if (state.provience.isNotBlank()){
-                                ReadonlyJobNepalTextField(
-                                    value = state.district,
-                                    label = "District",
-                                    onClick = {
-                                        if (address != null){
-                                            addressList = address.find { it.name == state.provience }?.districts?.map { it.name }?.toMutableList() ?: mutableListOf()
-                                            addressListIndicator = "pd"
-                                            addressDialog = true
-                                        }
-                                    }
-                                )
-                            }
-                            if (state.district.isNotBlank()){
-                                ReadonlyJobNepalTextField(
-                                    label = "Municipality",
-                                    value = state.municipality,
-                                    onClick = {
-                                        if (address != null){
-                                            addressList = address.find { it.name == state.provience }?.districts?.find { it.name == state.district }?.municipalities?.toMutableList() ?: mutableListOf()
-                                            addressListIndicator = "pm"
-                                            addressDialog = true
-                                        }
-                                    }
-                                )
-                            }
-                        }
-
                     }
                 }
-                Spacer(modifier = Modifier.height(5.dp))
-
-
-
-                //Family Details
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth(0.9f)
-                        .animateContentSize(),
-                    colors = CardDefaults.cardColors(MaterialTheme.colorScheme.secondaryContainer),
-                ) {
-                    Column(
-                        modifier = Modifier.padding(7.dp),
-                        verticalArrangement = Arrangement.spacedBy(5.dp)
-                    ) {
-
-                        Spacer(modifier = Modifier.height(10.dp))
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(text = "Other details")
-                            Icon(
-                                imageVector = if (!state.isOtherVisible) Icons.Default.KeyboardArrowDown else Icons.Default.KeyboardArrowUp,
-                                contentDescription = null,
-                                modifier = Modifier.clickable {
-                                    onEvent(ProfileEvent.OnOtherDetailsClicked(!state.isOtherVisible))
-                                }
-                            )
-                        }
-                        Divider(modifier = Modifier.padding(top = 20.dp, bottom = 10.dp))
-                        if (state.isOtherVisible) {
-                            TextFieldJobNepal(
-                                label = "Father First Name",
-                                value = state.editFatherFirstName,
-                                onValueChange = {
-                                    onEvent(ProfileEvent.OnFatherFirstNameChange(it))
-                                })
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                            ) {
-                                TextFieldJobNepal(
-                                    modifier = Modifier.weight(1f),
-                                    label = "Father Middle Name",
-                                    value = state.editFatherMiddleName,
-                                    onValueChange = {
-                                        onEvent(ProfileEvent.OnFatherMiddleNameChange(it))
-                                    })
-                                Spacer(modifier = Modifier.width(5.dp))
-                                TextFieldJobNepal(
-                                    modifier = Modifier.weight(1f),
-                                    label = "Father Last Name",
-                                    value = state.editFatherLastNam,
-                                    onValueChange = {
-                                        onEvent(ProfileEvent.OnFatherLastNameChange(it))
-                                    }, required = true
-                                )
-                            }
-                        }
-
-                    }
-                }
-
-
-
-
-
-                Spacer(modifier = Modifier.height(5.dp))
-                YouCannotClickMe(
-                    enable = !state.areAllDataFilled(),
-                    size = 200f,
-                    buttonWidth = 100,
-                    buttonHeight = 50,
-                    text = "Upload",
-                    boxColor = Color.Transparent,
-                    buttonColor = MaterialTheme.colorScheme.onTertiaryContainer,
-                    onClick = {
-                        selectedImageUri?.let { it1 -> ProfileEvent.Upload(it1) }
-                            ?.let { it2 -> onEvent(it2) }
-                    })
-
-
             }
 
+            //Grand father's details
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth(0.9f)
+                    .animateContentSize(),
+                colors = CardDefaults.cardColors(MaterialTheme.colorScheme.inversePrimary),
+            ) {
+                var isExpand by remember {
+                    mutableStateOf(false)
+                }
+                Column(
+                    modifier = Modifier.padding(7.dp),
+                    verticalArrangement = Arrangement.spacedBy(5.dp)
+                ) {
+
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(text = "Grand Father's Details")
+                        Icon(imageVector = if (!isExpand) Icons.Default.KeyboardArrowDown else Icons.Default.KeyboardArrowUp,
+                            contentDescription = null,
+                            modifier = Modifier.clickable {
+                                isExpand = !isExpand
+                            })
+                    }
+                    Divider(
+                        modifier = Modifier.padding(
+                            top = 20.dp, bottom = 10.dp
+                        )
+                    )
+                    if (isExpand) {
+                        TextFieldJobNepal(label = "First Name",
+                            value = state.editGrandFatherFirstName,
+                            onValueChange = {
+                                onEvent(ProfileEvent.GrandFathersFirstName(it))
+                            })
+                        Row(
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            TextFieldJobNepal(modifier = Modifier.weight(1f),
+                                label = "Middle Name",
+                                value = state.editGrandFatherMiddleName,
+                                onValueChange = {
+                                    onEvent(ProfileEvent.GrandFathersMiddleName(it))
+                                })
+                            Spacer(modifier = Modifier.width(5.dp))
+                            TextFieldJobNepal(
+                                modifier = Modifier.weight(1f),
+                                label = "Last Name",
+                                value = state.editGrandFatherLastNam,
+                                onValueChange = {
+                                    onEvent(ProfileEvent.GrandFathersLastName(it))
+                                },
+                                required = true
+                            )
+                        }
+                    }
+                }
+            }
+
+            // Husband or Wife
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth(0.9f)
+                    .animateContentSize(),
+                colors = CardDefaults.cardColors(MaterialTheme.colorScheme.inversePrimary),
+            ) {
+                var isExpand by remember {
+                    mutableStateOf(false)
+                }
+                Column(
+                    modifier = Modifier.padding(7.dp),
+                    verticalArrangement = Arrangement.spacedBy(5.dp)
+                ) {
+
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(text = "Husband / Wife")
+                        Icon(imageVector = if (!isExpand) Icons.Default.KeyboardArrowDown else Icons.Default.KeyboardArrowUp,
+                            contentDescription = null,
+                            modifier = Modifier.clickable {
+                                isExpand = !isExpand
+                            })
+                    }
+                    Divider(
+                        modifier = Modifier.padding(
+                            top = 20.dp, bottom = 10.dp
+                        )
+                    )
+                    if (isExpand) {
+                        TextFieldJobNepal(label = "First Name",
+                            value = state.editHusbandWifeFirstName,
+                            onValueChange = {
+                                onEvent(ProfileEvent.HusbandWifeFirstName(it))
+                            })
+                        Row(
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            TextFieldJobNepal(modifier = Modifier.weight(1f),
+                                label = "Middle Name",
+                                value = state.editHusbandWifeMiddleName,
+                                onValueChange = {
+                                    onEvent(ProfileEvent.HusbandWifeMiddleName(it))
+                                })
+                            Spacer(modifier = Modifier.width(5.dp))
+                            TextFieldJobNepal(
+                                modifier = Modifier.weight(1f),
+                                label = "Last Name",
+                                value = state.editHusbandWifeLastName,
+                                onValueChange = {
+                                    onEvent(ProfileEvent.HusbandWifeLastName(it))
+                                },
+                                required = true
+                            )
+                        }
+                    }
+                }
+            }
+            YouCannotClickMe(enable = !state.areAllDataFilled(),
+                size = 200f,
+                buttonWidth = 100,
+                buttonHeight = 50,
+                text = "Upload",
+                boxColor = Color.Transparent,
+                buttonColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                onClick = {
+                    selectedImageUri?.let { it1 -> ProfileEvent.Upload(it1) }
+                        ?.let { it2 -> onEvent(it2) }
+                })
         }
-    )
+    })
 }
+

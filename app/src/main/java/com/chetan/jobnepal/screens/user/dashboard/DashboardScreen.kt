@@ -41,6 +41,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
@@ -133,7 +134,7 @@ fun DashboardScreen(
                                     modifier = Modifier
                                         .shadow(4.dp, shape = RoundedCornerShape(20))
                                         .clip(RoundedCornerShape(20))
-                                        .background(MaterialTheme.colorScheme.onPrimary)
+                                        .background(MaterialTheme.colorScheme.primaryContainer)
                                         .clickable {
                                             scope.launch {
                                                 drawerState.open()
@@ -144,12 +145,11 @@ fun DashboardScreen(
                                     Icon(
                                         modifier = Modifier.size(32.dp),
                                         imageVector = Icons.Default.Menu,
-                                        contentDescription = "Close"
+                                        contentDescription = "Menu"
                                     )
                                 }
                             },
                             title = {
-
 
                             },
                             actions = {
@@ -157,7 +157,7 @@ fun DashboardScreen(
                                     modifier = Modifier
                                         .shadow(4.dp, shape = RoundedCornerShape(20))
                                         .clip(RoundedCornerShape(20))
-                                        .background(MaterialTheme.colorScheme.onPrimary),
+                                        .background(MaterialTheme.colorScheme.primaryContainer),
                                     contentAlignment = Alignment.Center
                                 ) {
                                     VibratingIcon(Icons.Default.NotificationsActive) {
@@ -265,6 +265,7 @@ fun DashboardScreen(
 //                placeholder = "Search Here"
 //            )
             DockedSearchBar(
+                colors = SearchBarDefaults.colors(MaterialTheme.colorScheme.primaryContainer),
                 modifier = Modifier
                     .padding(top = 4.dp)
                     .fillMaxWidth(0.75f)

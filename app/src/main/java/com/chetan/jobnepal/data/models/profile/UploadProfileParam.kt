@@ -12,5 +12,12 @@ data class UploadProfileParam(
     val gender: String? = "",
     val fatherFirstName: String? = "",
     val fatherMiddleName: String? = "",
-    val fatherLastName: String? = ""
+    val fatherLastName: String? = "",
+    val grandfatherFirstName: String? = "",
+    val grandfatherMiddleName: String? = "",
+    val grandfatherLastName: String? = "",
+    val husbandWifeFirstName: String? = "",
+    val husbandWifeMiddleName: String? = "",
+    val husbandWifeLastName: String? = "",
+
 )
