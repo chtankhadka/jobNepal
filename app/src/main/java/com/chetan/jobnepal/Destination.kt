@@ -7,6 +7,8 @@ open class Destination(open val route : String) {
         object AdminDashboard: Destination("admin-dashboard")
         object UploadVideoScreen : Destination("upload-video-screen")
 
+        object AdminSendNotification: Destination("admin-send-notification")
+
         //user
 
         object OnBoard : Destination("on-board")
@@ -15,6 +17,8 @@ open class Destination(open val route : String) {
         object SignWithEmailPassword: Destination("sign-with-email-password")
         object GoogleSignIn: Destination("google-sign-in")
         object Academic : Destination("academic")
+
+        object userNotification: Destination("user-notification")
 
 
         object ProfileScreen : Destination("profile-screen")

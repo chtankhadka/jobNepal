@@ -58,7 +58,7 @@ fun ModalDrawerSheetPage(
                 .height(2.dp)
         )
         val menuList = listOf(
-            Icons.Default.Home to "Add Video",
+            Icons.Default.Home to "Send Notification",
             Icons.Default.Contacts to "Documents"
         )
 
@@ -66,8 +66,8 @@ fun ModalDrawerSheetPage(
             Spacer(modifier = Modifier.height(5.dp))
             ElevatedCard(
                 modifier = Modifier.clickable {
-                  if (it.second == "Add Video")  {
-
+                  if (it.second == "Send Notification")  {
+                        onClick("Send Notification")
                   }
                 },
                 shape = RoundedCornerShape(5.dp)

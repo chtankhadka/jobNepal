@@ -20,6 +20,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.chetan.jobnepal.screens.admin.dashboard.AdminDashboard
 import com.chetan.jobnepal.screens.admin.dashboard.AdminDashboardViewModel
+import com.chetan.jobnepal.screens.admin.notification.NotificationScreen
+import com.chetan.jobnepal.screens.admin.notification.NotificationViewModel
 import com.chetan.jobnepal.screens.admin.uploadvideo.UploadVideoScreen
 import com.chetan.jobnepal.screens.admin.uploadvideo.UploadVideoViewModel
 import com.chetan.jobnepal.screens.onboardscreen.OnBoardScreen
@@ -60,8 +62,8 @@ fun AppNavHost(
             LaunchedEffect(key1 = Unit) {
                 if (googleAuthUiClient.getSignedInUser() != null) {
                     if (googleAuthUiClient.getSignedInUser()!!.userEmail == "chetan.dtech@gmail.com" || googleAuthUiClient.getSignedInUser()!!.userEmail == "bheshkshetri58@gmail.com") {
-                        navController.cleanNavigate(Destination.Screen.Dashboard.route)
-//                        navController.cleanNavigate(Destination.Screen.AdminDashboard.route)
+//                        navController.cleanNavigate(Destination.Screen.Dashboard.route)
+                        navController.cleanNavigate(Destination.Screen.AdminDashboard.route)
                     } else {
                         navController.cleanNavigate(Destination.Screen.Dashboard.route)
                     }
@@ -153,6 +155,8 @@ fun AppNavHost(
 
         }
 
+
+        // Admin
         composable(Destination.Screen.AdminDashboard.route) {
             val viewModel = hiltViewModel<AdminDashboardViewModel>()
             AdminDashboard(
@@ -175,6 +179,13 @@ fun AppNavHost(
                         }
                     }
                 })
+        }
+        composable(Destination.Screen.AdminSendNotification.route){
+            val viewModel = hiltViewModel<NotificationViewModel>()
+            NotificationScreen(
+                navController = navController,
+                state = viewModel.state.collectAsStateWithLifecycle().value ,
+                onEvent = viewModel.onEvent)
         }
 
 

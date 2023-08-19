@@ -25,6 +25,7 @@ class JobNepalApp : Application() {
 
         // promptForPublishNotification will show the native Android notification permission prompt
         // We recommend removing the following code and instead using an In-App Message to prompt for notification permission (See step 7)
+
         OneSignal.promptForPushNotifications()
     }
 }

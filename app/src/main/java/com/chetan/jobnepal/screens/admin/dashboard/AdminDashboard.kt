@@ -89,7 +89,13 @@ fun AdminDashboard(
                 ModalDrawerSheetPage(
                     state = state,
                     onEvent = onEvent,
-                    onClick = onClick
+                    onClick = {
+                        when (it){
+                            "Send Notification" -> {
+                                navController.navigate(Destination.Screen.AdminSendNotification.route)
+                            }
+                        }
+                    }
                 )
             }
 
