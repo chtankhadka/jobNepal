@@ -1,7 +1,10 @@
 package com.chetan.jobnepal
 
 import android.app.Application
+import android.content.Context
+import android.widget.Toast
 import com.google.firebase.FirebaseApp
+import com.onesignal.OSNotificationReceivedEvent
 import com.onesignal.OneSignal
 import dagger.hilt.android.HiltAndroidApp
 
@@ -28,4 +31,5 @@ class JobNepalApp : Application() {
 
         OneSignal.promptForPushNotifications()
     }
+
 }

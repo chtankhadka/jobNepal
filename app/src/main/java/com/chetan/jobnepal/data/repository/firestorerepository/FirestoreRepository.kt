@@ -6,6 +6,7 @@ import com.chetan.jobnepal.data.models.dashboard.FormAppliedList
 import com.chetan.jobnepal.data.models.param.UploadNewVideoLink
 import com.chetan.jobnepal.data.models.profile.UploadProfileParam
 import com.chetan.jobnepal.data.models.searchhistory.SearchHistoryRequestResponse
+import com.chetan.jobnepal.data.models.storenotification.StoreNotificationRequestResponse
 
 interface FirestoreRepository {
 
@@ -53,5 +54,15 @@ interface FirestoreRepository {
     suspend fun deleteSearchHistory(
         data: SearchHistoryRequestResponse
     ): Resource<Any>
+
+
+
+
+    //for oneSignal notification
+    suspend fun saveNotification(
+        data: StoreNotificationRequestResponse
+    ): Resource<Any>
+    suspend fun getNotification(
+    ): Resource<List<StoreNotificationRequestResponse>>
 
 }

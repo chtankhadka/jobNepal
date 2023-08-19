@@ -15,7 +15,7 @@ class OnBoardViewModel @Inject constructor(val preference: Preference) : ViewMod
     private val _state = MutableStateFlow(OnBoardState())
     val state : StateFlow<OnBoardState> = _state
 
-    val onEvent: (event : OnBoardEvent) -> Unit = {event ->
+    val onEvent: (event : OnBoardEvent) -> Unit = { event ->
         when (event){
             is OnBoardEvent.SwithchPage -> {
                 _state.update{

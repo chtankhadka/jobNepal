@@ -16,8 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.chetan.jobnepal.R
-import com.chetan.jobnepal.screens.user.dashboard.DashboardEvent
 import com.chetan.jobnepal.ui.component.IconJobNepal
 import com.chetan.jobnepal.ui.component.dialogs.MessageDialog
 import com.chetan.jobnepal.ui.component.textfield.TextFieldJobNepal
@@ -26,8 +24,8 @@ import com.chetan.jobnepal.ui.component.textfield.TextFieldJobNepal
 @Composable
 fun NotificationScreen(
     navController: NavHostController,
-    state: NotificationState,
-    onEvent: (event: NotificationEvent) -> Unit
+    state: AdminNotificationState,
+    onEvent: (event: AdminNotificationEvent) -> Unit
 ) {
 
     val ctx = LocalContext.current
@@ -55,7 +53,7 @@ fun NotificationScreen(
                         message = it,
                         onDismissRequest = {
                             if (onEvent != null && state.infoMsg.isCancellable == true) {
-                                onEvent(NotificationEvent.DissmissInfoMsg)
+                                onEvent(AdminNotificationEvent.DissmissInfoMsg)
                             }
                                            },
                         onPositive = { },
@@ -66,11 +64,11 @@ fun NotificationScreen(
                     singleLine = false,
                     value = state.message,
                     onValueChange = {
-                        onEvent(NotificationEvent.OnMessageChange(it))
+                        onEvent(AdminNotificationEvent.OnMessageChange(it))
                     }
                 )
                 Button(onClick = {
-                    onEvent(NotificationEvent.OnSendNotification)
+                    onEvent(AdminNotificationEvent.OnSendNotification)
                 }) {
                     Text(text = "Send Notice")
 

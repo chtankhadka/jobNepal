@@ -21,7 +21,7 @@ import androidx.navigation.compose.composable
 import com.chetan.jobnepal.screens.admin.dashboard.AdminDashboard
 import com.chetan.jobnepal.screens.admin.dashboard.AdminDashboardViewModel
 import com.chetan.jobnepal.screens.admin.notification.NotificationScreen
-import com.chetan.jobnepal.screens.admin.notification.NotificationViewModel
+import com.chetan.jobnepal.screens.admin.notification.AdminNotificationViewModel
 import com.chetan.jobnepal.screens.admin.uploadvideo.UploadVideoScreen
 import com.chetan.jobnepal.screens.admin.uploadvideo.UploadVideoViewModel
 import com.chetan.jobnepal.screens.onboardscreen.OnBoardScreen
@@ -38,6 +38,8 @@ import com.chetan.jobnepal.screens.user.account.ProfileScreen
 import com.chetan.jobnepal.screens.user.account.ProfileViewModel
 import com.chetan.jobnepal.screens.user.dashboard.DashboardScreen
 import com.chetan.jobnepal.screens.user.dashboard.DashboardViewModel
+import com.chetan.jobnepal.screens.user.notification.UserNotificationScreen
+import com.chetan.jobnepal.screens.user.notification.UserNotificationViewModel
 import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -61,13 +63,11 @@ fun AppNavHost(
             val state by viewModel.state.collectAsStateWithLifecycle()
             LaunchedEffect(key1 = Unit) {
                 if (googleAuthUiClient.getSignedInUser() != null) {
-                    if (googleAuthUiClient.getSignedInUser()!!.userEmail == "chetan.dtech@gmail.com" || googleAuthUiClient.getSignedInUser()!!.userEmail == "bheshkshetri58@gmail.com") {
-//                        navController.cleanNavigate(Destination.Screen.Dashboard.route)
+                    if (googleAuthUiClient.getSignedInUser()!!.userEmail == "chtankhadka12@gmail.com" || googleAuthUiClient.getSignedInUser()!!.userEmail == "bheshkshetri58@gmail.com") {
                         navController.cleanNavigate(Destination.Screen.AdminDashboard.route)
                     } else {
                         navController.cleanNavigate(Destination.Screen.Dashboard.route)
                     }
-
                 }
             }
 
@@ -155,6 +155,14 @@ fun AppNavHost(
 
         }
 
+        composable(Destination.Screen.UserNotification.route){
+            val viewModel = hiltViewModel<UserNotificationViewModel>()
+            UserNotificationScreen(
+                navController = navController,
+                state = viewModel.state.collectAsStateWithLifecycle().value,
+                onEvent = viewModel.onEvent)
+        }
+
 
         // Admin
         composable(Destination.Screen.AdminDashboard.route) {
@@ -181,7 +189,7 @@ fun AppNavHost(
                 })
         }
         composable(Destination.Screen.AdminSendNotification.route){
-            val viewModel = hiltViewModel<NotificationViewModel>()
+            val viewModel = hiltViewModel<AdminNotificationViewModel>()
             NotificationScreen(
                 navController = navController,
                 state = viewModel.state.collectAsStateWithLifecycle().value ,

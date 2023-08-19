@@ -18,7 +18,7 @@ open class Destination(open val route : String) {
         object GoogleSignIn: Destination("google-sign-in")
         object Academic : Destination("academic")
 
-        object userNotification: Destination("user-notification")
+        object UserNotification: Destination("user-notification")
 
 
         object ProfileScreen : Destination("profile-screen")

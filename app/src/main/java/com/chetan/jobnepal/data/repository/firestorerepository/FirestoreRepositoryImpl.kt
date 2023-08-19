@@ -7,6 +7,7 @@ import com.chetan.jobnepal.data.models.dashboard.FormAppliedList
 import com.chetan.jobnepal.data.models.param.UploadNewVideoLink
 import com.chetan.jobnepal.data.models.profile.UploadProfileParam
 import com.chetan.jobnepal.data.models.searchhistory.SearchHistoryRequestResponse
+import com.chetan.jobnepal.data.models.storenotification.StoreNotificationRequestResponse
 import com.chetan.jobnepal.screens.user.academic.AcademicState
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -284,4 +285,43 @@ class FirestoreRepositoryImpl @Inject constructor(
             Resource.Failure(e)
         }
     }
+
+
+    // oneSignal Notification
+    override suspend fun saveNotification(data : StoreNotificationRequestResponse): Resource<Any> {
+        return try {
+            val documentRef = firestore.collection(preference.dbTable.toString())
+                .document("notificationData")
+                .collection("data")
+                .document(data.time)
+                .set(data)
+                .await()
+            Resource.Success(documentRef)
+        }catch (e:Exception){
+            e.printStackTrace()
+            Resource.Failure(e)
+        }
+    }
+
+    override suspend fun getNotification(): Resource<List<StoreNotificationRequestResponse>> {
+        return try {
+            var response = mutableListOf<StoreNotificationRequestResponse>()
+            val documentRef = firestore.collection(preference.dbTable.toString())
+                .document("notificationData")
+                .collection("data")
+                .get()
+                .await()
+            for (document in documentRef.documents){
+                val notification = document.toObject<StoreNotificationRequestResponse>()
+                notification?.let {
+                    response.add(it)
+                }
+            }
+            Resource.Success(response)
+        }catch (e: Exception){
+            e.printStackTrace()
+            Resource.Failure(e)
+        }
+    }
+
 }

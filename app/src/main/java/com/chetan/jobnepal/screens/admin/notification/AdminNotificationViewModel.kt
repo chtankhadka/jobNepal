@@ -18,18 +18,18 @@ import retrofit2.HttpException
 import javax.inject.Inject
 
 @HiltViewModel
-class NotificationViewModel @Inject constructor(
+class AdminNotificationViewModel @Inject constructor(
     private val firebaseRepository: FirestoreRepository,
     private val oneSiganlRepository: OneSignalRepository,
 ) : ViewModel() {
-    private val _state = MutableStateFlow(NotificationState())
-    val state: StateFlow<NotificationState> = _state
+    private val _state = MutableStateFlow(AdminNotificationState())
+    val state: StateFlow<AdminNotificationState> = _state
 
 
-    val onEvent: (event: NotificationEvent) -> Unit = { event ->
+    val onEvent: (event: AdminNotificationEvent) -> Unit = { event ->
         viewModelScope.launch(Dispatchers.IO) {
             when (event) {
-                is NotificationEvent.OnMessageChange -> {
+                is AdminNotificationEvent.OnMessageChange -> {
                     _state.update {
                         it.copy(
                             message = event.value
@@ -37,7 +37,7 @@ class NotificationViewModel @Inject constructor(
                     }
                 }
 
-                NotificationEvent.OnSendNotification -> {
+                AdminNotificationEvent.OnSendNotification -> {
                     _state.update {
                         it.copy(
                             infoMsg = Message.Loading(
@@ -104,7 +104,7 @@ class NotificationViewModel @Inject constructor(
                     }
                 }
 
-                NotificationEvent.DissmissInfoMsg -> {
+                AdminNotificationEvent.DissmissInfoMsg -> {
                     _state.update {
                         it.copy(infoMsg = null)
                     }
