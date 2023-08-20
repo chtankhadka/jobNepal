@@ -321,6 +321,7 @@ class DashboardViewModel @Inject constructor(
                                 )
 
                             }
+                            getAppliedFormData()
                         }
 
                         Resource.Loading -> {
@@ -333,9 +334,10 @@ class DashboardViewModel @Inject constructor(
                                     infoMsg = null
                                 )
                             }
+                            getAppliedFormData()
                         }
                     }
-                    getAppliedFormData()
+
 
                 }
 
@@ -457,11 +459,6 @@ class DashboardViewModel @Inject constructor(
                     }
                 }
             }
-        }
-    }
-    fun doesMatchSearchQuery(query: String) : Boolean{
-        return state.value.videoListResponse.any{
-            it.title.contains(query, ignoreCase = true)
         }
     }
 }

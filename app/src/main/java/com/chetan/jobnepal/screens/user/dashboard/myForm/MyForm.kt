@@ -49,7 +49,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun MyForm(state: DashboardState, onEvent: (event: DashboardEvent) -> Unit) {
     val scope = rememberCoroutineScope()
-    val list = listOf("Pending", "Pay Now", "On Going")
+    val list = listOf("Pay Now", "Paid", "Admin Card")
     val pagerState = rememberPagerState(initialPage = 0) { 4 }
     TabRow(
         selectedTabIndex = pagerState.currentPage,
@@ -87,19 +87,18 @@ fun MyForm(state: DashboardState, onEvent: (event: DashboardEvent) -> Unit) {
                         .padding(horizontal = 5.dp)
                 ) {
                     MyFormItem(
-                        state.appliedListResponse.filter { it.apply == "applyLater" },
+                        state.appliedListResponse.filter { it.apply == "applied" },
                         listOf(
-                            Triple("Apply", Icons.Default.AppRegistration, true),
-                            Triple("Full Guid", Icons.Default.Link, true),
+                            Triple("Pay", Icons.Default.QrCode, true),
                             Triple("Cancel", Icons.Default.Cancel, true)
+
                         )
                     ){ item, id ->
-                        when (item){
-                            "Apply" -> {
-                                onEvent(DashboardEvent.DeleteAppliedData(id))
-                                onEvent(DashboardEvent.ShowApplyDialog(true))
+                        when  (item){
+                            "Pay" -> {
+
                             }
-                            "Cancel" -> {
+                            "Cancel" ->{
                                 onEvent(DashboardEvent.DeleteAppliedData(id))
                             }
                         }
@@ -114,23 +113,15 @@ fun MyForm(state: DashboardState, onEvent: (event: DashboardEvent) -> Unit) {
                         .padding(horizontal = 5.dp)
                 ) {
                     MyFormItem(
-                        state.appliedListResponse.filter { it.apply == "applied" },
+                        state.appliedListResponse.filter { it.apply == "paid" },
                         listOf(
-                            Triple("Pay", Icons.Default.QrCode, true),
-                            Triple("Edit", Icons.Default.Edit, true),
-                            Triple("Cancel", Icons.Default.Cancel, true)
-
+                            Triple("Refund", Icons.Default.Undo, true),
                         )
                     ){ item, id ->
-                        when  (item){
-                            "Pay" -> {
-                                onEvent(DashboardEvent.DeleteAppliedData(id))
-                            }
-                        }
+
                     }
                 }
             }
-
             2 -> {
                 Column(
                     modifier = Modifier
@@ -138,11 +129,9 @@ fun MyForm(state: DashboardState, onEvent: (event: DashboardEvent) -> Unit) {
                         .padding(horizontal = 5.dp)
                 ) {
                     MyFormItem(
-                        state.appliedListResponse.filter { it.apply == "paid" },
+                        state.appliedListResponse.filter { it.apply == "done" },
                         listOf(
-                            Triple("Refund", Icons.Default.Undo, true),
-                            Triple("Download", Icons.Default.Download, true)
-
+                            Triple("Download", Icons.Default.Undo, true),
                         )
                     ){ item, id ->
 

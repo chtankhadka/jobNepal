@@ -207,8 +207,8 @@ class FirestoreRepositoryImpl @Inject constructor(
                     snapshot.toObject(FormAppliedList::class.java)?.dataColl?.toMutableList()
                 val itemIndex = dataList?.indexOfFirst { it.id == id }
                 if (itemIndex != null && itemIndex != -1) {
-                    val deleteData = dataList.removeAt(itemIndex)
-                    documentRef.update("dataColl", deleteData).await()
+                dataList.removeAt(itemIndex)
+                    documentRef.update("dataColl", dataList).await()
                 }
 
             }
