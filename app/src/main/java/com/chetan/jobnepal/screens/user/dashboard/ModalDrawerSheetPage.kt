@@ -62,6 +62,7 @@ fun ModalDrawerSheetPage(
                 )
             DropdownJobNepalSetting(list,state,onEvent,onClick ={
                     if (it == "Logout"){
+                        onEvent(DashboardEvent.Logout)
                         onClick("logout")
                     }else if (it=="Nepali"){
                         onClick("Nepali")

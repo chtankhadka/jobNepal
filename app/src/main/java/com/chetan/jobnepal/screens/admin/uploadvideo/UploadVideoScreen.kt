@@ -1,20 +1,28 @@
 package com.chetan.jobnepal.screens.admin.uploadvideo
 
 import JobsSelectionDialog
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -22,16 +30,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.chetan.jobnepal.R
+import com.chetan.jobnepal.ui.component.IconJobNepal
 import com.chetan.jobnepal.ui.component.dialogs.MessageDialog
-import com.chetan.jobnepal.utils.youtubePlayer.WebContent
+import com.chetan.jobnepal.ui.component.textfield.TextFieldJobNepal
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UploadVideoScreen(
     navController: NavHostController,
@@ -42,111 +53,103 @@ fun UploadVideoScreen(
         JobsSelectionDialog(onEvent) {
         }
     }
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        state.infoMsg?.let {
-            MessageDialog(
-                message = it,
-                onDismissRequest = {
-                    onEvent(UploadVideoEvent.DismissInfoMsg)
-                },
-                onPositive = {  }) {
+    val ctx = LocalContext.current
+    Scaffold(topBar = {
+        CenterAlignedTopAppBar(colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+            MaterialTheme.colorScheme.primaryContainer
+        ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(bottomEnd = 10.dp, bottomStart = 10.dp)),
+            navigationIcon = {
 
-            }
-        }
-
-        TextField(
-            value = state.id,
-            onValueChange = {
-                onEvent(UploadVideoEvent.IdChange(it))
+                IconJobNepal(
+                    onClick = {
+                        navController.popBackStack()
+                    }, icon = Icons.Default.ArrowBack
+                )
             },
-            label = {
-                Text(text = "Add Id")
-            },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Text
-            )
-        )
-        Spacer(modifier = Modifier.height(5.dp))
-        TextField(
-            value = state.url,
-            onValueChange = {
-                onEvent(UploadVideoEvent.UrlChange(it))
-            },
-            label = {
-                Text(text = "Add video url")
-            },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Text
-            )
-        )
-        Spacer(modifier = Modifier.height(5.dp))
-
-        TextField(
-            value = state.title,
-            onValueChange = {
-                onEvent(UploadVideoEvent.TitleChange(it))
-            },
-            label = {
-                Text(text = "Title")
-            },
-        )
-        Spacer(modifier = Modifier.height(5.dp))
-
-        TextField(
-            value = state.description,
-            onValueChange = {
-                onEvent(UploadVideoEvent.DescriptionChange(it))
-            },
-            label = {
-                Text(text = "Add Description")
-            }
-        )
-        Spacer(modifier = Modifier.height(5.dp))
-        Button(onClick = {
-            onEvent(UploadVideoEvent.SetCheckedList(true))
-        }) {
-            Text(text = "Job For")
-        }
-        Button(
-            onClick = {
-                onEvent(UploadVideoEvent.UploadVideoUrl)
-            }) {
-            Text(text = stringResource(id = R.string.upload_data))
-
-        }
-        Spacer(modifier = Modifier.height(5.dp))
-
-        var clicked by remember {
-            mutableStateOf(false)
-        }
-        Button(
-            onClick = {
-                onEvent(UploadVideoEvent.Reset)
-            }) {
-            Text(text = "Reset")
-
-        }
-        Button(
-            onClick = {
-                onEvent(UploadVideoEvent.DownloadVideoUrl)
-                clicked = true
-            }) {
-            Text(text = "get Data")
-
-        }
+            title = {
+                Text(
+                    text = "Upload Video", style = MaterialTheme.typography.titleLarge
+                )
+            })
+    }, content = {
         Column(
             modifier = Modifier
-                .size(300.dp)
-                .background(Color.Blue),
-            verticalArrangement = Arrangement.spacedBy(5.dp)
+                .fillMaxSize()
+                .padding(it)
+                .padding(10.dp)
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(5.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            WebContent(videoId = "cvgZ8qkuIxA")
+            state.infoMsg?.let {
+                MessageDialog(
+                    message = it,
+                    onDismissRequest = {
+                        onEvent(UploadVideoEvent.DismissInfoMsg)
+                    },
+                    onPositive = { }) {
+                }
+            }
+
+            TextFieldJobNepal(
+                value = state.id,
+                onValueChange = {
+                    onEvent(UploadVideoEvent.IdChange(it))
+                },
+                label = "Add video Id"
+            )
+
+            TextFieldJobNepal(
+                value = state.url,
+                onValueChange = {
+                    onEvent(UploadVideoEvent.UrlChange(it))
+                },
+                label = "Add video link id",
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text
+                )
+            )
+            TextFieldJobNepal(
+                value = state.title,
+                onValueChange = {
+                    onEvent(UploadVideoEvent.TitleChange(it))
+                },
+                label = "Title"
+            )
+
+            TextFieldJobNepal(
+                value = state.description,
+                onValueChange = {
+                    onEvent(UploadVideoEvent.DescriptionChange(it))
+                },
+                label = "Add Description"
+            )
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 5.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Button(
+                    modifier = Modifier.weight(1f),
+                    onClick = {
+                    onEvent(UploadVideoEvent.SetCheckedList(true))
+                }) {
+                    Text(text = "Job For")
+                }
+            }
+            Button(
+                onClick = {
+                    onEvent(UploadVideoEvent.UploadVideoUrl)
+                }) {
+                Text(text = stringResource(id = R.string.upload_data))
+
+            }
+            Spacer(modifier = Modifier.height(5.dp))
 
         }
+    })
 
-    }
 }

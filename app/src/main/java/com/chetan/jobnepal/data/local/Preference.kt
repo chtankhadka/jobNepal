@@ -21,6 +21,7 @@ class Preference @Inject constructor(
         private const val GMAIL_PROFILE = "GMAIL_PROFILE"
         private const val GMAIL_USER_NAME = "GMAIL_USER_NAME"
         private const val NEPALI = "NEPALI"
+        private const val FIRST_TIME = "FIRST_TIME"
     }
 
     private val sharedPreferences: SharedPreferences =
@@ -31,6 +32,10 @@ class Preference @Inject constructor(
         set(value) {
             sharedPreferences.edit().putBoolean(ONBOARD_COMPLETED,value).apply()
         }
+
+    var isFirstTime
+        get() = sharedPreferences.getBoolean(FIRST_TIME, true)
+        set(value) {sharedPreferences.edit().putBoolean(FIRST_TIME,value).apply()}
 
     var dbTable
         get() = sharedPreferences.getString(DB_TABLE,"")
@@ -51,4 +56,5 @@ class Preference @Inject constructor(
     var isNepaliLanguage
         get() = sharedPreferences.getBoolean(NEPALI, false)
         set(value) {sharedPreferences.edit().putBoolean(NEPALI, value).apply()}
+
 }

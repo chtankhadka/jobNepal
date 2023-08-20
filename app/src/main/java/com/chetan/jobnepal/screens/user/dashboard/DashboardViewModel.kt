@@ -40,6 +40,11 @@ class DashboardViewModel @Inject constructor(
                 nepaliLanguage = preference.isNepaliLanguage
             )
         }
+
+        if (preference.isFirstTime){
+            firstTime()
+            println("000000000000000000000"+preference.dbTable)
+        }
         getAppliedFormData()
         getNewVideoLink()
         getSearchHistory()
@@ -143,6 +148,41 @@ class DashboardViewModel @Inject constructor(
                             infoMsg = null,
                             appliedListResponse = resource2.data,
                             appliedIdsList = resource2.data.map { dataColl -> dataColl.id }
+                        )
+                    }
+                }
+            }
+        }
+    }
+    fun firstTime(){
+        viewModelScope.launch {
+            val reseting = firestoreRepository.createJobNepalCollection(
+                listOf(
+                    "academic",
+                    "videoList",
+                    "appliedList",
+                    "Profile",
+                    "searchHistory"
+                )
+            )
+            when (reseting) {
+                is Resource.Failure -> {
+                    _state.update {
+                        it.copy(
+                            infoMsg = Message.Error(
+                                description = "Resetting",
+                                isCancellable = false
+                            )
+                        )
+                    }
+                }
+
+                Resource.Loading -> {}
+                is Resource.Success -> {
+                    preference.isFirstTime = false
+                    _state.update {
+                        it.copy(
+                            infoMsg = null
                         )
                     }
                 }
@@ -295,6 +335,9 @@ class DashboardViewModel @Inject constructor(
                             }
                         }
                     }
+                }
+                DashboardEvent.Logout -> {
+                    preference.isFirstTime = true
                 }
 
                 is DashboardEvent.DeleteAppliedData -> {

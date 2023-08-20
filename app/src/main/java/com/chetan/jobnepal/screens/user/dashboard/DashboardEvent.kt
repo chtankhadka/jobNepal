@@ -22,6 +22,7 @@ sealed interface DashboardEvent {
     ) : DashboardEvent
 
     object DismissInfoMsg : DashboardEvent
+    object Logout : DashboardEvent
 
 
 }

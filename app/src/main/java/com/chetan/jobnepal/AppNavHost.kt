@@ -66,7 +66,8 @@ fun AppNavHost(
                     if (googleAuthUiClient.getSignedInUser()!!.userEmail == "chtankhadka12@gmail.com" || googleAuthUiClient.getSignedInUser()!!.userEmail == "bheshkshetri58@gmail.com") {
                         navController.cleanNavigate(Destination.Screen.AdminDashboard.route)
                     } else {
-                        navController.cleanNavigate(Destination.Screen.Dashboard.route)
+                        navController.cleanNavigate(Destination.Screen.AdminDashboard.route)
+//                        navController.cleanNavigate(Destination.Screen.Dashboard.route)
                     }
                 }
             }
@@ -138,9 +139,7 @@ fun AppNavHost(
                     if (it == "logout") {
                         lifecycleScope.launch {
                             googleAuthUiClient.signOut()
-                            navController.navigate("sign_in") {
-                                popUpTo(Destination.Screen.GoogleSignIn.route) { inclusive = true }
-                            }
+                            navController.cleanNavigate("sign_in")
                         }
 
 
@@ -177,9 +176,7 @@ fun AppNavHost(
                         "logout" ->{
                             lifecycleScope.launch {
                                 googleAuthUiClient.signOut()
-                                navController.navigate("sign_in") {
-                                    popUpTo(Destination.Screen.GoogleSignIn.route) { inclusive = true }
-                                }
+                                navController.cleanNavigate("sign_in")
                             }
                         }
                         "addVideo" ->{

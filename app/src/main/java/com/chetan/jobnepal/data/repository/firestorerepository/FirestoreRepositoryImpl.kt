@@ -22,13 +22,20 @@ class FirestoreRepositoryImpl @Inject constructor(
 ) : FirestoreRepository {
     override suspend fun createJobNepalCollection(jobNepalColletion: List<String>): Resource<Any> {
         return try {
+
             val collectionRef = firestore.collection(preference.dbTable.toString())
-            val batch = firestore.batch()
-            for (documentId in jobNepalColletion) {
-                val documentRef = collectionRef.document(documentId)
-                batch.set(documentRef, emptyMap<String, Any>())
+            val check = collectionRef.document("academic").get().await()
+            if (check.data == null){
+                val batch = firestore.batch()
+                for (documentId in jobNepalColletion) {
+                    val documentRef = collectionRef.document(documentId)
+                    batch.set(documentRef, emptyMap<String, Any>())
+                }
+                batch.commit().await()
+            }else{
+
             }
-            batch.commit().await()
+
             Resource.Success(Unit)
         } catch (e: Exception) {
             e.printStackTrace()

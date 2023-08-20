@@ -171,38 +171,7 @@ class UploadVideoViewModel @Inject constructor(
                             infoMsg = Message.Loading(description = "Reseting...")
                         )
                     }
-                    viewModelScope.launch {
-                        val reseting = repository.createJobNepalCollection(
-                            listOf(
-                                "academic",
-                                "videoList",
-                                "appliedList",
-                                "Profile",
-                                "searchHistory"
-                            )
-                        )
-                        when (reseting) {
-                            is Resource.Failure -> {
-                                _state.update {
-                                    it.copy(
-                                        infoMsg = Message.Error(
-                                            description = "Resetting",
-                                            isCancellable = false
-                                        )
-                                    )
-                                }
-                            }
 
-                            Resource.Loading -> {}
-                            is Resource.Success -> {
-                                _state.update {
-                                    it.copy(
-                                        infoMsg = null
-                                    )
-                                }
-                            }
-                        }
-                    }
 
 
                 }
