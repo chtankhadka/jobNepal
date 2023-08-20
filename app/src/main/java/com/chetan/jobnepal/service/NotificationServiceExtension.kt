@@ -23,6 +23,7 @@ class NotificationServiceExtension : OneSignal.OSRemoteNotificationReceivedHandl
                     firestoreRepository.saveNotification(StoreNotificationRequestResponse(
                         body = notification?.body?:"",
                         time = notification?.sentTime.toString(),
+                        readNotice = false
                     ))
 
             }
