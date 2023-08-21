@@ -183,47 +183,47 @@ fun DashboardScreen(
                                     onPositive = { },
                                     onNegative = {})
                             }
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(5.dp)
-                            ) {
-                                ExposedDropdownJobNepal(
-                                    modifier = Modifier.weight(0.5f),
-                                    list = arrayOf(
-                                        "Province",
-                                        "Province 1",
-                                        "Province 2",
-                                        "Province 3",
-                                        "Province 4",
-                                        "Province 5"
-                                    ),
-                                    onClick = {
-                                        onEvent(DashboardEvent.OnProvinceFilter(it))
-                                    }
-                                )
-                                ExposedDropdownJobNepal(
-                                    modifier = Modifier.weight(0.5f),
-                                    list = arrayOf(
-                                        "Field",
-                                        "IT",
-                                        "Health",
-                                        "Bank"
-                                    ),
-                                    onClick = {
-                                        onEvent(DashboardEvent.OnFieldFilter(it))
-                                    }
-
-                                )
-                                ExposedDropdownJobNepal(
-                                    modifier = Modifier.weight(0.5f),
-                                    list = arrayOf("All", "Technical", "Non Technical"),
-                                    onClick = {
-//                                    onEvent(DashboardEvent.OnProvinceFilter(it))
-                                    }
-                                )
-
-                            }
-                            Spacer(modifier = Modifier.height(5.dp))
+//                            Row(
+//                                modifier = Modifier.fillMaxWidth(),
+//                                horizontalArrangement = Arrangement.spacedBy(5.dp)
+//                            ) {
+//                                ExposedDropdownJobNepal(
+//                                    modifier = Modifier.weight(0.5f),
+//                                    list = arrayOf(
+//                                        "Province",
+//                                        "Province 1",
+//                                        "Province 2",
+//                                        "Province 3",
+//                                        "Province 4",
+//                                        "Province 5"
+//                                    ),
+//                                    onClick = {
+//                                        onEvent(DashboardEvent.OnProvinceFilter(it))
+//                                    }
+//                                )
+//                                ExposedDropdownJobNepal(
+//                                    modifier = Modifier.weight(0.5f),
+//                                    list = arrayOf(
+//                                        "Field",
+//                                        "IT",
+//                                        "Health",
+//                                        "Bank"
+//                                    ),
+//                                    onClick = {
+//                                        onEvent(DashboardEvent.OnFieldFilter(it))
+//                                    }
+//
+//                                )
+//                                ExposedDropdownJobNepal(
+//                                    modifier = Modifier.weight(0.5f),
+//                                    list = arrayOf("All", "Technical", "Non Technical"),
+//                                    onClick = {
+////                                    onEvent(DashboardEvent.OnProvinceFilter(it))
+//                                    }
+//                                )
+//
+//                            }
+//                            Spacer(modifier = Modifier.height(5.dp))
                             LazyColumn(
                                 modifier = Modifier.fillMaxSize(),
                                 verticalArrangement = Arrangement.spacedBy(5.dp)

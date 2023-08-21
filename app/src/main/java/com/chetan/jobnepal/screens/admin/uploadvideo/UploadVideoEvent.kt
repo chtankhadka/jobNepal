@@ -16,5 +16,6 @@ sealed interface UploadVideoEvent{
     class UrlChange(var value: String) : UploadVideoEvent
     class DescriptionChange(var value: String) : UploadVideoEvent
     class TitleChange(var value: String) : UploadVideoEvent
+    class OnSelectProvince(var value: String) : UploadVideoEvent
     object DismissInfoMsg : UploadVideoEvent
 }

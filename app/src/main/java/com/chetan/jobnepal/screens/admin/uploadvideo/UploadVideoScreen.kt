@@ -17,7 +17,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -39,6 +42,9 @@ import androidx.navigation.NavHostController
 import com.chetan.jobnepal.R
 import com.chetan.jobnepal.ui.component.IconJobNepal
 import com.chetan.jobnepal.ui.component.dialogs.MessageDialog
+import com.chetan.jobnepal.ui.component.dropdown.CascadeDropdownMenuJobNepal
+import com.chetan.jobnepal.ui.component.dropdown.DropdownJobNepal
+import com.chetan.jobnepal.ui.component.textfield.ReadonlyJobNepalTextField
 import com.chetan.jobnepal.ui.component.textfield.TextFieldJobNepal
 
 
@@ -49,6 +55,9 @@ fun UploadVideoScreen(
     state: UploadVideoState,
     onEvent: (event: UploadVideoEvent) -> Unit
 ) {
+
+    var expanded by remember { mutableStateOf(false) }
+
     if (state.showJobDialog) {
         JobsSelectionDialog(onEvent) {
         }
@@ -127,16 +136,41 @@ fun UploadVideoScreen(
                 },
                 label = "Add Description"
             )
-            Row(modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 5.dp),
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 5.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
+                val provienceList = listOf("Province 1", "Province 2", "Province 3", "Province 4", "Province 5", "Province 6", "Province 7")
+                ReadonlyJobNepalTextField(
+                    label = "Select Province",
+                    value = state.editProvince,
+                    onClick = {
+                        expanded = !expanded
+                    }
+                )
+
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = {
+                        expanded = false
+                    }) {
+                    provienceList.forEach {
+                        DropdownMenuItem(text = {
+it
+                        }, onClick = {
+                            onEvent(UploadVideoEvent.OnSelectProvince(it))
+                        })
+                    }
+
+
+                }
                 Button(
                     modifier = Modifier.weight(1f),
                     onClick = {
-                    onEvent(UploadVideoEvent.SetCheckedList(true))
-                }) {
+                        onEvent(UploadVideoEvent.SetCheckedList(true))
+                    }) {
                     Text(text = "Job For")
                 }
             }

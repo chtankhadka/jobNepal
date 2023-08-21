@@ -259,6 +259,14 @@ class UploadVideoViewModel @Inject constructor(
                         it.copy(infoMsg = null)
                     }
                 }
+
+                is UploadVideoEvent.OnSelectProvince -> {
+                    _state.update {
+                        it.copy(
+                            editProvince = event.value
+                        )
+                    }
+                }
             }
         }
 

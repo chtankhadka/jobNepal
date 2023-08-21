@@ -31,6 +31,7 @@ data class UploadVideoState(
     var id: String = "",
     var url: String = "",
     var title: String = "",
+    var editProvince: String = "",
     var description: String = "",
     var publishedTime: String = "",
     override val infoMsg: Message? = null,
