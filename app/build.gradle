@@ -43,9 +43,8 @@ android {
             applicationIdSuffix ".debug"
         }
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.debug
         }
     }
     compileOptions {
@@ -159,6 +158,8 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.6")
     implementation 'com.google.code.gson:gson:2.8.8'
 
+    //admob
+    implementation 'com.google.android.gms:play-services-ads:22.3.0'
 
 }
 kapt {

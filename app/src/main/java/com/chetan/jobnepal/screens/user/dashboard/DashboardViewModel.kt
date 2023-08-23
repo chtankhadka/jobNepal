@@ -41,15 +41,23 @@ class DashboardViewModel @Inject constructor(
             )
         }
 
-        if (preference.isFirstTime){
+        if (preference.isFirstTime) {
+            setOneSignalId()
             firstTime()
-            println("000000000000000000000"+preference.dbTable)
+            println("000000000000000000000" + preference.dbTable)
         }
         getAppliedFormData()
         getNewVideoLink()
         getSearchHistory()
 
 
+    }
+
+    private fun setOneSignalId() {
+        println("i am here cheta")
+        viewModelScope.launch {
+            firestoreRepository.getOneSignalUserId()
+        }
     }
 
     private fun getSearchHistory() {
@@ -76,7 +84,8 @@ class DashboardViewModel @Inject constructor(
             }
         }
     }
-    fun resetApplyingList(){
+
+    fun resetApplyingList() {
         _state.update {
             it.copy(
                 appliedIdsList = emptyList(),
@@ -85,11 +94,11 @@ class DashboardViewModel @Inject constructor(
                     listName = "",
                     levels = emptyList()
                 ),
-                lokSewaAayog =FormAppliedList.DataColl.AcademicList(
+                lokSewaAayog = FormAppliedList.DataColl.AcademicList(
                     jobList = emptyList(),
                     listName = "",
                     levels = emptyList()
-                ) ,
+                ),
                 rastriyaAnusandhanBibhag = FormAppliedList.DataColl.AcademicList(
                     jobList = emptyList(),
                     listName = "",
@@ -154,7 +163,8 @@ class DashboardViewModel @Inject constructor(
             }
         }
     }
-    fun firstTime(){
+
+    fun firstTime() {
         viewModelScope.launch {
             val reseting = firestoreRepository.createJobNepalCollection(
                 listOf(
@@ -336,6 +346,7 @@ class DashboardViewModel @Inject constructor(
                         }
                     }
                 }
+
                 DashboardEvent.Logout -> {
                     preference.isFirstTime = true
                 }
@@ -416,12 +427,17 @@ class DashboardViewModel @Inject constructor(
                 }
 
                 is DashboardEvent.OnQueryChangeOnSearch -> {
-                    val search_list = state.value.videoListResponse.filter { it.title.contains(event.value) }
+                    val search_list =
+                        state.value.videoListResponse.filter { it.title.contains(event.value) }
                     _state.update {
                         it.copy(
                             searchText = event.value,
-                            videoListResponse = search_list + state.value.videoListResponse.filter { !it.title.contains(event.value) }
-                            )
+                            videoListResponse = search_list + state.value.videoListResponse.filter {
+                                !it.title.contains(
+                                    event.value
+                                )
+                            }
+                        )
                     }
 
                 }
@@ -437,9 +453,10 @@ class DashboardViewModel @Inject constructor(
                             )
                         )
                     )
-                    when (resource){
+                    when (resource) {
                         is Resource.Failure -> {
                         }
+
                         Resource.Loading -> {}
                         is Resource.Success -> {
                             getSearchHistory()
@@ -450,14 +467,14 @@ class DashboardViewModel @Inject constructor(
                 is DashboardEvent.OnQuerySearchDelete -> {
                     val list = state.value.searchListResponse.toMutableList()
                     val filterListIndex = list.indexOfFirst { it.searchTime == event.value }
-                    if (filterListIndex != null && filterListIndex != -1){
-                        val resource =firestoreRepository.deleteSearchHistory(
+                    if (filterListIndex != null && filterListIndex != -1) {
+                        val resource = firestoreRepository.deleteSearchHistory(
                             SearchHistoryRequestResponse(
-                                dataColl =list.filter { it.searchTime != event.value }
+                                dataColl = list.filter { it.searchTime != event.value }
 
                             )
                         )
-                        when (resource){
+                        when (resource) {
                             is Resource.Failure -> {}
                             Resource.Loading -> {}
                             is Resource.Success -> {
@@ -468,13 +485,14 @@ class DashboardViewModel @Inject constructor(
 
                 }
 
-                is DashboardEvent.OnFieldFilter ->{
+                is DashboardEvent.OnFieldFilter -> {
                     val search_list = state.value.videoListResponse
                     _state.update {
                         it.copy(
                             videoListResponse = search_list.filter { it.title == event.value })
                     }
                 }
+
                 is DashboardEvent.OnProvinceFilter -> {
                     val search_list = state.value.videoListResponse
                     _state.update {
@@ -486,7 +504,13 @@ class DashboardViewModel @Inject constructor(
 
                 DashboardEvent.OnRefresh -> {
                     _state.update {
-                        it.copy(infoMsg = Message.Loading(description = "Fetching Data", isCancellable = false, yesNoRequired = false))
+                        it.copy(
+                            infoMsg = Message.Loading(
+                                description = "Fetching Data",
+                                isCancellable = false,
+                                yesNoRequired = false
+                            )
+                        )
                     }
                     getNewVideoLink()
                     getAppliedFormData()

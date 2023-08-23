@@ -64,7 +64,8 @@ fun AppNavHost(
             LaunchedEffect(key1 = Unit) {
                 if (googleAuthUiClient.getSignedInUser() != null) {
                     if (googleAuthUiClient.getSignedInUser()!!.userEmail == "chtankhadka12@gmail.com" || googleAuthUiClient.getSignedInUser()!!.userEmail == "bheshkshetri58@gmail.com") {
-                        navController.cleanNavigate(Destination.Screen.AdminDashboard.route)
+                        navController.cleanNavigate(Destination.Screen.Dashboard.route)
+//                        navController.cleanNavigate(Destination.Screen.AdminDashboard.route)
                     } else {
 //                        navController.cleanNavigate(Destination.Screen.AdminDashboard.route)
                         navController.cleanNavigate(Destination.Screen.Dashboard.route)

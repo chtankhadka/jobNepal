@@ -65,4 +65,7 @@ interface FirestoreRepository {
     suspend fun getNotification(
     ): Resource<List<StoreNotificationRequestResponse>>
 
+    suspend fun getOneSignalUserId(
+    )
+
 }

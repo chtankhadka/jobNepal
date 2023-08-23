@@ -3,6 +3,7 @@ package com.chetan.jobnepal
 import android.app.Application
 import android.content.Context
 import android.widget.Toast
+import com.google.android.gms.ads.MobileAds
 import com.google.firebase.FirebaseApp
 import com.onesignal.OSNotificationReceivedEvent
 import com.onesignal.OneSignal
@@ -15,6 +16,9 @@ class JobNepalApp : Application() {
         super.onCreate()
         FirebaseApp.initializeApp(this)
         initOnesignal()
+        MobileAds.initialize(this){
+
+        }
     }
 
 
@@ -25,6 +29,7 @@ class JobNepalApp : Application() {
         //OneSignal Initialization
         OneSignal.initWithContext(this)
         OneSignal.setAppId(BuildConfig.OneSignal_API_Key)
+
 
         // promptForPublishNotification will show the native Android notification permission prompt
         // We recommend removing the following code and instead using an In-App Message to prompt for notification permission (See step 7)

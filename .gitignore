@@ -13,3 +13,7 @@
 .externalNativeBuild
 .cxx
 local.properties
+/app/release/app-release.aab
+/app/release/app-release.apk
+/jobnepalstore.jks
+/app/release/output-metadata.json

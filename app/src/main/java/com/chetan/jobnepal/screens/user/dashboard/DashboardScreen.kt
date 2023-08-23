@@ -56,8 +56,8 @@ import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import com.chetan.jobnepal.Destination
 import com.chetan.jobnepal.ui.component.dialogs.MessageDialog
-import com.chetan.jobnepal.ui.component.dropdown.ExposedDropdownJobNepal
 import com.chetan.jobnepal.utils.VibratingIcon
+import com.chetan.jobnepal.utils.ads.BannerAd
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -347,6 +347,11 @@ fun DashboardScreen(
 
                 },
             )
+            Row(
+                modifier = Modifier.fillMaxWidth().align(Alignment.BottomCenter)
+            ) {
+                BannerAd(bId = "ca-app-pub-3940256099942544/6300978111",modifier = Modifier.fillMaxWidth())
+            }
             PullRefreshIndicator(
                 refreshing = refreshing, state = refreshState, modifier = Modifier.align(
                     Alignment.TopCenter

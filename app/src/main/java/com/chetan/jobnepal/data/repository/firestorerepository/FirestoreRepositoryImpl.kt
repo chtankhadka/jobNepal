@@ -4,6 +4,7 @@ import com.chetan.jobnepal.data.Resource
 import com.chetan.jobnepal.data.local.Preference
 import com.chetan.jobnepal.data.models.academic.UploadAcademicList
 import com.chetan.jobnepal.data.models.dashboard.FormAppliedList
+import com.chetan.jobnepal.data.models.oneSignal.OneSignalId
 import com.chetan.jobnepal.data.models.param.UploadNewVideoLink
 import com.chetan.jobnepal.data.models.profile.UploadProfileParam
 import com.chetan.jobnepal.data.models.searchhistory.SearchHistoryRequestResponse
@@ -12,6 +13,7 @@ import com.chetan.jobnepal.screens.user.academic.AcademicState
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.toObject
+import com.onesignal.OneSignal
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -25,14 +27,14 @@ class FirestoreRepositoryImpl @Inject constructor(
 
             val collectionRef = firestore.collection(preference.dbTable.toString())
             val check = collectionRef.document("academic").get().await()
-            if (check.data == null){
+            if (check.data == null) {
                 val batch = firestore.batch()
                 for (documentId in jobNepalColletion) {
                     val documentRef = collectionRef.document(documentId)
                     batch.set(documentRef, emptyMap<String, Any>())
                 }
                 batch.commit().await()
-            }else{
+            } else {
 
             }
 
@@ -103,9 +105,11 @@ class FirestoreRepositoryImpl @Inject constructor(
                 AcademicState.CITIZENSHIP -> {
                     mapOf(selectedLevel to FieldValue.arrayUnion(*data.CITIZENSHIP.toTypedArray()))
                 }
+
                 AcademicState.EXPERIENCE -> {
                     mapOf(selectedLevel to FieldValue.arrayUnion(*data.experience.toTypedArray()))
                 }
+
                 AcademicState.TRAINING -> {
                     mapOf(selectedLevel to FieldValue.arrayUnion(*data.training.toTypedArray()))
                 }
@@ -139,7 +143,7 @@ class FirestoreRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun deleteAcademicData(level: String ): Resource<Any> {
+    override suspend fun deleteAcademicData(level: String): Resource<Any> {
         return try {
             val documentRef =
                 firestore.collection(preference.dbTable.toString())
@@ -214,7 +218,7 @@ class FirestoreRepositoryImpl @Inject constructor(
                     snapshot.toObject(FormAppliedList::class.java)?.dataColl?.toMutableList()
                 val itemIndex = dataList?.indexOfFirst { it.id == id }
                 if (itemIndex != null && itemIndex != -1) {
-                dataList.removeAt(itemIndex)
+                    dataList.removeAt(itemIndex)
                     documentRef.update("dataColl", dataList).await()
                 }
 
@@ -279,7 +283,8 @@ class FirestoreRepositoryImpl @Inject constructor(
             Resource.Failure(e)
         }
     }
-    override suspend fun deleteSearchHistory(data: SearchHistoryRequestResponse):Resource<Any>{
+
+    override suspend fun deleteSearchHistory(data: SearchHistoryRequestResponse): Resource<Any> {
         return try {
             val documentRef = firestore.collection(preference.dbTable.toString())
                 .document("searchHistory")
@@ -287,7 +292,7 @@ class FirestoreRepositoryImpl @Inject constructor(
                 .await()
             Resource.Success(documentRef)
 
-        }catch (e: Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
             Resource.Failure(e)
         }
@@ -295,7 +300,7 @@ class FirestoreRepositoryImpl @Inject constructor(
 
 
     // oneSignal Notification
-    override suspend fun saveNotification(data : StoreNotificationRequestResponse): Resource<Any> {
+    override suspend fun saveNotification(data: StoreNotificationRequestResponse): Resource<Any> {
         return try {
             val documentRef = firestore.collection(preference.dbTable.toString())
                 .document("notificationData")
@@ -304,7 +309,7 @@ class FirestoreRepositoryImpl @Inject constructor(
                 .set(data)
                 .await()
             Resource.Success(documentRef)
-        }catch (e:Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
             Resource.Failure(e)
         }
@@ -318,17 +323,46 @@ class FirestoreRepositoryImpl @Inject constructor(
                 .collection("data")
                 .get()
                 .await()
-            for (document in documentRef.documents){
+            for (document in documentRef.documents) {
                 val notification = document.toObject<StoreNotificationRequestResponse>()
                 notification?.let {
                     response.add(it)
                 }
             }
             Resource.Success(response)
-        }catch (e: Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
             Resource.Failure(e)
         }
     }
+
+    override suspend fun getOneSignalUserId() {
+        try {
+            val documentSnapshot = firestore.collection(preference.dbTable.toString())
+                .document("oneSignalIdentity")
+                .get()
+                .await()
+                .toObject<OneSignalId>()
+
+            if (!documentSnapshot?.oneSignalId.isNullOrBlank()) {
+                println("I am here at ff ${documentSnapshot?.oneSignalId}")
+                OneSignal.setExternalUserId(documentSnapshot.toString())
+            } else {
+                val newId = OneSignal.getDeviceState()?.userId
+                println("I am new id $newId")
+                if (newId != null) {
+                    val newIdMap = mapOf("oneSignalId" to newId)
+                    firestore.collection(preference.dbTable.toString())
+                        .document("oneSignalIdentity")
+                        .set(newIdMap)
+                        .await()
+                    OneSignal.sendTag("id",newId)
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
 
 }
