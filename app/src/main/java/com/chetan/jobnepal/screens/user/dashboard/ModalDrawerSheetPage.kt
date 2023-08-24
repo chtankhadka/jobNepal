@@ -15,16 +15,23 @@ import androidx.compose.material.icons.filled.Contacts
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Logout
+import androidx.compose.material.icons.filled.PrivacyTip
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.chetan.jobnepal.Destination
 import com.chetan.jobnepal.screens.user.dashboard.myForm.MyForm
+import com.chetan.jobnepal.ui.component.dialogs.AboutUsDialog
+import com.chetan.jobnepal.ui.component.dialogs.PrivacyPolicyDialog
 import com.chetan.jobnepal.ui.component.dropdown.DropdownJobNepalSetting
 import com.chetan.jobnepal.utils.ProfileAnimation
 
@@ -34,8 +41,24 @@ fun ModalDrawerSheetPage(
     state: DashboardState,
     onClick: (String) -> Unit,
     onEvent: (event: DashboardEvent) -> Unit,
-
     ) {
+
+    var showDialog by remember {
+        mutableStateOf(false)
+    }
+    if (showDialog) {
+        PrivacyPolicyDialog(onDismiss = {
+            showDialog = it
+        })
+    }
+    var showAboutUsDialog by remember {
+        mutableStateOf(false)
+    }
+    if (showAboutUsDialog) {
+        AboutUsDialog(onDismiss = {
+            showAboutUsDialog = it
+        })
+    }
     Column(
         modifier = Modifier
             .fillMaxWidth(0.85f)
@@ -57,16 +80,26 @@ fun ModalDrawerSheetPage(
             }
             val list = listOf(
                 Triple("Nepali", Icons.Default.Language,true),
-                Triple("Contacts" , Icons.Default.Contacts,true),
+                Triple("About Us" , Icons.Default.Contacts,true),
+                Triple("Privacy & Policy", Icons.Default.PrivacyTip, true),
                 Triple("Logout" , Icons.Default.Logout,true),
                 )
             DropdownJobNepalSetting(list,state,onEvent,onClick ={
-                    if (it == "Logout"){
+                when (it){
+                    "Logout" -> {
                         onEvent(DashboardEvent.Logout)
                         onClick("logout")
-                    }else if (it=="Nepali"){
+                    }
+                    "Nepali" -> {
                         onClick("Nepali")
                     }
+                    "Privacy & Policy" ->{
+                        showDialog = true
+                    }
+                    "About Us" -> {
+                        showAboutUsDialog = true
+                    }
+                }
             })
 
         }

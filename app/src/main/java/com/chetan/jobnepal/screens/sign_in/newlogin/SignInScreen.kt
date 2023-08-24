@@ -52,6 +52,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.chetan.jobnepal.R
+import com.chetan.jobnepal.ui.component.dialogs.PrivacyPolicyDialog
 
 
 @Composable
@@ -66,16 +67,9 @@ fun SignInScreen(
         mutableStateOf(false)
     }
     if (showDialog) {
-        Dialog(onDismissRequest = {
-            showDialog = false
-        },
-            content = {
-                Text(text = "Very Good..")
-                Button(onClick = { showDialog = false }) {
-                    Text(text = "Confirm")
-                }
-            })
-
+        PrivacyPolicyDialog(onDismiss = {
+            showDialog = it
+        })
     }
     val context = LocalContext.current
     LaunchedEffect(key1 = state.signInError) {
@@ -109,6 +103,9 @@ fun SignInScreen(
                     }
                 )
                 Text(
+                    modifier = Modifier.clickable {
+                        showDialog = true
+                    },
                     text = "Terms and Conditions",
                     textDecoration = TextDecoration.Underline,
                     fontWeight = FontWeight.Bold,
