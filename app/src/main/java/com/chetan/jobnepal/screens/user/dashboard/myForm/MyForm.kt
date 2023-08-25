@@ -28,7 +28,11 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -41,6 +45,7 @@ import coil.compose.AsyncImage
 import com.chetan.jobnepal.data.models.dashboard.FormAppliedList
 import com.chetan.jobnepal.screens.user.dashboard.DashboardEvent
 import com.chetan.jobnepal.screens.user.dashboard.DashboardState
+import com.chetan.jobnepal.ui.component.dialogs.PaymentDialog
 import com.chetan.jobnepal.ui.component.dropdown.DropdownJobNepal
 import com.chetan.jobnepal.utils.youtubePlayer.WebContent
 import kotlinx.coroutines.launch
@@ -51,6 +56,20 @@ fun MyForm(state: DashboardState, onEvent: (event: DashboardEvent) -> Unit) {
     val scope = rememberCoroutineScope()
     val list = listOf("Pay Now", "Paid", "Admin Card")
     val pagerState = rememberPagerState(initialPage = 0) { 4 }
+
+    var showPaymentDialog by remember {
+        mutableStateOf(false)
+    }
+    var paymentId by remember {
+        mutableStateOf("")
+    }
+    if (showPaymentDialog) {
+        PaymentDialog(
+            paymentId = paymentId,
+            onDismiss = {
+            showPaymentDialog = it
+        })
+    }
     TabRow(
         selectedTabIndex = pagerState.currentPage,
         containerColor = MaterialTheme.colorScheme.onPrimary,
@@ -96,7 +115,8 @@ fun MyForm(state: DashboardState, onEvent: (event: DashboardEvent) -> Unit) {
                     ){ item, id ->
                         when  (item){
                             "Pay" -> {
-
+                                paymentId = id+"/9863142800"
+                                showPaymentDialog = true
                             }
                             "Cancel" ->{
                                 onEvent(DashboardEvent.DeleteAppliedData(id))

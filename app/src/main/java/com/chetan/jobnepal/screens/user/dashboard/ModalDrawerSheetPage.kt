@@ -31,6 +31,7 @@ import androidx.navigation.NavHostController
 import com.chetan.jobnepal.Destination
 import com.chetan.jobnepal.screens.user.dashboard.myForm.MyForm
 import com.chetan.jobnepal.ui.component.dialogs.AboutUsDialog
+import com.chetan.jobnepal.ui.component.dialogs.PaymentDialog
 import com.chetan.jobnepal.ui.component.dialogs.PrivacyPolicyDialog
 import com.chetan.jobnepal.ui.component.dropdown.DropdownJobNepalSetting
 import com.chetan.jobnepal.utils.ProfileAnimation
@@ -59,6 +60,7 @@ fun ModalDrawerSheetPage(
             showAboutUsDialog = it
         })
     }
+
     Column(
         modifier = Modifier
             .fillMaxWidth(0.85f)
