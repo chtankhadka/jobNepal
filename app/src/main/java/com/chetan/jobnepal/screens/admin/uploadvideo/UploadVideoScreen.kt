@@ -142,15 +142,23 @@ fun UploadVideoScreen(
                     .padding(horizontal = 5.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                val provienceList = listOf("Province 1", "Province 2", "Province 3", "Province 4", "Province 5", "Province 6", "Province 7")
+                val provienceList = listOf(
+                    "Province 1",
+                    "Province 2",
+                    "Province 3",
+                    "Province 4",
+                    "Province 5",
+                    "Province 6",
+                    "Province 7"
+                )
                 ReadonlyJobNepalTextField(
+                    modifier = Modifier.weight(1f),
                     label = "Select Province",
                     value = state.editProvince,
                     onClick = {
                         expanded = !expanded
                     }
                 )
-
                 DropdownMenu(
                     expanded = expanded,
                     onDismissRequest = {
@@ -158,12 +166,11 @@ fun UploadVideoScreen(
                     }) {
                     provienceList.forEach {
                         DropdownMenuItem(text = {
-it
+                            Text(text = it)
                         }, onClick = {
                             onEvent(UploadVideoEvent.OnSelectProvince(it))
                         })
                     }
-
 
                 }
                 Button(
@@ -173,6 +180,7 @@ it
                     }) {
                     Text(text = "Job For")
                 }
+
             }
             Button(
                 onClick = {

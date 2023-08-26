@@ -1,6 +1,13 @@
 package com.chetan.jobnepal.screens.user.dashboard
 
 import android.annotation.SuppressLint
+import android.os.Handler
+import android.os.Looper
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -8,6 +15,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -27,6 +35,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DockedSearchBar
 import androidx.compose.material3.DrawerValue
@@ -40,6 +49,7 @@ import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -71,7 +81,6 @@ fun DashboardScreen(
 ) {
 
     val scope = rememberCoroutineScope()
-
     var searchText by remember {
         mutableStateOf("")
     }
@@ -97,6 +106,19 @@ fun DashboardScreen(
 
     val refreshState = rememberPullRefreshState(refreshing, ::refresh)
 
+    var cardVisible by remember {
+        mutableStateOf(true)
+    }
+    LaunchedEffect(key1 = cardVisible, block ={
+        if (cardVisible){
+            val handler = Handler(Looper.getMainLooper())
+            handler.postDelayed({
+                cardVisible = false
+            }, 5000)
+
+        }
+    } )
+
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
@@ -118,8 +140,7 @@ fun DashboardScreen(
                         CenterAlignedTopAppBar(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 5.dp)
-                            ,
+                                .padding(horizontal = 5.dp),
                             navigationIcon = {
                                 Box(
                                     modifier = Modifier
@@ -157,10 +178,11 @@ fun DashboardScreen(
                                 }
                             },
 
-                        )
+                            )
 
                     },
                     bottomBar = {
+
 
                     },
 
@@ -347,10 +369,32 @@ fun DashboardScreen(
 
                 },
             )
+
+               AnimatedVisibility(
+                   modifier = Modifier.align(Alignment.BottomCenter),
+                   visible = cardVisible, enter = fadeIn(), exit = fadeOut()) {
+                   Card(
+                       modifier = Modifier
+                           .fillMaxWidth()
+                           .fillMaxHeight(0.3f)
+                           ,
+                       shape = RoundedCornerShape(topEnd = 10.dp, topStart = 10.dp)
+                   ) {
+                       Text(text = "hello")
+                   }
+               }
+
+
+
             Row(
-                modifier = Modifier.fillMaxWidth().align(Alignment.BottomCenter)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.BottomCenter)
             ) {
-                BannerAd(bId = "ca-app-pub-3940256099942544/6300978111",modifier = Modifier.fillMaxWidth())
+                BannerAd(
+                    bId = "ca-app-pub-3940256099942544/6300978111",
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
             PullRefreshIndicator(
                 refreshing = refreshing, state = refreshState, modifier = Modifier.align(
@@ -359,6 +403,5 @@ fun DashboardScreen(
             )
         }
     }
-
 
 }
