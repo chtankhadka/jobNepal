@@ -8,7 +8,6 @@ import com.chetan.jobnepal.R
 import com.chetan.jobnepal.data.Resource
 import com.chetan.jobnepal.data.local.Preference
 import com.chetan.jobnepal.data.models.dashboard.FormAppliedList
-import com.chetan.jobnepal.data.models.param.UploadNewVideoLink
 import com.chetan.jobnepal.data.models.searchhistory.SearchHistoryRequestResponse
 import com.chetan.jobnepal.data.repository.firebasestoragerepository.FirebaseStorageRepository
 import com.chetan.jobnepal.data.repository.firestorerepository.FirestoreRepository
@@ -26,7 +25,7 @@ import javax.inject.Inject
 class DashboardViewModel @Inject constructor(
     private val preference: Preference,
     private val firestoreRepository: FirestoreRepository,
-    private val firebaseStorageRepository: FirebaseStorageRepository
+    private val firebaseStorageRepository: FirebaseStorageRepository,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(DashboardState())
