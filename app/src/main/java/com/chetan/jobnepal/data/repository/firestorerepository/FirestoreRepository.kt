@@ -2,7 +2,8 @@ package com.chetan.jobnepal.data.repository.firestorerepository
 
 import com.chetan.jobnepal.data.Resource
 import com.chetan.jobnepal.data.models.academic.UploadAcademicList
-import com.chetan.jobnepal.data.models.dashboard.FormAppliedList
+import com.chetan.jobnepal.data.models.adminpayment.AddAdminPaymentMethodRequest
+import com.chetan.jobnepal.data.models.adminpayment.AddAdminPaymentMethodResponse
 import com.chetan.jobnepal.data.models.dashboard.UploadAppliedFormDataRequest
 import com.chetan.jobnepal.data.models.param.UploadNewVideoLink
 import com.chetan.jobnepal.data.models.param.UserDashboardUpdateNoticeRequestResponse
@@ -68,6 +69,10 @@ interface FirestoreRepository {
     //Admin
     suspend fun updateNoticeUserDashboard(
         data: UserDashboardUpdateNoticeRequestResponse
+    ): Resource<Any>
+
+    suspend fun addAdminPaymentMethod(
+        data: AddAdminPaymentMethodResponse
     ): Resource<Any>
 
 

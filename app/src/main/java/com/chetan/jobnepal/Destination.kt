@@ -8,6 +8,7 @@ open class Destination(open val route : String) {
         object UploadVideoScreen : Destination("upload-video-screen")
 
         object AdminSendNotification: Destination("admin-send-notification")
+        object AdminPayment: Destination("admin-payment")
         object AdminBottomSheetNotice: Destination("admin-bottom-sheet-notification")
 
         //user

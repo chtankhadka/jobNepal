@@ -81,11 +81,18 @@ fun AdminDashboard(
                     onEvent = onEvent,
                     onClick = {
                         when (it){
-                            "Send Notification" -> {
+
+                            MenuItem.Documents -> {
+
+                            }
+                            MenuItem.Offer -> {
+                                navController.navigate(Destination.Screen.AdminBottomSheetNotice.route)
+                            }
+                            MenuItem.Notification -> {
                                 navController.navigate(Destination.Screen.AdminSendNotification.route)
                             }
-                            "Notice" -> {
-                                navController.navigate(Destination.Screen.AdminBottomSheetNotice.route)
+                            MenuItem.Payments -> {
+                                navController.navigate(Destination.Screen.AdminPayment.route)
                             }
                         }
                     }

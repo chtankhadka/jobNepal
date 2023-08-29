@@ -3,7 +3,8 @@ package com.chetan.jobnepal.data.repository.firestorerepository
 import com.chetan.jobnepal.data.Resource
 import com.chetan.jobnepal.data.local.Preference
 import com.chetan.jobnepal.data.models.academic.UploadAcademicList
-import com.chetan.jobnepal.data.models.dashboard.FormAppliedList
+import com.chetan.jobnepal.data.models.adminpayment.AddAdminPaymentMethodRequest
+import com.chetan.jobnepal.data.models.adminpayment.AddAdminPaymentMethodResponse
 import com.chetan.jobnepal.data.models.dashboard.UploadAppliedFormDataRequest
 import com.chetan.jobnepal.data.models.oneSignal.OneSignalId
 import com.chetan.jobnepal.data.models.param.UploadNewVideoLink
@@ -329,6 +330,21 @@ class FirestoreRepositoryImpl @Inject constructor(
                 .await()
             Resource.Success(documentRef)
         } catch (e: Exception) {
+            e.printStackTrace()
+            Resource.Failure(e)
+        }
+    }
+
+    override suspend fun addAdminPaymentMethod(data: AddAdminPaymentMethodResponse): Resource<Any> {
+        return try {
+            val documentRef = firestore.collection("chtankhadka12")
+                .document("paymentMethod")
+                .collection("data")
+                .document(data.bankName)
+                .set(data)
+                .await()
+            Resource.Success(documentRef)
+        }catch (e: Exception){
             e.printStackTrace()
             Resource.Failure(e)
         }

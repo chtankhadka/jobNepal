@@ -3,6 +3,8 @@ package com.chetan.jobnepal.data.repository.firebasestoragerepository
 import android.net.Uri
 import com.chetan.jobnepal.data.Resource
 import com.chetan.jobnepal.data.local.Preference
+import com.chetan.jobnepal.data.models.adminpayment.AddAdminPaymentMethodRequest
+import com.chetan.jobnepal.data.models.adminpayment.AddAdminPaymentMethodResponse
 import com.chetan.jobnepal.utils.GenerateRandomNumber
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.storage.FirebaseStorage
@@ -22,6 +24,33 @@ class FirebaseStorageRepositoryImpl @Inject constructor(
     private val storageRef: StorageReference,
     private val preference: Preference
 ) : FirebaseStorageRepository {
+    override suspend fun uploadPaymentMethod(fileUri: List<Uri>,bankName: String):  Resource<List<Pair<String,String>>> {
+        return try {
+            val uploadedImageInfo = mutableListOf<Pair<String,String>>()
+            withContext(Dispatchers.IO){
+                val deferredUpload = fileUri.map { uri ->
+                    async {
+                        val file = File(uri.path!!)
+                        val fileName = file.name+"${GenerateRandomNumber.generateRandomNumber(111..999)}"
+                        val imageRef = storageRef.child("chtankhadka12"+"/Payment/${bankName}/"+fileName)
+                        try {
+                            val uploadTask = imageRef.putFile(uri).await()
+                            val downloadUrl = uploadTask.storage.downloadUrl.await()
+                            uploadedImageInfo.add(Pair(fileName,downloadUrl.toString()))
+                        } catch (e: Exception){
+                            e.printStackTrace()
+                        }
+                    }
+                }
+                deferredUpload.awaitAll()
+            }
+            Resource.Success(uploadedImageInfo)
+
+        }catch (e: Exception){
+            e.printStackTrace()
+            Resource.Failure(e)
+        }
+    }
 
     override suspend fun uploadAcademicAttachement(fileUri: List<Uri>,level: String): Resource<List<Pair<String,String>>> {
         return try {

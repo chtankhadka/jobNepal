@@ -12,25 +12,25 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Contacts
-import androidx.compose.material.icons.filled.Discount
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Language
-import androidx.compose.material.icons.filled.Logout
+import androidx.compose.material.icons.filled.LibraryBooks
+import androidx.compose.material.icons.filled.LocalOffer
+import androidx.compose.material.icons.filled.NotificationAdd
+import androidx.compose.material.icons.filled.Payments
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import com.chetan.jobnepal.ui.component.dropdown.DropdownJobNepalSetting
 import com.chetan.jobnepal.utils.ProfileAnimation
 
 @Composable
 fun ModalDrawerSheetPage(
     state: AdminDashboardState,
     onEvent: (event: AdminDashboardEvent) -> Unit,
-    onClick: (String) -> Unit,
+    onClick: (MenuItem) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -64,16 +64,17 @@ fun ModalDrawerSheetPage(
                 .height(2.dp)
         )
         val menuList = listOf(
-            Icons.Default.Home to "Send Notification",
-            Icons.Default.Discount to "Notice",
-            Icons.Default.Contacts to "Documents"
+            MenuItem.Notification,
+            MenuItem.Offer,
+            MenuItem.Payments,
+            MenuItem.Documents
         )
 
-        menuList.forEach {
+        menuList.forEach { menuItem ->
             Spacer(modifier = Modifier.height(5.dp))
             ElevatedCard(
                 modifier = Modifier.clickable {
-                    onClick(it.second)
+                    onClick(menuItem)
                 },
                 shape = RoundedCornerShape(5.dp)
             ) {
@@ -83,12 +84,18 @@ fun ModalDrawerSheetPage(
                         .padding(vertical = 7.dp),
                     horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    Icon(imageVector = it.first, contentDescription = "")
-                    Text(text = it.second)
+                    Icon(imageVector = menuItem.icon, contentDescription = "")
+                    Text(text = menuItem.label)
                 }
             }
-
         }
         Spacer(modifier = Modifier.height(5.dp))
     }
+}
+
+sealed class MenuItem(val icon: ImageVector, val label: String){
+    object Notification : MenuItem(Icons.Default.NotificationAdd, "Send Notification")
+    object Offer : MenuItem(Icons.Default.LocalOffer, "Offer")
+    object Payments : MenuItem(Icons.Default.Payments, "Payments")
+    object Documents : MenuItem(Icons.Default.LibraryBooks, "Documents")
 }

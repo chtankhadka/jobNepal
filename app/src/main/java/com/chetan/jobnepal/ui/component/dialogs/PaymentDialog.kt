@@ -2,7 +2,9 @@ package com.chetan.jobnepal.ui.component.dialogs
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -25,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import coil.compose.AsyncImage
 import com.chetan.jobnepal.R
+import com.chetan.jobnepal.ui.component.dropdown.DropdownJobNepal
 
 @Composable
 fun PaymentDialog(
@@ -37,28 +40,32 @@ fun PaymentDialog(
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-
+                    .fillMaxHeight(7f)
             ) {
-                Text(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp),
-                    text = buildAnnotatedString {
-                        withStyle(SpanStyle(fontWeight = FontWeight.Bold, fontSize = 20.sp)) {
-                            append("Note:")
-                        }
-                        withStyle(SpanStyle(fontWeight = FontWeight.Bold, fontSize = 15.sp)) {
-                            append("Add remarks like this : ")
-                        }
-                        withStyle(
-                            SpanStyle(
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 15.sp,
-                                color = Color.Red
-                            )
-                        ) {
-                            append(paymentId)
-                        }
-                    })
+//                Text(modifier = Modifier
+//                    .fillMaxWidth()
+//                    .padding(10.dp),
+//                    text = buildAnnotatedString {
+//                        withStyle(SpanStyle(fontWeight = FontWeight.Bold, fontSize = 20.sp)) {
+//                            append("Note:")
+//                        }
+//                        withStyle(SpanStyle(fontWeight = FontWeight.Bold, fontSize = 15.sp)) {
+//                            append("Add remarks like this : ")
+//                        }
+//                        withStyle(
+//                            SpanStyle(
+//                                fontWeight = FontWeight.Bold,
+//                                fontSize = 15.sp,
+//                                color = Color.Red
+//                            )
+//                        ) {
+//                            append(paymentId)
+//                        }
+//                    })
+                
+                Row(modifier = Modifier.fillMaxWidth()) {
+//                    DropdownJobNepal(list = , clicked = )
+                }
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()

@@ -24,6 +24,8 @@ import com.chetan.jobnepal.screens.admin.dashboard.AdminDashboard
 import com.chetan.jobnepal.screens.admin.dashboard.AdminDashboardViewModel
 import com.chetan.jobnepal.screens.admin.notification.NotificationScreen
 import com.chetan.jobnepal.screens.admin.notification.AdminNotificationViewModel
+import com.chetan.jobnepal.screens.admin.payments.AdminPaymentScreen
+import com.chetan.jobnepal.screens.admin.payments.AdminPaymentViewModel
 import com.chetan.jobnepal.screens.admin.uploadvideo.UploadVideoScreen
 import com.chetan.jobnepal.screens.admin.uploadvideo.UploadVideoViewModel
 import com.chetan.jobnepal.screens.onboardscreen.OnBoardScreen
@@ -200,6 +202,14 @@ fun AppNavHost(
         composable(Destination.Screen.AdminBottomSheetNotice.route){
             val viewModel = hiltViewModel<AdminBottomSheetViewModel>()
             AdminBottomSheetScreen(
+                navController = navController,
+                state = viewModel.state.collectAsStateWithLifecycle().value,
+                onEvent = viewModel.onEvent
+            )
+        }
+        composable(Destination.Screen.AdminPayment.route) {
+            val viewModel = hiltViewModel<AdminPaymentViewModel>()
+            AdminPaymentScreen(
                 navController = navController,
                 state = viewModel.state.collectAsStateWithLifecycle().value,
                 onEvent = viewModel.onEvent
