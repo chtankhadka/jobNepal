@@ -2,6 +2,7 @@ package com.chetan.jobnepal.screens.user.dashboard
 
 
 import com.chetan.jobnepal.data.models.dashboard.FormAppliedList
+import com.chetan.jobnepal.data.models.dashboard.UploadAppliedFormDataRequest
 import com.chetan.jobnepal.data.models.param.UploadNewVideoLink
 import com.chetan.jobnepal.data.models.param.UserDashboardUpdateNoticeRequestResponse
 import com.chetan.jobnepal.data.models.searchhistory.SearchHistoryRequestResponse
@@ -19,20 +20,20 @@ data class DashboardState(
     val appliedIdsList : List<String> = emptyList(),
     val updatedNotice: UserDashboardUpdateNoticeRequestResponse = UserDashboardUpdateNoticeRequestResponse(),
     val selectedVideoId: String = "",
-    val shikashakSewaAayog: FormAppliedList.DataColl.AcademicList =
-        FormAppliedList.DataColl.AcademicList(
+    val shikashakSewaAayog: UploadAppliedFormDataRequest.AcademicList =
+        UploadAppliedFormDataRequest.AcademicList(
             jobList = emptyList(),
             listName = "",
             levels = emptyList()
         ),
-    val lokSewaAayog: FormAppliedList.DataColl.AcademicList =
-        FormAppliedList.DataColl.AcademicList(
+    val lokSewaAayog: UploadAppliedFormDataRequest.AcademicList =
+        UploadAppliedFormDataRequest.AcademicList(
             jobList = emptyList(),
             listName = "",
             levels = emptyList()
         ),
-    val rastriyaAnusandhanBibhag: FormAppliedList.DataColl.AcademicList =
-        FormAppliedList.DataColl.AcademicList(
+    val rastriyaAnusandhanBibhag: UploadAppliedFormDataRequest.AcademicList =
+        UploadAppliedFormDataRequest.AcademicList(
             jobList = emptyList(),
             listName = "",
             levels = emptyList()

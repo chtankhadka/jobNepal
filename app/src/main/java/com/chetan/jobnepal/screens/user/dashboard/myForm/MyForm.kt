@@ -40,6 +40,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.chetan.jobnepal.data.models.dashboard.FormAppliedList
@@ -47,6 +48,7 @@ import com.chetan.jobnepal.screens.user.dashboard.DashboardEvent
 import com.chetan.jobnepal.screens.user.dashboard.DashboardState
 import com.chetan.jobnepal.ui.component.dialogs.PaymentDialog
 import com.chetan.jobnepal.ui.component.dropdown.DropdownJobNepal
+import com.chetan.jobnepal.utils.downloader.AndroidDownloader
 import com.chetan.jobnepal.utils.youtubePlayer.WebContent
 import kotlinx.coroutines.launch
 
@@ -54,6 +56,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun MyForm(state: DashboardState, onEvent: (event: DashboardEvent) -> Unit) {
     val scope = rememberCoroutineScope()
+    val ctx = LocalContext.current
     val list = listOf("Pay Now", "Paid", "Admin Card")
     val pagerState = rememberPagerState(initialPage = 0) { 4 }
 
@@ -70,6 +73,7 @@ fun MyForm(state: DashboardState, onEvent: (event: DashboardEvent) -> Unit) {
             showPaymentDialog = it
         })
     }
+    val downloader = AndroidDownloader(ctx)
     TabRow(
         selectedTabIndex = pagerState.currentPage,
         containerColor = MaterialTheme.colorScheme.onPrimary,
@@ -154,7 +158,8 @@ fun MyForm(state: DashboardState, onEvent: (event: DashboardEvent) -> Unit) {
                             Triple("Download", Icons.Default.Undo, true),
                         )
                     ){ item, id ->
-
+                        val data = state.appliedListResponse.find { it.id == id }
+                        downloader.downloadFile("https://firebasestorage.googleapis.com/v0/b/jobnepal-674cd.appspot.com/o/chtankhadka12%2FAcademic%2FSEE%2F1000012120174?alt=media&token=79166fd8-1093-40c6-a22d-1b9472820062",data?.title?:"")
                     }
                 }
             }

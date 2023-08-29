@@ -3,6 +3,7 @@ package com.chetan.jobnepal.data.repository.firestorerepository
 import com.chetan.jobnepal.data.Resource
 import com.chetan.jobnepal.data.models.academic.UploadAcademicList
 import com.chetan.jobnepal.data.models.dashboard.FormAppliedList
+import com.chetan.jobnepal.data.models.dashboard.UploadAppliedFormDataRequest
 import com.chetan.jobnepal.data.models.param.UploadNewVideoLink
 import com.chetan.jobnepal.data.models.param.UserDashboardUpdateNoticeRequestResponse
 import com.chetan.jobnepal.data.models.profile.UploadProfileParam
@@ -41,7 +42,8 @@ interface FirestoreRepository {
 
     // get applied form data
     suspend fun uploadAppliedFormData(
-        data: FormAppliedList
+        data: UploadAppliedFormDataRequest,
+        id: String
     ): Resource<Any>
 
     suspend fun deleteAppliedFormData(

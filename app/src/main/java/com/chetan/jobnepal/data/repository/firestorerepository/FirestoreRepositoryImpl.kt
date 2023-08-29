@@ -4,6 +4,7 @@ import com.chetan.jobnepal.data.Resource
 import com.chetan.jobnepal.data.local.Preference
 import com.chetan.jobnepal.data.models.academic.UploadAcademicList
 import com.chetan.jobnepal.data.models.dashboard.FormAppliedList
+import com.chetan.jobnepal.data.models.dashboard.UploadAppliedFormDataRequest
 import com.chetan.jobnepal.data.models.oneSignal.OneSignalId
 import com.chetan.jobnepal.data.models.param.UploadNewVideoLink
 import com.chetan.jobnepal.data.models.param.UserDashboardUpdateNoticeRequestResponse
@@ -193,15 +194,17 @@ class FirestoreRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun uploadAppliedFormData(data: FormAppliedList): Resource<Any> {
+    override suspend fun uploadAppliedFormData(data: UploadAppliedFormDataRequest, id: String): Resource<Any> {
         return try {
             val documentRef =
-                firestore.collection(preference.dbTable.toString()).document("appliedList")
-            val newData = mapOf(
-                "dataColl" to FieldValue.arrayUnion(*data.dataColl.toTypedArray())
-            )
-            val result = documentRef.update(newData).await()
-            Resource.Success(result)
+                firestore.collection(preference.dbTable.toString())
+                    .document("appliedList")
+                    .collection("data")
+                    .document(id)
+                    .set(data)
+                    .await()
+
+            Resource.Success(documentRef)
         } catch (e: Exception) {
             e.printStackTrace()
             Resource.Failure(e)

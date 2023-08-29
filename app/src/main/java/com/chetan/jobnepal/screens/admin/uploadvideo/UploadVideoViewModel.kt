@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.chetan.jobnepal.data.Resource
 import com.chetan.jobnepal.data.repository.firestorerepository.FirestoreRepository
 import com.chetan.jobnepal.data.models.param.UploadNewVideoLink
-import com.chetan.jobnepal.screens.user.dashboard.DashboardEvent
 import com.chetan.jobnepal.ui.component.dialogs.Message
 import com.chetan.jobnepal.ui.component.dialogs.Progress
 import com.chetan.jobnepal.utils.GenerateRandomNumber

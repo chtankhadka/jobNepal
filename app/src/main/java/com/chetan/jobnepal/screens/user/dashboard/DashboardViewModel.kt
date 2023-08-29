@@ -8,6 +8,7 @@ import com.chetan.jobnepal.R
 import com.chetan.jobnepal.data.Resource
 import com.chetan.jobnepal.data.local.Preference
 import com.chetan.jobnepal.data.models.dashboard.FormAppliedList
+import com.chetan.jobnepal.data.models.dashboard.UploadAppliedFormDataRequest
 import com.chetan.jobnepal.data.models.searchhistory.SearchHistoryRequestResponse
 import com.chetan.jobnepal.data.repository.firebasestoragerepository.FirebaseStorageRepository
 import com.chetan.jobnepal.data.repository.firestorerepository.FirestoreRepository
@@ -89,17 +90,17 @@ class DashboardViewModel @Inject constructor(
         _state.update {
             it.copy(
                 appliedIdsList = emptyList(),
-                shikashakSewaAayog = FormAppliedList.DataColl.AcademicList(
+                shikashakSewaAayog = UploadAppliedFormDataRequest.AcademicList(
                     jobList = emptyList(),
                     listName = "",
                     levels = emptyList()
                 ),
-                lokSewaAayog = FormAppliedList.DataColl.AcademicList(
+                lokSewaAayog = UploadAppliedFormDataRequest.AcademicList(
                     jobList = emptyList(),
                     listName = "",
                     levels = emptyList()
                 ),
-                rastriyaAnusandhanBibhag = FormAppliedList.DataColl.AcademicList(
+                rastriyaAnusandhanBibhag = UploadAppliedFormDataRequest.AcademicList(
                     jobList = emptyList(),
                     listName = "",
                     levels = emptyList()
@@ -163,6 +164,7 @@ class DashboardViewModel @Inject constructor(
             }
         }
     }
+
     fun getUpdatedNotice() {
         viewModelScope.launch {
             _state.update {
@@ -245,26 +247,23 @@ class DashboardViewModel @Inject constructor(
                         )
                     }
                     val applylist =
-                        state.value.videoListResponse.filter { it.id == state.value.selectedVideoId }
+                        state.value.videoListResponse.find { it.id == state.value.selectedVideoId }
                     val applyNowRequest = firestoreRepository.uploadAppliedFormData(
-                        FormAppliedList(
-                            dataColl = applylist.map {
-                                FormAppliedList.DataColl(
-                                    id = it.id,
-                                    title = it.title,
-                                    videoLink = it.videoLink,
-                                    description = it.description,
-                                    apply = "applied",
-                                    paymentSuccess = false,
-                                    academicList = listOf(
-                                        state.value.shikashakSewaAayog,
-                                        state.value.lokSewaAayog,
-                                        state.value.rastriyaAnusandhanBibhag
-                                    )
-                                )
-
-                            }
-                        )
+                        data =
+                        UploadAppliedFormDataRequest(
+                            id = applylist?.id?:"",
+                            title = applylist?.title?:"",
+                            videoLink = applylist?.videoLink?:"",
+                            description = applylist?.description?:"",
+                            apply = "applied",
+                            paymentSuccess = false,
+                            academicList = listOf(
+                                state.value.shikashakSewaAayog,
+                                state.value.lokSewaAayog,
+                                state.value.rastriyaAnusandhanBibhag
+                            )
+                        ),
+                        id = state.value.selectedVideoId
                     )
                     when (applyNowRequest) {
                         is Resource.Failure -> {
@@ -308,15 +307,15 @@ class DashboardViewModel @Inject constructor(
 
                         when (event.title) {
                             "शिक्षक सेवा आयोग" -> {
-                                it.copy(shikashakSewaAayog = FormAppliedList.DataColl.AcademicList(
+                                it.copy(shikashakSewaAayog = UploadAppliedFormDataRequest.AcademicList(
                                     listName = event.title,
                                     jobList = event.value.map {
-                                        FormAppliedList.DataColl.AcademicList.AvailableJobs(
+                                        UploadAppliedFormDataRequest.AcademicList.AvailableJobs(
                                             it
                                         )
                                     },
                                     levels = event.selectedLevels.map {
-                                        FormAppliedList.DataColl.AcademicList.AvailableLevels(
+                                        UploadAppliedFormDataRequest.AcademicList.AvailableLevels(
                                             it
                                         )
                                     }
@@ -324,15 +323,15 @@ class DashboardViewModel @Inject constructor(
                             }
 
                             "लोकसेवा आयोग" -> {
-                                it.copy(lokSewaAayog = FormAppliedList.DataColl.AcademicList(
+                                it.copy(lokSewaAayog =UploadAppliedFormDataRequest.AcademicList(
                                     listName = event.title,
                                     jobList = event.value.map {
-                                        FormAppliedList.DataColl.AcademicList.AvailableJobs(
+                                        UploadAppliedFormDataRequest.AcademicList.AvailableJobs(
                                             it
                                         )
                                     },
                                     levels = event.selectedLevels.map {
-                                        FormAppliedList.DataColl.AcademicList.AvailableLevels(
+                                        UploadAppliedFormDataRequest.AcademicList.AvailableLevels(
                                             it
                                         )
                                     }
@@ -340,15 +339,15 @@ class DashboardViewModel @Inject constructor(
                             }
 
                             "राष्ट्रिय अनुसन्धान विभाग" -> {
-                                it.copy(rastriyaAnusandhanBibhag = FormAppliedList.DataColl.AcademicList(
+                                it.copy(rastriyaAnusandhanBibhag = UploadAppliedFormDataRequest.AcademicList(
                                     listName = event.title,
                                     jobList = event.value.map {
-                                        FormAppliedList.DataColl.AcademicList.AvailableJobs(
+                                        UploadAppliedFormDataRequest.AcademicList.AvailableJobs(
                                             it
                                         )
                                     },
                                     levels = event.selectedLevels.map {
-                                        FormAppliedList.DataColl.AcademicList.AvailableLevels(
+                                        UploadAppliedFormDataRequest.AcademicList.AvailableLevels(
                                             it
                                         )
                                     }
@@ -357,15 +356,15 @@ class DashboardViewModel @Inject constructor(
 
 
                             else -> {
-                                it.copy(lokSewaAayog = FormAppliedList.DataColl.AcademicList(
+                                it.copy(lokSewaAayog = UploadAppliedFormDataRequest.AcademicList(
                                     listName = event.title,
                                     jobList = event.value.map {
-                                        FormAppliedList.DataColl.AcademicList.AvailableJobs(
+                                        UploadAppliedFormDataRequest.AcademicList.AvailableJobs(
                                             it
                                         )
                                     },
                                     levels = event.selectedLevels.map {
-                                        FormAppliedList.DataColl.AcademicList.AvailableLevels(
+                                        UploadAppliedFormDataRequest.AcademicList.AvailableLevels(
                                             it
                                         )
                                     }
