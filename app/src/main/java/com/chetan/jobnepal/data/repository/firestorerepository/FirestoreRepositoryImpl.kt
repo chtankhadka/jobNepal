@@ -218,19 +218,13 @@ class FirestoreRepositoryImpl @Inject constructor(
     override suspend fun deleteAppliedFormData(id: String): Resource<Any> {
         return try {
             val documentRef =
-                firestore.collection(preference.dbTable.toString()).document("appliedList")
-            val snapshot = documentRef.get().await()
-            if (snapshot != null) {
-                val dataList =
-                    snapshot.toObject(FormAppliedList::class.java)?.dataColl?.toMutableList()
-                val itemIndex = dataList?.indexOfFirst { it.id == id }
-                if (itemIndex != null && itemIndex != -1) {
-                    dataList.removeAt(itemIndex)
-                    documentRef.update("dataColl", dataList).await()
-                }
-
-            }
-            Resource.Success("deleteData")
+                firestore.collection(preference.dbTable.toString())
+                    .document("appliedList")
+                    .collection("data")
+                    .document(id)
+                    .delete()
+                    .await()
+            Resource.Success(documentRef)
         } catch (e: Exception) {
             e.printStackTrace()
             Resource.Failure(e)
