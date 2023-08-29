@@ -13,7 +13,7 @@ import com.chetan.jobnepal.ui.component.dialogs.Progress
 data class DashboardState(
     val videoListResponse: List<UploadNewVideoLink.DataColl> = emptyList(),
     val originalVideoListResponse: List<UploadNewVideoLink.DataColl> = emptyList(),
-    val appliedListResponse: List<FormAppliedList.DataColl> = emptyList(),
+    val appliedListResponse: List<UploadAppliedFormDataRequest> = emptyList(),
     val jobsForDialog: List<Triple<String, List<String>, List<String>>> = emptyList(),
     val searchListResponse: List<SearchHistoryRequestResponse.DataColl> = emptyList(),
     val nepaliLanguage: Boolean = false,

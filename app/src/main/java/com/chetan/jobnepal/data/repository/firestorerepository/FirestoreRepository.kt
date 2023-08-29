@@ -50,7 +50,7 @@ interface FirestoreRepository {
         id: String
     ): Resource<Any>
 
-    suspend fun getAppliedFormData(): Resource<List<FormAppliedList.DataColl>>
+    suspend fun getAppliedFormData(): Resource<List<UploadAppliedFormDataRequest>>
 
     suspend fun getSearchHistory(): Resource<List<SearchHistoryRequestResponse.DataColl>>
     suspend fun postSearchHistory(

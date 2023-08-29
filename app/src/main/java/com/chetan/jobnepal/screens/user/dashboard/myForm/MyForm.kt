@@ -44,6 +44,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.chetan.jobnepal.data.models.dashboard.FormAppliedList
+import com.chetan.jobnepal.data.models.dashboard.UploadAppliedFormDataRequest
 import com.chetan.jobnepal.screens.user.dashboard.DashboardEvent
 import com.chetan.jobnepal.screens.user.dashboard.DashboardState
 import com.chetan.jobnepal.ui.component.dialogs.PaymentDialog
@@ -170,7 +171,7 @@ fun MyForm(state: DashboardState, onEvent: (event: DashboardEvent) -> Unit) {
 
 @Composable
 fun MyFormItem(
-    data: List<FormAppliedList.DataColl>,
+    data: List<UploadAppliedFormDataRequest>,
     listOfDropdownItem: List<Triple<String, ImageVector, Boolean>>,
     onClickedDropdownItem: (item: String, id: String) -> Unit
     ) {

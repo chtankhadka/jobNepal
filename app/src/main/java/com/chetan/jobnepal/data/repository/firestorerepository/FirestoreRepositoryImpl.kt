@@ -194,7 +194,10 @@ class FirestoreRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun uploadAppliedFormData(data: UploadAppliedFormDataRequest, id: String): Resource<Any> {
+    override suspend fun uploadAppliedFormData(
+        data: UploadAppliedFormDataRequest,
+        id: String
+    ): Resource<Any> {
         return try {
             val documentRef =
                 firestore.collection(preference.dbTable.toString())
@@ -234,18 +237,21 @@ class FirestoreRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getAppliedFormData(): Resource<List<FormAppliedList.DataColl>> {
+    override suspend fun getAppliedFormData(): Resource<List<UploadAppliedFormDataRequest>> {
         return try {
+            val appliedList = mutableListOf<UploadAppliedFormDataRequest>()
             val result = firestore.collection(preference.dbTable.toString())
                 .document("appliedList")
+                .collection("data")
                 .get()
                 .await()
-                .toObject(FormAppliedList::class.java)
-            if (result != null) {
-                Resource.Success(result.dataColl)
-            } else {
-                Resource.Failure(java.lang.Exception("No Data yet"))
+            for (document in result.documents) {
+                val data = document.toObject<UploadAppliedFormDataRequest>()
+                data?.let {
+                    appliedList.add(it)
+                }
             }
+            Resource.Success(appliedList.reversed())
         } catch (e: Exception) {
             e.printStackTrace()
             Resource.Failure(e)
@@ -328,12 +334,11 @@ class FirestoreRepositoryImpl @Inject constructor(
                 .set(data)
                 .await()
             Resource.Success(documentRef)
-        }catch (e: Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
             Resource.Failure(e)
         }
     }
-
 
 
     // oneSignal Notification
@@ -393,7 +398,7 @@ class FirestoreRepositoryImpl @Inject constructor(
                         .document("oneSignalIdentity")
                         .set(newIdMap)
                         .await()
-                    OneSignal.sendTag("id",newId)
+                    OneSignal.sendTag("id", newId)
                 }
             }
         } catch (e: Exception) {
