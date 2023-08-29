@@ -18,6 +18,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.chetan.jobnepal.screens.admin.adminbottomsheet.AdminBottomSheetScreen
+import com.chetan.jobnepal.screens.admin.adminbottomsheet.AdminBottomSheetViewModel
 import com.chetan.jobnepal.screens.admin.dashboard.AdminDashboard
 import com.chetan.jobnepal.screens.admin.dashboard.AdminDashboardViewModel
 import com.chetan.jobnepal.screens.admin.notification.NotificationScreen
@@ -62,10 +64,11 @@ fun AppNavHost(
             val viewModel = hiltViewModel<SignInViewModel>()
             val state by viewModel.state.collectAsStateWithLifecycle()
             LaunchedEffect(key1 = Unit) {
+//                navController.cleanNavigate(Destination.Screen.Dashboard.route)
                 if (googleAuthUiClient.getSignedInUser() != null) {
                     if (googleAuthUiClient.getSignedInUser()!!.userEmail == "chtankhadka12@gmail.com" || googleAuthUiClient.getSignedInUser()!!.userEmail == "bheshkshetri58@gmail.com") {
-                        navController.cleanNavigate(Destination.Screen.Dashboard.route)
-//                        navController.cleanNavigate(Destination.Screen.AdminDashboard.route)
+//                        navController.cleanNavigate(Destination.Screen.Dashboard.route)
+                        navController.cleanNavigate(Destination.Screen.AdminDashboard.route)
                     } else {
 //                        navController.cleanNavigate(Destination.Screen.AdminDashboard.route)
                         navController.cleanNavigate(Destination.Screen.Dashboard.route)
@@ -192,6 +195,15 @@ fun AppNavHost(
                 navController = navController,
                 state = viewModel.state.collectAsStateWithLifecycle().value ,
                 onEvent = viewModel.onEvent)
+        }
+
+        composable(Destination.Screen.AdminBottomSheetNotice.route){
+            val viewModel = hiltViewModel<AdminBottomSheetViewModel>()
+            AdminBottomSheetScreen(
+                navController = navController,
+                state = viewModel.state.collectAsStateWithLifecycle().value,
+                onEvent = viewModel.onEvent
+            )
         }
 
 

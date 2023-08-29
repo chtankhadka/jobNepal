@@ -45,6 +45,7 @@ class DashboardViewModel @Inject constructor(
             firstTime()
             println("000000000000000000000" + preference.dbTable)
         }
+        getUpdatedNotice()
         getAppliedFormData()
         getNewVideoLink()
         getSearchHistory()
@@ -156,6 +157,34 @@ class DashboardViewModel @Inject constructor(
                             infoMsg = null,
                             appliedListResponse = resource2.data,
                             appliedIdsList = resource2.data.map { dataColl -> dataColl.id }
+                        )
+                    }
+                }
+            }
+        }
+    }
+    fun getUpdatedNotice() {
+        viewModelScope.launch {
+            _state.update {
+                it.copy(progress = Progress(value = 0.0F, cancellable = false))
+            }
+            val getUpdatedNoticeResponse = firestoreRepository.getUpdatedNoticeUserDashboard()
+            when (getUpdatedNoticeResponse) {
+                is Resource.Failure -> {
+//                    _state.update {
+//                        it.copy(
+//                            infoMsg = Message.Error(description = "Please "),
+//                            progress = null
+//                        )
+//                    }
+                }
+
+                Resource.Loading -> TODO()
+                is Resource.Success -> {
+                    _state.update {
+                        it.copy(
+                            infoMsg = null,
+                            updatedNotice = getUpdatedNoticeResponse.data
                         )
                     }
                 }

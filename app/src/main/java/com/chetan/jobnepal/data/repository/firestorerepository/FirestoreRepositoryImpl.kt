@@ -6,6 +6,7 @@ import com.chetan.jobnepal.data.models.academic.UploadAcademicList
 import com.chetan.jobnepal.data.models.dashboard.FormAppliedList
 import com.chetan.jobnepal.data.models.oneSignal.OneSignalId
 import com.chetan.jobnepal.data.models.param.UploadNewVideoLink
+import com.chetan.jobnepal.data.models.param.UserDashboardUpdateNoticeRequestResponse
 import com.chetan.jobnepal.data.models.profile.UploadProfileParam
 import com.chetan.jobnepal.data.models.searchhistory.SearchHistoryRequestResponse
 import com.chetan.jobnepal.data.models.storenotification.StoreNotificationRequestResponse
@@ -297,6 +298,39 @@ class FirestoreRepositoryImpl @Inject constructor(
             Resource.Failure(e)
         }
     }
+
+    override suspend fun getUpdatedNoticeUserDashboard(): Resource<UserDashboardUpdateNoticeRequestResponse> {
+        return try {
+            val result = firestore.collection("chtankhadka12")
+                .document("updateNotice")
+                .get()
+                .await()
+                .toObject(UserDashboardUpdateNoticeRequestResponse::class.java)
+            if (result != null) {
+                Resource.Success(result)
+            } else {
+                Resource.Failure(java.lang.Exception("No Data yet"))
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Resource.Failure(e)
+        }
+    }
+
+    //admin
+    override suspend fun updateNoticeUserDashboard(data: UserDashboardUpdateNoticeRequestResponse): Resource<Any> {
+        return try {
+            val documentRef = firestore.collection("chtankhadka12")
+                .document("updateNotice")
+                .set(data)
+                .await()
+            Resource.Success(documentRef)
+        }catch (e: Exception){
+            e.printStackTrace()
+            Resource.Failure(e)
+        }
+    }
+
 
 
     // oneSignal Notification

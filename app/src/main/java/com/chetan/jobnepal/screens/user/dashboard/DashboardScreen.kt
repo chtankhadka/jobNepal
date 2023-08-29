@@ -36,6 +36,7 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DockedSearchBar
 import androidx.compose.material3.DrawerValue
@@ -61,7 +62,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import com.chetan.jobnepal.Destination
@@ -109,15 +117,15 @@ fun DashboardScreen(
     var cardVisible by remember {
         mutableStateOf(true)
     }
-    LaunchedEffect(key1 = cardVisible, block ={
-        if (cardVisible){
+    LaunchedEffect(key1 = cardVisible, block = {
+        if (cardVisible) {
             val handler = Handler(Looper.getMainLooper())
             handler.postDelayed({
                 cardVisible = false
-            }, 5000)
+            }, 7000)
 
         }
-    } )
+    })
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -370,22 +378,6 @@ fun DashboardScreen(
                 },
             )
 
-               AnimatedVisibility(
-                   modifier = Modifier.align(Alignment.BottomCenter),
-                   visible = cardVisible, enter = fadeIn(), exit = fadeOut()) {
-                   Card(
-                       modifier = Modifier
-                           .fillMaxWidth()
-                           .fillMaxHeight(0.3f)
-                           ,
-                       shape = RoundedCornerShape(topEnd = 10.dp, topStart = 10.dp)
-                   ) {
-                       Text(text = "hello")
-                   }
-               }
-
-
-
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -396,6 +388,50 @@ fun DashboardScreen(
                     modifier = Modifier.fillMaxWidth()
                 )
             }
+
+            AnimatedVisibility(
+                modifier = Modifier.align(Alignment.BottomCenter),
+                visible = cardVisible, enter = fadeIn(), exit = fadeOut()
+            ) {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(0.1f)
+                        .padding(horizontal = 7.dp),
+                    elevation = CardDefaults.cardElevation(10.dp),
+                    colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primaryContainer),
+                    shape = RoundedCornerShape(topEnd = 10.dp, topStart = 10.dp)
+                ) {
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = "Get ${state.updatedNotice.discountPercentage}% Discount on your first form!!",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 15.sp,
+                        textAlign = TextAlign.Center,
+                    )
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center,
+                        text = buildAnnotatedString {
+                            withStyle(
+                                SpanStyle(
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 20.sp,
+                                    textDecoration = TextDecoration.LineThrough,
+                                    color = MaterialTheme.colorScheme.error
+                                )
+                            ) {
+                                append("Rs ${state.updatedNotice.totalCost}")
+                            }
+                            withStyle(SpanStyle()){
+                                append(" Rs ${state.updatedNotice.discountAmt}")
+                            }
+                        }
+
+                    )
+                }
+            }
+
             PullRefreshIndicator(
                 refreshing = refreshing, state = refreshState, modifier = Modifier.align(
                     Alignment.TopCenter

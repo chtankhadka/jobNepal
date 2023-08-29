@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Contacts
+import androidx.compose.material.icons.filled.Discount
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Logout
@@ -30,7 +31,7 @@ fun ModalDrawerSheetPage(
     state: AdminDashboardState,
     onEvent: (event: AdminDashboardEvent) -> Unit,
     onClick: (String) -> Unit,
-    ) {
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth(0.85f)
@@ -41,7 +42,12 @@ fun ModalDrawerSheetPage(
             modifier = Modifier
                 .fillMaxWidth()
         ) {
-            ProfileAnimation(size = 100.dp,padding = 10.dp, uri = state.profileUrl,enableEdit = false)
+            ProfileAnimation(
+                size = 100.dp,
+                padding = 10.dp,
+                uri = state.profileUrl,
+                enableEdit = false
+            )
             Column(
                 modifier = Modifier.padding(vertical = 10.dp)
             ) {
@@ -59,6 +65,7 @@ fun ModalDrawerSheetPage(
         )
         val menuList = listOf(
             Icons.Default.Home to "Send Notification",
+            Icons.Default.Discount to "Notice",
             Icons.Default.Contacts to "Documents"
         )
 
@@ -66,9 +73,7 @@ fun ModalDrawerSheetPage(
             Spacer(modifier = Modifier.height(5.dp))
             ElevatedCard(
                 modifier = Modifier.clickable {
-                  if (it.second == "Send Notification")  {
-                        onClick("Send Notification")
-                  }
+                    onClick(it.second)
                 },
                 shape = RoundedCornerShape(5.dp)
             ) {
