@@ -126,7 +126,7 @@ fun PaymentDialog(
                     }) {
                     Row {
                         Icon(imageVector = Icons.Default.FileUpload, contentDescription = "Upload File")
-                        Text(text = "Upload paid receipt or ScreenShots")
+                        Text(text = "Upload Receipt ScreenShots")
                     }
 
                 }

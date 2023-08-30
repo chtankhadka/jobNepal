@@ -51,22 +51,20 @@ import kotlinx.coroutines.launch
 fun MyForm(state: DashboardState, onEvent: (event: DashboardEvent) -> Unit) {
     val scope = rememberCoroutineScope()
     val ctx = LocalContext.current
-    val list = listOf("Pay Now", "Paid", "Admin Card")
+    val list = listOf("Pay Now", "Paid", "Admit Card")
     val pagerState = rememberPagerState(initialPage = 0) { 4 }
 
-    var showPaymentDialog by remember {
-        mutableStateOf(false)
-    }
+
     var paymentId by remember {
         mutableStateOf("")
     }
-    if (showPaymentDialog) {
+    if (state.showPaymentDialog) {
         PaymentDialog(
             paymentMethods = state.paymentMethods,
             videoId = paymentId,
             onEvent = onEvent
         ) {
-            showPaymentDialog = it
+            onEvent(DashboardEvent.OnShowPaymentDialog(it))
         }
     }
     val downloader = AndroidDownloader(ctx)
@@ -116,7 +114,7 @@ fun MyForm(state: DashboardState, onEvent: (event: DashboardEvent) -> Unit) {
                         when  (item){
                             "Pay" -> {
                                 paymentId = id
-                                showPaymentDialog = true
+                                onEvent(DashboardEvent.OnShowPaymentDialog(true))
                             }
                             "Cancel" ->{
                                 onEvent(DashboardEvent.DeleteAppliedData(id))

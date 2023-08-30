@@ -609,14 +609,24 @@ class DashboardViewModel @Inject constructor(
 
                                 }
                                 is Resource.Success -> {
+
                                     _state.update {
                                         it.copy(
-                                            infoMsg = null
+                                            infoMsg = null,
+                                            showPaymentDialog = false
                                         )
                                     }
                                 }
                             }
                         }
+                    }
+                }
+
+                is DashboardEvent.OnShowPaymentDialog -> {
+                    _state.update {
+                        it.copy(
+                            showPaymentDialog = event.value
+                        )
                     }
                 }
             }

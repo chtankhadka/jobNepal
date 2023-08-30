@@ -16,6 +16,7 @@ sealed interface DashboardEvent {
     class OnProvinceFilter(val value: String) : DashboardEvent
     class OnFieldFilter(val value: String) : DashboardEvent
     class OnSubmitReceipt(val videoId: String, val receiptUri: Uri) : DashboardEvent
+    class OnShowPaymentDialog(val value: Boolean): DashboardEvent
     object OnRefresh : DashboardEvent
     class UpdateCheckedList(
         val title: String,

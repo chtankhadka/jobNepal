@@ -21,6 +21,7 @@ data class DashboardState(
     val appliedIdsList : List<String> = emptyList(),
     val updatedNotice: UserDashboardUpdateNoticeRequestResponse = UserDashboardUpdateNoticeRequestResponse(),
     val selectedVideoId: String = "",
+    val showPaymentDialog: Boolean = false,
     val paymentMethods: List<AddAdminPaymentMethodResponse> = emptyList(),
     val shikashakSewaAayog: UploadAppliedFormDataRequest.AcademicList =
         UploadAppliedFormDataRequest.AcademicList(
