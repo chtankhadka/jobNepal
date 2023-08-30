@@ -5,6 +5,7 @@ import com.chetan.jobnepal.data.local.Preference
 import com.chetan.jobnepal.data.models.academic.UploadAcademicList
 import com.chetan.jobnepal.data.models.adminpayment.AddAdminPaymentMethodRequest
 import com.chetan.jobnepal.data.models.adminpayment.AddAdminPaymentMethodResponse
+import com.chetan.jobnepal.data.models.adminpayment.PaidPaymentDetails
 import com.chetan.jobnepal.data.models.dashboard.UploadAppliedFormDataRequest
 import com.chetan.jobnepal.data.models.oneSignal.OneSignalId
 import com.chetan.jobnepal.data.models.param.UploadNewVideoLink
@@ -321,6 +322,43 @@ class FirestoreRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getPaymentMethod(): Resource<List<AddAdminPaymentMethodResponse>> {
+       return try{
+            val paymentList = mutableListOf<AddAdminPaymentMethodResponse>()
+            val query = firestore.collection("chtankhadka12")
+                .document("paymentMethod")
+                .collection("data")
+                .get()
+                .await()
+           for (document in query.documents){
+               val bank = document.toObject<AddAdminPaymentMethodResponse>()
+               bank?.let {
+                   paymentList.add(it)
+               }
+           }
+
+           Resource.Success(paymentList.reversed())
+        }catch (e: Exception){
+            e.printStackTrace()
+           Resource.Failure(e)
+        }
+    }
+
+    override suspend fun requestPaidReceipt(data: PaidPaymentDetails): Resource<Any> {
+        return try {
+            val documentRef = firestore.collection("chtankhadka12")
+                .document("paidReceipt")
+                .collection(data.videoId)
+                .document(preference.dbTable.toString())
+                .set(data)
+                .await()
+            Resource.Success(documentRef)
+        }catch (e: Exception){
+            e.printStackTrace()
+            Resource.Failure(e)
+        }
+    }
+
     //admin
     override suspend fun updateNoticeUserDashboard(data: UserDashboardUpdateNoticeRequestResponse): Resource<Any> {
         return try {
@@ -334,7 +372,6 @@ class FirestoreRepositoryImpl @Inject constructor(
             Resource.Failure(e)
         }
     }
-
     override suspend fun addAdminPaymentMethod(data: AddAdminPaymentMethodResponse): Resource<Any> {
         return try {
             val documentRef = firestore.collection("chtankhadka12")
@@ -349,8 +386,6 @@ class FirestoreRepositoryImpl @Inject constructor(
             Resource.Failure(e)
         }
     }
-
-
     // oneSignal Notification
     override suspend fun saveNotification(data: StoreNotificationRequestResponse): Resource<Any> {
         return try {

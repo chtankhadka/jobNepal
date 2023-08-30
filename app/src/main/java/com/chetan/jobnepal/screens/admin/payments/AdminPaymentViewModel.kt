@@ -56,15 +56,12 @@ class AdminPaymentViewModel @Inject constructor(
                         }
                         Resource.Loading -> TODO()
                         is Resource.Success -> {
-                            _state.update {
-                                it.copy(progress = null, downloadAttachementUrl = getUrlOfPic.data)
-                            }
                             if (!getUrlOfPic.data.isEmpty()){
                                 val addPaymentMethod = firebaseRepository.addAdminPaymentMethod(data =
                                 getUrlOfPic.data.let {
                                     AddAdminPaymentMethodResponse(
                                         bankName = state.value.bankName,
-                                        bankLogo = it.first().second,
+                                        bankLogo = it.last().second,
                                         bankQr = it.first().second
                                     )
                                 }
@@ -85,8 +82,6 @@ class AdminPaymentViewModel @Inject constructor(
                             }
                         }
                     }
-
-
 
                 }
 

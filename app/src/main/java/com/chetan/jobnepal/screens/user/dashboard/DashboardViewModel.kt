@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.chetan.jobnepal.R
 import com.chetan.jobnepal.data.Resource
 import com.chetan.jobnepal.data.local.Preference
+import com.chetan.jobnepal.data.models.adminpayment.PaidPaymentDetails
 import com.chetan.jobnepal.data.models.dashboard.FormAppliedList
 import com.chetan.jobnepal.data.models.dashboard.UploadAppliedFormDataRequest
 import com.chetan.jobnepal.data.models.searchhistory.SearchHistoryRequestResponse
@@ -50,6 +51,7 @@ class DashboardViewModel @Inject constructor(
         getAppliedFormData()
         getNewVideoLink()
         getSearchHistory()
+        getPaymentMethods()
 
 
     }
@@ -106,6 +108,26 @@ class DashboardViewModel @Inject constructor(
                     levels = emptyList()
                 )
             )
+        }
+    }
+    fun getPaymentMethods() {
+        viewModelScope.launch {
+            val paymentMethod = firestoreRepository.getPaymentMethod()
+            when(paymentMethod){
+                is Resource.Failure -> {
+
+                }
+                Resource.Loading -> {
+
+                }
+                is Resource.Success -> {
+                    _state.update {
+                        it.copy(
+                            paymentMethods = paymentMethod.data
+                        )
+                    }
+                }
+            }
         }
     }
 
@@ -550,6 +572,51 @@ class DashboardViewModel @Inject constructor(
                         it.copy(
                             selectedVideoId = event.value
                         )
+                    }
+                }
+
+                is DashboardEvent.OnSubmitReceipt -> {
+                    _state.update {
+                        it.copy(
+                            infoMsg = Message.Loading(
+                                yesNoRequired = false,
+                                isCancellable = false,
+                                description = "Sending..."
+                            )
+                        )
+                    }
+                    val getUrlOfReceipt = firebaseStorageRepository.uploadPaidReceipt(event.receiptUri)
+                    when (getUrlOfReceipt){
+                        is Resource.Failure -> {
+
+                        }
+                        Resource.Loading -> {
+
+                        }
+                        is Resource.Success -> {
+                        val requestPaidReceipt = firestoreRepository.requestPaidReceipt(
+                            data = PaidPaymentDetails(
+                                emailAddress = preference.dbTable.toString(),
+                                videoId = event.videoId,
+                                receiptLink = getUrlOfReceipt.data.second,
+                            )
+                        )
+                            when (requestPaidReceipt){
+                                is Resource.Failure -> {
+
+                                }
+                                Resource.Loading -> {
+
+                                }
+                                is Resource.Success -> {
+                                    _state.update {
+                                        it.copy(
+                                            infoMsg = null
+                                        )
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }

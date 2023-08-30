@@ -1,6 +1,7 @@
 package com.chetan.jobnepal.screens.user.dashboard
 
 
+import com.chetan.jobnepal.data.models.adminpayment.AddAdminPaymentMethodResponse
 import com.chetan.jobnepal.data.models.dashboard.FormAppliedList
 import com.chetan.jobnepal.data.models.dashboard.UploadAppliedFormDataRequest
 import com.chetan.jobnepal.data.models.param.UploadNewVideoLink
@@ -20,6 +21,7 @@ data class DashboardState(
     val appliedIdsList : List<String> = emptyList(),
     val updatedNotice: UserDashboardUpdateNoticeRequestResponse = UserDashboardUpdateNoticeRequestResponse(),
     val selectedVideoId: String = "",
+    val paymentMethods: List<AddAdminPaymentMethodResponse> = emptyList(),
     val shikashakSewaAayog: UploadAppliedFormDataRequest.AcademicList =
         UploadAppliedFormDataRequest.AcademicList(
             jobList = emptyList(),

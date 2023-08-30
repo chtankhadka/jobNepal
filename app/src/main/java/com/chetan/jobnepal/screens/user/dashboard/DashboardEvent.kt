@@ -1,5 +1,6 @@
 package com.chetan.jobnepal.screens.user.dashboard
 
+import android.net.Uri
 import com.chetan.jobnepal.data.models.param.UploadNewVideoLink
 
 sealed interface DashboardEvent {
@@ -14,6 +15,7 @@ sealed interface DashboardEvent {
     class OnQuerySearchDelete(val value: String): DashboardEvent
     class OnProvinceFilter(val value: String) : DashboardEvent
     class OnFieldFilter(val value: String) : DashboardEvent
+    class OnSubmitReceipt(val videoId: String, val receiptUri: Uri) : DashboardEvent
     object OnRefresh : DashboardEvent
     class UpdateCheckedList(
         val title: String,

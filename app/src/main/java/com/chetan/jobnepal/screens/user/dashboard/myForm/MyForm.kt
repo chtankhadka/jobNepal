@@ -14,11 +14,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AppRegistration
 import androidx.compose.material.icons.filled.Cancel
-import androidx.compose.material.icons.filled.Download
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Link
 import androidx.compose.material.icons.filled.QrCode
 import androidx.compose.material.icons.filled.Undo
 import androidx.compose.material3.Card
@@ -39,11 +35,8 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
-import com.chetan.jobnepal.data.models.dashboard.FormAppliedList
 import com.chetan.jobnepal.data.models.dashboard.UploadAppliedFormDataRequest
 import com.chetan.jobnepal.screens.user.dashboard.DashboardEvent
 import com.chetan.jobnepal.screens.user.dashboard.DashboardState
@@ -69,10 +62,12 @@ fun MyForm(state: DashboardState, onEvent: (event: DashboardEvent) -> Unit) {
     }
     if (showPaymentDialog) {
         PaymentDialog(
-            paymentId = paymentId,
-            onDismiss = {
+            paymentMethods = state.paymentMethods,
+            videoId = paymentId,
+            onEvent = onEvent
+        ) {
             showPaymentDialog = it
-        })
+        }
     }
     val downloader = AndroidDownloader(ctx)
     TabRow(
@@ -120,7 +115,7 @@ fun MyForm(state: DashboardState, onEvent: (event: DashboardEvent) -> Unit) {
                     ){ item, id ->
                         when  (item){
                             "Pay" -> {
-                                paymentId = id+"/9863142800"
+                                paymentId = id
                                 showPaymentDialog = true
                             }
                             "Cancel" ->{
