@@ -51,8 +51,7 @@ class FirestoreRepositoryImpl @Inject constructor(
 
     override suspend fun uploadNewVideoLink(data: UploadNewVideoLink): Resource<Any> {
         return try {
-            val documentRef = firestore.collection("chtankhadka12")
-                .document("videoList")
+            val documentRef = firestore.collection("chtankhadka12").document("videoList")
             val newData = mapOf(
                 "dataColl" to FieldValue.arrayUnion(*data.dataColl.toTypedArray())
             )
@@ -66,10 +65,7 @@ class FirestoreRepositoryImpl @Inject constructor(
 
     override suspend fun getNewVideoLink(): Resource<List<UploadNewVideoLink.DataColl>> {
         return try {
-            val result = firestore.collection("chtankhadka12")
-                .document("videoList")
-                .get()
-                .await()
+            val result = firestore.collection("chtankhadka12").document("videoList").get().await()
                 .toObject(UploadNewVideoLink::class.java)
             if (result != null) {
                 Resource.Success(result.dataColl.reversed())
@@ -150,8 +146,7 @@ class FirestoreRepositoryImpl @Inject constructor(
     override suspend fun deleteAcademicData(level: String): Resource<Any> {
         return try {
             val documentRef =
-                firestore.collection(preference.dbTable.toString())
-                    .document("academic")
+                firestore.collection(preference.dbTable.toString()).document("academic")
 
             val newData =
                 //IAC: [{url:"https:"}]
@@ -197,17 +192,12 @@ class FirestoreRepositoryImpl @Inject constructor(
     }
 
     override suspend fun uploadAppliedFormData(
-        data: UploadAppliedFormDataRequest,
-        id: String
+        data: UploadAppliedFormDataRequest, id: String
     ): Resource<Any> {
         return try {
             val documentRef =
-                firestore.collection(preference.dbTable.toString())
-                    .document("appliedList")
-                    .collection("data")
-                    .document(id)
-                    .set(data)
-                    .await()
+                firestore.collection(preference.dbTable.toString()).document("appliedList")
+                    .collection("data").document(id).set(data).await()
 
             Resource.Success(documentRef)
         } catch (e: Exception) {
@@ -220,12 +210,8 @@ class FirestoreRepositoryImpl @Inject constructor(
     override suspend fun deleteAppliedFormData(id: String): Resource<Any> {
         return try {
             val documentRef =
-                firestore.collection(preference.dbTable.toString())
-                    .document("appliedList")
-                    .collection("data")
-                    .document(id)
-                    .delete()
-                    .await()
+                firestore.collection(preference.dbTable.toString()).document("appliedList")
+                    .collection("data").document(id).delete().await()
             Resource.Success(documentRef)
         } catch (e: Exception) {
             e.printStackTrace()
@@ -236,11 +222,8 @@ class FirestoreRepositoryImpl @Inject constructor(
     override suspend fun getAppliedFormData(): Resource<List<UploadAppliedFormDataRequest>> {
         return try {
             val appliedList = mutableListOf<UploadAppliedFormDataRequest>()
-            val result = firestore.collection(preference.dbTable.toString())
-                .document("appliedList")
-                .collection("data")
-                .get()
-                .await()
+            val result = firestore.collection(preference.dbTable.toString()).document("appliedList")
+                .collection("data").get().await()
             for (document in result.documents) {
                 val data = document.toObject<UploadAppliedFormDataRequest>()
                 data?.let {
@@ -257,11 +240,8 @@ class FirestoreRepositoryImpl @Inject constructor(
     override suspend fun getSearchHistory(): Resource<List<SearchHistoryRequestResponse.DataColl>> {
         return try {
             val result =
-                firestore.collection(preference.dbTable.toString())
-                    .document("searchHistory")
-                    .get()
-                    .await()
-                    .toObject(SearchHistoryRequestResponse::class.java)
+                firestore.collection(preference.dbTable.toString()).document("searchHistory").get()
+                    .await().toObject(SearchHistoryRequestResponse::class.java)
             if (result != null) {
                 Resource.Success(result.dataColl.reversed())
             } else {
@@ -277,8 +257,8 @@ class FirestoreRepositoryImpl @Inject constructor(
 
     override suspend fun postSearchHistory(data: SearchHistoryRequestResponse): Resource<Any> {
         return try {
-            val documentRef = firestore.collection(preference.dbTable.toString())
-                .document("searchHistory")
+            val documentRef =
+                firestore.collection(preference.dbTable.toString()).document("searchHistory")
             val newData = mapOf(
                 "dataColl" to FieldValue.arrayUnion(*data.dataColl.toTypedArray())
             )
@@ -292,10 +272,9 @@ class FirestoreRepositoryImpl @Inject constructor(
 
     override suspend fun deleteSearchHistory(data: SearchHistoryRequestResponse): Resource<Any> {
         return try {
-            val documentRef = firestore.collection(preference.dbTable.toString())
-                .document("searchHistory")
-                .set(data)
-                .await()
+            val documentRef =
+                firestore.collection(preference.dbTable.toString()).document("searchHistory")
+                    .set(data).await()
             Resource.Success(documentRef)
 
         } catch (e: Exception) {
@@ -306,11 +285,9 @@ class FirestoreRepositoryImpl @Inject constructor(
 
     override suspend fun getUpdatedNoticeUserDashboard(): Resource<UserDashboardUpdateNoticeRequestResponse> {
         return try {
-            val result = firestore.collection("chtankhadka12")
-                .document("updateNotice")
-                .get()
-                .await()
-                .toObject(UserDashboardUpdateNoticeRequestResponse::class.java)
+            val result =
+                firestore.collection("chtankhadka12").document("updateNotice").get().await()
+                    .toObject(UserDashboardUpdateNoticeRequestResponse::class.java)
             if (result != null) {
                 Resource.Success(result)
             } else {
@@ -323,37 +300,38 @@ class FirestoreRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getPaymentMethod(): Resource<List<AddAdminPaymentMethodResponse>> {
-       return try{
+        return try {
             val paymentList = mutableListOf<AddAdminPaymentMethodResponse>()
-            val query = firestore.collection("chtankhadka12")
-                .document("paymentMethod")
-                .collection("data")
-                .get()
-                .await()
-           for (document in query.documents){
-               val bank = document.toObject<AddAdminPaymentMethodResponse>()
-               bank?.let {
-                   paymentList.add(it)
-               }
-           }
+            val query =
+                firestore.collection("chtankhadka12").document("paymentMethod").collection("data")
+                    .get().await()
+            for (document in query.documents) {
+                val bank = document.toObject<AddAdminPaymentMethodResponse>()
+                bank?.let {
+                    paymentList.add(it)
+                }
+            }
 
-           Resource.Success(paymentList.reversed())
-        }catch (e: Exception){
+            Resource.Success(paymentList.reversed())
+        } catch (e: Exception) {
             e.printStackTrace()
-           Resource.Failure(e)
+            Resource.Failure(e)
         }
     }
 
     override suspend fun requestPaidReceipt(data: PaidPaymentDetails): Resource<Any> {
         return try {
-            val documentRef = firestore.collection("chtankhadka12")
-                .document("paidReceipt")
-                .collection(data.videoId)
-                .document(preference.dbTable.toString())
-                .set(data)
-                .await()
+            val documentRef =
+                firestore.collection("chtankhadka12").document("paidReceipt").collection("videoId")
+                    .document(data.videoId).collection("data").document(data.emailAddress).set(data)
+                    .await()
+
+            val dummy =
+                firestore.collection("chtankhadka12").document("paidReceipt").collection("videoId")
+                    .document(data.videoId).set(mapOf("test" to "")).await()
+
             Resource.Success(documentRef)
-        }catch (e: Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
             Resource.Failure(e)
         }
@@ -362,39 +340,85 @@ class FirestoreRepositoryImpl @Inject constructor(
     //admin
     override suspend fun updateNoticeUserDashboard(data: UserDashboardUpdateNoticeRequestResponse): Resource<Any> {
         return try {
-            val documentRef = firestore.collection("chtankhadka12")
-                .document("updateNotice")
-                .set(data)
-                .await()
+            val documentRef =
+                firestore.collection("chtankhadka12").document("updateNotice").set(data).await()
             Resource.Success(documentRef)
         } catch (e: Exception) {
             e.printStackTrace()
             Resource.Failure(e)
         }
     }
+
     override suspend fun addAdminPaymentMethod(data: AddAdminPaymentMethodResponse): Resource<Any> {
         return try {
-            val documentRef = firestore.collection("chtankhadka12")
-                .document("paymentMethod")
-                .collection("data")
-                .document(data.bankName)
-                .set(data)
-                .await()
+            val documentRef =
+                firestore.collection("chtankhadka12").document("paymentMethod").collection("data")
+                    .document(data.bankName).set(data).await()
             Resource.Success(documentRef)
-        }catch (e: Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
             Resource.Failure(e)
         }
     }
+
+    override suspend fun getUserPaymentFormRequest(docsId: String): Resource<List<PaidPaymentDetails>> {
+        return try {
+            val paidReceiptList = mutableListOf<PaidPaymentDetails>()
+            val documentRef =
+                firestore.collection("chtankhadka12").document("paidReceipt").collection("videoId")
+                    .document(docsId).collection("data").get().await()
+            for (document in documentRef.documents) {
+                val receipt = document.toObject<PaidPaymentDetails>()
+                receipt?.let {
+                    paidReceiptList.add(it)
+                }
+            }
+            Resource.Success(paidReceiptList.reversed())
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Resource.Failure(e)
+        }
+    }
+
+    override suspend fun changeFormRequestToPaid(user: String, videoId: String): Resource<Any> {
+        return try {
+            firestore.collection(user).document("appliedList").collection("data").document(videoId)
+                .update("apply", "paid").await()
+            firestore.collection("chtankhadka12").document("paidReceipt").collection("videoId")
+                .document(videoId).collection("data").document(user).update("approved", true)
+                .await()
+            Resource.Success("Success")
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Resource.Failure(e)
+        }
+    }
+
+    override suspend fun getUserPaymentVideoIdList(): Resource<List<String>> {
+        return try {
+            val videoIdList = mutableListOf<String>()
+            val documentRef =
+                firestore.collection("chtankhadka12").document("paidReceipt").collection("videoId")
+                    .get().await()
+            for (docId in documentRef.documents) {
+                videoIdList.add(docId.id)
+            }
+            println(documentRef.documents.size)
+            println(videoIdList)
+
+            Resource.Success(videoIdList)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Resource.Failure(e)
+        }
+    }
+
     // oneSignal Notification
     override suspend fun saveNotification(data: StoreNotificationRequestResponse): Resource<Any> {
         return try {
-            val documentRef = firestore.collection(preference.dbTable.toString())
-                .document("notificationData")
-                .collection("data")
-                .document(data.time)
-                .set(data)
-                .await()
+            val documentRef =
+                firestore.collection(preference.dbTable.toString()).document("notificationData")
+                    .collection("data").document(data.time).set(data).await()
             Resource.Success(documentRef)
         } catch (e: Exception) {
             e.printStackTrace()
@@ -405,11 +429,9 @@ class FirestoreRepositoryImpl @Inject constructor(
     override suspend fun getNotification(): Resource<List<StoreNotificationRequestResponse>> {
         return try {
             var response = mutableListOf<StoreNotificationRequestResponse>()
-            val documentRef = firestore.collection(preference.dbTable.toString())
-                .document("notificationData")
-                .collection("data")
-                .get()
-                .await()
+            val documentRef =
+                firestore.collection(preference.dbTable.toString()).document("notificationData")
+                    .collection("data").get().await()
             for (document in documentRef.documents) {
                 val notification = document.toObject<StoreNotificationRequestResponse>()
                 notification?.let {
@@ -425,11 +447,9 @@ class FirestoreRepositoryImpl @Inject constructor(
 
     override suspend fun getOneSignalUserId() {
         try {
-            val documentSnapshot = firestore.collection(preference.dbTable.toString())
-                .document("oneSignalIdentity")
-                .get()
-                .await()
-                .toObject<OneSignalId>()
+            val documentSnapshot =
+                firestore.collection(preference.dbTable.toString()).document("oneSignalIdentity")
+                    .get().await().toObject<OneSignalId>()
 
             if (!documentSnapshot?.oneSignalId.isNullOrBlank()) {
                 println("I am here at ff ${documentSnapshot?.oneSignalId}")
@@ -440,9 +460,7 @@ class FirestoreRepositoryImpl @Inject constructor(
                 if (newId != null) {
                     val newIdMap = mapOf("oneSignalId" to newId)
                     firestore.collection(preference.dbTable.toString())
-                        .document("oneSignalIdentity")
-                        .set(newIdMap)
-                        .await()
+                        .document("oneSignalIdentity").set(newIdMap).await()
                     OneSignal.sendTag("id", newId)
                 }
             }

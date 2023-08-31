@@ -79,6 +79,13 @@ interface FirestoreRepository {
         data: AddAdminPaymentMethodResponse
     ): Resource<Any>
 
+    suspend fun getUserPaymentFormRequest(docsId: String) : Resource<List<PaidPaymentDetails>>
+    suspend fun changeFormRequestToPaid(
+        user: String,
+        videoId: String
+    ) : Resource<Any>
+    suspend fun getUserPaymentVideoIdList() : Resource<List<String>>
+
 
     //for oneSignal notification
     suspend fun saveNotification(

@@ -22,8 +22,10 @@ import com.chetan.jobnepal.screens.admin.adminbottomsheet.AdminBottomSheetScreen
 import com.chetan.jobnepal.screens.admin.adminbottomsheet.AdminBottomSheetViewModel
 import com.chetan.jobnepal.screens.admin.dashboard.AdminDashboard
 import com.chetan.jobnepal.screens.admin.dashboard.AdminDashboardViewModel
-import com.chetan.jobnepal.screens.admin.notification.NotificationScreen
+import com.chetan.jobnepal.screens.admin.formrequest.FormRequestScreen
+import com.chetan.jobnepal.screens.admin.formrequest.FormRequestViewModel
 import com.chetan.jobnepal.screens.admin.notification.AdminNotificationViewModel
+import com.chetan.jobnepal.screens.admin.notification.NotificationScreen
 import com.chetan.jobnepal.screens.admin.payments.AdminPaymentScreen
 import com.chetan.jobnepal.screens.admin.payments.AdminPaymentViewModel
 import com.chetan.jobnepal.screens.admin.uploadvideo.UploadVideoScreen
@@ -160,12 +162,13 @@ fun AppNavHost(
 
         }
 
-        composable(Destination.Screen.UserNotification.route){
+        composable(Destination.Screen.UserNotification.route) {
             val viewModel = hiltViewModel<UserNotificationViewModel>()
             UserNotificationScreen(
                 navController = navController,
                 state = viewModel.state.collectAsStateWithLifecycle().value,
-                onEvent = viewModel.onEvent)
+                onEvent = viewModel.onEvent
+            )
         }
 
 
@@ -178,28 +181,30 @@ fun AppNavHost(
                 onEvent = viewModel.onEvent,
                 onClick =
                 {
-                    when (it){
-                        "logout" ->{
+                    when (it) {
+                        "logout" -> {
                             lifecycleScope.launch {
                                 googleAuthUiClient.signOut()
                                 navController.cleanNavigate("sign_in")
                             }
                         }
-                        "addVideo" ->{
+
+                        "addVideo" -> {
                             navController.navigate(Destination.Screen.UploadVideoScreen.route)
                         }
                     }
                 })
         }
-        composable(Destination.Screen.AdminSendNotification.route){
+        composable(Destination.Screen.AdminSendNotification.route) {
             val viewModel = hiltViewModel<AdminNotificationViewModel>()
             NotificationScreen(
                 navController = navController,
-                state = viewModel.state.collectAsStateWithLifecycle().value ,
-                onEvent = viewModel.onEvent)
+                state = viewModel.state.collectAsStateWithLifecycle().value,
+                onEvent = viewModel.onEvent
+            )
         }
 
-        composable(Destination.Screen.AdminBottomSheetNotice.route){
+        composable(Destination.Screen.AdminBottomSheetNotice.route) {
             val viewModel = hiltViewModel<AdminBottomSheetViewModel>()
             AdminBottomSheetScreen(
                 navController = navController,
@@ -215,6 +220,16 @@ fun AppNavHost(
                 onEvent = viewModel.onEvent
             )
         }
+        composable(Destination.Screen.UserFormRequestScreen.route) {
+            val viewModel = hiltViewModel<FormRequestViewModel>()
+            FormRequestScreen(
+                navController = navController,
+                state = viewModel.state.collectAsStateWithLifecycle().value,
+                onEvent = viewModel.onEvent
+            )
+        }
+
+
 
 
 

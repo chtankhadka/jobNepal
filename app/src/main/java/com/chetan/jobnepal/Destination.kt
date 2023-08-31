@@ -10,6 +10,7 @@ open class Destination(open val route : String) {
         object AdminSendNotification: Destination("admin-send-notification")
         object AdminPayment: Destination("admin-payment")
         object AdminBottomSheetNotice: Destination("admin-bottom-sheet-notification")
+        object UserFormRequestScreen: Destination("user-form-request-screen")
 
         //user
 

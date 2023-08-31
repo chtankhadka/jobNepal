@@ -94,6 +94,10 @@ fun AdminDashboard(
                             MenuItem.Payments -> {
                                 navController.navigate(Destination.Screen.AdminPayment.route)
                             }
+
+                            MenuItem.FormRequest -> {
+                                navController.navigate(Destination.Screen.UserFormRequestScreen.route)
+                            }
                         }
                     }
                 )

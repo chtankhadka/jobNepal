@@ -4,4 +4,5 @@ data class PaidPaymentDetails(
     val emailAddress: String ="",
     val videoId: String = "",
     val receiptLink: String = "",
+    val approved: Boolean = false
 )

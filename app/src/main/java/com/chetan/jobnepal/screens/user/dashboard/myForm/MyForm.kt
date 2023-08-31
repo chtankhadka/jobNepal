@@ -52,7 +52,7 @@ fun MyForm(state: DashboardState, onEvent: (event: DashboardEvent) -> Unit) {
     val scope = rememberCoroutineScope()
     val ctx = LocalContext.current
     val list = listOf("Pay Now", "Paid", "Admit Card")
-    val pagerState = rememberPagerState(initialPage = 0) { 4 }
+    val pagerState = rememberPagerState(initialPage = 0) { 3 }
 
 
     var paymentId by remember {
