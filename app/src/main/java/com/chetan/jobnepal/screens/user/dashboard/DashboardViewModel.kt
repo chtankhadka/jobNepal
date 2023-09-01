@@ -163,6 +163,8 @@ class DashboardViewModel @Inject constructor(
                 it.copy(progress = Progress(value = 0.0F, cancellable = false))
             }
             val resource2 = firestoreRepository.getAppliedFormData()
+            println("Goooooooooooooooooooooooooooooooooooooo")
+            println(resource2)
             when (resource2) {
                 is Resource.Failure -> {
 //                    _state.update {

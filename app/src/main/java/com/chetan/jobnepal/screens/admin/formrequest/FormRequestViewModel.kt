@@ -58,13 +58,15 @@ class FormRequestViewModel @Inject constructor(
                         )
                     }
 
-                    when(firestoreRepository.changeFormRequestToPaid(event.user, event.videoId)){
+                    when (firestoreRepository.changeFormRequestToPaid(event.user, event.videoId)) {
                         is Resource.Failure -> {
 
                         }
+
                         Resource.Loading -> {
 
                         }
+
                         is Resource.Success -> {
                             _state.update {
                                 it.copy(
@@ -84,7 +86,8 @@ class FormRequestViewModel @Inject constructor(
                 }
 
                 is FormRequestEvent.GetFormRequestsOfId -> {
-                    when (val receiptList = firestoreRepository.getUserPaymentFormRequest(event.value)) {
+                    when (val receiptList =
+                        firestoreRepository.getUserPaymentFormRequest(event.value)) {
                         is Resource.Failure -> {
 
                         }
@@ -97,6 +100,24 @@ class FormRequestViewModel @Inject constructor(
                             _state.update {
                                 it.copy(
                                     paymentReceiptList = receiptList.data
+                                )
+                            }
+                        }
+                    }
+                }
+
+                is FormRequestEvent.OnJobDetailsClicked -> {
+                    when(val getAppliedFormDetails = firestoreRepository.getAppliedFormDetails(event.user, event.videoId)){
+                        is Resource.Failure -> {
+
+                        }
+                        Resource.Loading -> {
+
+                        }
+                        is Resource.Success -> {
+                            _state.update {
+                                it.copy(
+                                    userAppliedFormDetails = getAppliedFormDetails.data
                                 )
                             }
                         }

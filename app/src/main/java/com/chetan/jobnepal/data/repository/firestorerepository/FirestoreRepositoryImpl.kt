@@ -7,6 +7,7 @@ import com.chetan.jobnepal.data.models.adminpayment.AddAdminPaymentMethodRequest
 import com.chetan.jobnepal.data.models.adminpayment.AddAdminPaymentMethodResponse
 import com.chetan.jobnepal.data.models.adminpayment.PaidPaymentDetails
 import com.chetan.jobnepal.data.models.dashboard.UploadAppliedFormDataRequest
+import com.chetan.jobnepal.data.models.formrequest.FormRequestJobDetails
 import com.chetan.jobnepal.data.models.oneSignal.OneSignalId
 import com.chetan.jobnepal.data.models.param.UploadNewVideoLink
 import com.chetan.jobnepal.data.models.param.UserDashboardUpdateNoticeRequestResponse
@@ -18,6 +19,7 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.toObject
 import com.onesignal.OneSignal
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -382,7 +384,8 @@ class FirestoreRepositoryImpl @Inject constructor(
 
     override suspend fun changeFormRequestToPaid(user: String, videoId: String): Resource<Any> {
         return try {
-            firestore.collection(user).document("appliedList").collection("data").document(videoId)
+            firestore.collection(user).document("appliedList")
+                .collection("data").document(videoId)
                 .update("apply", "paid").await()
             firestore.collection("chtankhadka12").document("paidReceipt").collection("videoId")
                 .document(videoId).collection("data").document(user).update("approved", true)
@@ -392,6 +395,27 @@ class FirestoreRepositoryImpl @Inject constructor(
             e.printStackTrace()
             Resource.Failure(e)
         }
+    }
+
+    override suspend fun getAppliedFormDetails(
+        user: String,
+        videoId: String
+    ): Resource<FormRequestJobDetails> {
+       return try {
+           val formDetails : FormRequestJobDetails
+           val documentRef = firestore.collection(user)
+               .document("appliedList")
+               .collection("data")
+               .document(videoId)
+               .get()
+               .await()
+               .toObject<FormRequestJobDetails>()
+          formDetails = documentRef ?: FormRequestJobDetails()
+           Resource.Success(formDetails)
+       }catch (e: Exception){
+           e.printStackTrace()
+           Resource.Failure(e)
+       }
     }
 
     override suspend fun getUserPaymentVideoIdList(): Resource<List<String>> {

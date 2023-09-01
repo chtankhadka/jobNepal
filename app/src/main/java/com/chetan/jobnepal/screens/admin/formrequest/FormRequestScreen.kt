@@ -64,6 +64,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.chetan.jobnepal.data.models.adminpayment.PaidPaymentDetails
+import com.chetan.jobnepal.data.models.formrequest.FormRequestJobDetails
 import com.chetan.jobnepal.ui.component.IconJobNepal
 import com.chetan.jobnepal.ui.component.dialogs.MessageDialog
 import kotlinx.coroutines.launch
@@ -83,7 +84,8 @@ fun FormRequestScreen(
     val pagerList = listOf("Request", "Paid")
     val pagerState = rememberPagerState(initialPage = 0) { 3 }
 
-    ModalNavigationDrawer(drawerState = drawerState, drawerContent = {
+    ModalNavigationDrawer(drawerState = drawerState,
+        drawerContent = {
         ModalDrawerSheet(
             modifier = Modifier
                 .padding(10.dp)
@@ -197,7 +199,11 @@ fun FormRequestScreen(
                                 state.paymentReceiptList.filter { paidPaymentDetails ->
                                     !paidPaymentDetails.approved
                                 }.forEach { filterPaidPaymentDetails ->
-                                    FormRequestItem(filterPaidPaymentDetails, onEvent)
+                                    FormRequestItem(
+                                        filterPaidPaymentDetails,
+                                        onEvent,
+                                        state.userAppliedFormDetails
+                                    )
                                 }
 
                             }
@@ -212,7 +218,11 @@ fun FormRequestScreen(
                                 state.paymentReceiptList.filter { paidPaymentDetails ->
                                     paidPaymentDetails.approved
                                 }.forEach { filterPaidPaymentDetails ->
-                                    FormRequestItem(filterPaidPaymentDetails, onEvent)
+                                    FormRequestItem(
+                                        filterPaidPaymentDetails,
+                                        onEvent,
+                                        state.userAppliedFormDetails
+                                    )
                                 }
 
                             }
@@ -231,7 +241,8 @@ fun FormRequestScreen(
 @Composable
 fun FormRequestItem(
     paidPaymentDetails: PaidPaymentDetails,
-    onEvent: (event: FormRequestEvent) -> Unit
+    onEvent: (event: FormRequestEvent) -> Unit,
+    userAppliedFormDetails: FormRequestJobDetails
 ) {
 
     var showReceipt by remember {
@@ -340,6 +351,17 @@ fun FormRequestItem(
         }
     }
 
+    var showJobDetails by remember {
+        mutableStateOf(false)
+    }
+    if (showJobDetails){
+        FormRequestJobDetailsDialog(
+            listOfJobs = userAppliedFormDetails) {
+            showJobDetails = false
+        }
+    }
+
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -406,7 +428,8 @@ fun FormRequestItem(
                 elevation = CardDefaults.cardElevation(10.dp)
             ) {
                 IconButton(onClick = {
-
+                    onEvent(FormRequestEvent.OnJobDetailsClicked(paidPaymentDetails.emailAddress,paidPaymentDetails.videoId))
+                    showJobDetails = true
                 }) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
