@@ -1,8 +1,7 @@
 package com.chetan.jobnepal.data.repository.firestorerepository
 
 import com.chetan.jobnepal.data.Resource
-import com.chetan.jobnepal.data.models.academic.UploadAcademicList
-import com.chetan.jobnepal.data.models.adminpayment.AddAdminPaymentMethodRequest
+import com.chetan.jobnepal.data.models.academic.UploadAcademicData
 import com.chetan.jobnepal.data.models.adminpayment.AddAdminPaymentMethodResponse
 import com.chetan.jobnepal.data.models.adminpayment.PaidPaymentDetails
 import com.chetan.jobnepal.data.models.dashboard.UploadAppliedFormDataRequest
@@ -29,13 +28,16 @@ interface FirestoreRepository {
 
     //academic
     suspend fun uploadAcademicData(
-        data: UploadAcademicList,
-        selectedLevel: String
+        data: UploadAcademicData
     ): Resource<Any>
 
-    suspend fun getAcademicData(): Resource<UploadAcademicList>
+    suspend fun getAcademicData(
+        level: String
+    ): Resource<List<UploadAcademicData>>
 
     suspend fun deleteAcademicData(level: String): Resource<Any>
+    suspend fun deleteAcademicSingleAttachement(
+        id: String, level: String): Resource<Any>
 
     suspend fun uploadProfileData(
         data: UploadProfileParam

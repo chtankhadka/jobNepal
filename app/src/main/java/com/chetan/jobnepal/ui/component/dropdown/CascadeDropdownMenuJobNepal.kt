@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddBox
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -14,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.chetan.jobnepal.ui.component.IconJobNepal
 import com.maxkeppeker.sheets.core.icons.twotone.ExpandMore
 import me.saket.cascade.CascadeDropdownMenu
@@ -21,104 +24,64 @@ import me.saket.cascade.CascadeDropdownMenu
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun CascadeDropdownMenuJobNepal(
-    onLevelSelected: (String) -> Unit
+    expanded: Boolean = false,
+    onLevelSelected: (String) -> Unit,
+    onDismiss: () -> Unit
 ) {
-    var expanded by remember {
-        mutableStateOf(false)
-    }
-    Box(
-        modifier = Modifier.wrapContentSize(Alignment.TopEnd)
-    ) {
-        IconJobNepal(onClick = {
-            expanded = true
-        }, icon = Icons.Default.AddBox)
-        CascadeDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-            androidx.compose.material3.DropdownMenuItem(text = { Text(text = "1.SLC/SEE") },
+
+    CascadeDropdownMenu(expanded = expanded,
+        onDismissRequest = {
+            onDismiss()
+        }) {
+        androidx.compose.material3.DropdownMenuItem(text = { Text(text = "1.SLC/SEE") },
+            onClick = {
+                onLevelSelected("see")
+                onDismiss()
+            })
+
+        //Intermediate
+        androidx.compose.material3.DropdownMenuItem(text = { Text(text = "2.Intermediate") },
+            onClick = {
+                onLevelSelected("intermediate")
+                onDismiss()
+            })
+
+        //Bachelors
+        androidx.compose.material3.DropdownMenuItem(text = { Text(text = "3.Bachelors") },
+            onClick = {
+                onLevelSelected("bachelors")
+                onDismiss()
+            })
+
+        androidx.compose.material3.DropdownMenuItem(text = { Text(text = "4.Masters") },
+            onClick = {
+                onLevelSelected("masters")
+                onDismiss()
+            })
+
+        DropdownMenuItem(text = { Text(text = "5.Other Docs") }, children = {
+            androidx.compose.material3.DropdownMenuItem(
+                text = {
+                    Text(text = "1.Citizenship")
+                },
                 onClick = {
-                    onLevelSelected("SEE")
-                    expanded = false
+                    onLevelSelected("citizenship")
+                    onDismiss()
                 })
-
-            //Intermediate
-            DropdownMenuItem(text = { Text(text = "2.Intermediate") }, children = {
-                DropdownMenuItem(text = { Text(text = "1.Technical") }, children = {
-                    androidx.compose.material3.DropdownMenuItem(text = { Text(text = "1.HA") },
-                        onClick = {
-                            onLevelSelected("HA")
-                            expanded = false
-                        })
-                    androidx.compose.material3.DropdownMenuItem(text = { Text(text = "2.Nursing") },
-                        onClick = {
-                            onLevelSelected("Nursing")
-                            expanded = false
-                        })
+            androidx.compose.material3.DropdownMenuItem(
+                text = { Text(text = "2.Experience") },
+                onClick = {
+                    onLevelSelected("experience")
+                    onDismiss()
                 })
-
-                DropdownMenuItem(text = { Text(text = "2.Non-Technical") }, children = {
-                    androidx.compose.material3.DropdownMenuItem(text = { Text(text = "1.IAC") },
-                        onClick = {
-                            onLevelSelected("IAC")
-                            expanded = false
-                        })
-                    androidx.compose.material3.DropdownMenuItem(text = { Text(text = "2.Education") },
-                        onClick = {
-                            onLevelSelected("Education")
-                            expanded = false
-                        })
+            androidx.compose.material3.DropdownMenuItem(
+                text = { Text(text = "3.Training") },
+                onClick = {
+                    onLevelSelected("training")
+                    onDismiss()
                 })
-            })
-
-            //Bachelors
-
-            DropdownMenuItem(text = { Text(text = "3.Bachelors") }, children = {
-                DropdownMenuItem(text = { Text(text = "1.Technical") }, children = {
-                    androidx.compose.material3.DropdownMenuItem(text = { Text(text = "1.BSc.CSIT") },
-                        onClick = {
-                            onLevelSelected("BSc_CSIT")
-                            expanded = false
-                        })
-                    androidx.compose.material3.DropdownMenuItem(text = { Text(text = "2.BSC-Nursing") },
-                        onClick = {
-                            onLevelSelected("BSC-Nursing")
-                            expanded = false
-                        })
-                })
-
-                DropdownMenuItem(text = { Text(text = "2.Non-Technical") }, children = {
-                    androidx.compose.material3.DropdownMenuItem(text = { Text(text = "1.BSC") },
-                        onClick = {
-                            onLevelSelected("BSC")
-                            expanded = false
-                        })
-                    androidx.compose.material3.DropdownMenuItem(text = { Text(text = "2.BBA") },
-                        onClick = {
-                            onLevelSelected("BBA")
-                            expanded = false
-                        })
-                })
-            })
-            DropdownMenuItem(text = { Text(text = "4.Other Docs") }, children = {
-                androidx.compose.material3.DropdownMenuItem(
-                    text = {
-                        Text(text = "1.Citizenship")
-                    },
-                    onClick = {
-                        onLevelSelected("CITIZENSHIP")
-                        expanded = false
-                    })
-                androidx.compose.material3.DropdownMenuItem(
-                    text = { Text(text = "2.Experience") },
-                    onClick = {
-                        onLevelSelected("Experience")
-                        expanded = false
-                    })
-
-                androidx.compose.material3.DropdownMenuItem(
-                    text = { Text(text = "3.Training") },
-                    onClick = { onLevelSelected("TRAINING")
-                        expanded = false
-                    })
-            })
-        }
+        })
     }
 }
+
+

@@ -10,8 +10,9 @@ interface FirebaseStorageRepository {
 
     //admin
     suspend fun uploadPaymentMethod(fileUri: List<Uri>,bankName: String):  Resource<List<Pair<String,String>>>
-    suspend fun uploadAcademicAttachement(fileUri: List<Uri>,level: String) : Resource<List<Pair<String,String>>>
-    suspend fun deleteAcademicAtachements(level: String, names: List<String>) : Resource<Any>
+    suspend fun uploadAcademicAttachement(fileUri: Uri,level: String) : Resource<Pair<String,String>>
+    suspend fun deleteAcademicAtachements(level: String, ids: List<String>) : Resource<Any>
+    suspend fun deleteAcademicSingleAttachement(id: String, level: String): Resource<Any>
 
     //payment
     suspend fun uploadPaidReceipt(fileUri: Uri) : Resource<Pair<String,String>>
