@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "229968047952",
+    "firebase_url": "https://jobnepal-674cd-default-rtdb.firebaseio.com",
     "project_id": "jobnepal-674cd",
     "storage_bucket": "jobnepal-674cd.appspot.com"
   },
@@ -13,6 +14,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "229968047952-bhn921a0iugfmncom2jvqfue36ohulm3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.chetan.jobnepal",
+            "certificate_hash": "130716c86a604464755fd6a3da2f8e91251f80e5"
+          }
+        },
         {
           "client_id": "229968047952-hba6mbpnta5oolb5ivv606n6tgjq7l3v.apps.googleusercontent.com",
           "client_type": 1,
@@ -50,6 +59,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "229968047952-3qs9rlvnpa0f0laa8g1e7i0isac6r6ap.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.chetan.jobnepal.debug",
+            "certificate_hash": "9ae3c7f391d799140b388b93ebd6c5b2c8182ed8"
+          }
+        },
         {
           "client_id": "229968047952-eqef9jkpdu1dvokee7svkrhso0nfendd.apps.googleusercontent.com",
           "client_type": 3
