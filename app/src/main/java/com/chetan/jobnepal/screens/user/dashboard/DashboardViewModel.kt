@@ -8,7 +8,6 @@ import com.chetan.jobnepal.R
 import com.chetan.jobnepal.data.Resource
 import com.chetan.jobnepal.data.local.Preference
 import com.chetan.jobnepal.data.models.adminpayment.PaidPaymentDetails
-import com.chetan.jobnepal.data.models.dashboard.FormAppliedList
 import com.chetan.jobnepal.data.models.dashboard.UploadAppliedFormDataRequest
 import com.chetan.jobnepal.data.models.searchhistory.SearchHistoryRequestResponse
 import com.chetan.jobnepal.data.repository.firebasestoragerepository.FirebaseStorageRepository
@@ -88,38 +87,18 @@ class DashboardViewModel @Inject constructor(
         }
     }
 
-    fun resetApplyingList() {
-        _state.update {
-            it.copy(
-                appliedIdsList = emptyList(),
-                shikashakSewaAayog = UploadAppliedFormDataRequest.AcademicList(
-                    jobList = emptyList(),
-                    listName = "",
-                    levels = emptyList()
-                ),
-                lokSewaAayog = UploadAppliedFormDataRequest.AcademicList(
-                    jobList = emptyList(),
-                    listName = "",
-                    levels = emptyList()
-                ),
-                rastriyaAnusandhanBibhag = UploadAppliedFormDataRequest.AcademicList(
-                    jobList = emptyList(),
-                    listName = "",
-                    levels = emptyList()
-                )
-            )
-        }
-    }
     fun getPaymentMethods() {
         viewModelScope.launch {
             val paymentMethod = firestoreRepository.getPaymentMethod()
-            when(paymentMethod){
+            when (paymentMethod) {
                 is Resource.Failure -> {
 
                 }
+
                 Resource.Loading -> {
 
                 }
+
                 is Resource.Success -> {
                     _state.update {
                         it.copy(
@@ -259,7 +238,16 @@ class DashboardViewModel @Inject constructor(
     val onEvent: (event: DashboardEvent) -> Unit = { event ->
         viewModelScope.launch {
             when (event) {
-                is DashboardEvent.ApplyNow -> {
+                is DashboardEvent.ShowApplyDialog -> {
+                    _state.update {
+                        it.copy(
+                            selectedVideoId = event.id,
+                            showApplyDialog = event.show
+                        )
+                    }
+
+                }
+                 DashboardEvent.ApplyNow -> {
                     _state.update {
                         it.copy(
                             infoMsg = Message.Loading(
@@ -275,19 +263,14 @@ class DashboardViewModel @Inject constructor(
                     val applyNowRequest = firestoreRepository.uploadAppliedFormData(
                         data =
                         UploadAppliedFormDataRequest(
-                            id = applylist?.id?:"",
-                            title = applylist?.title?:"",
-                            videoLink = applylist?.videoLink?:"",
-                            description = applylist?.description?:"",
+                            id = applylist?.id ?: "",
+                            title = applylist?.title ?: "",
+                            videoLink = applylist?.videoLink ?: "",
+                            description = applylist?.description ?: "",
                             apply = "applied",
                             paymentSuccess = false,
-                            academicList = listOf(
-                                state.value.shikashakSewaAayog,
-                                state.value.lokSewaAayog,
-                                state.value.rastriyaAnusandhanBibhag
-                            )
-                        ),
-                        id = state.value.selectedVideoId
+                            jobInfo = state.value.onChangeJobDescription
+                        )
                     )
                     when (applyNowRequest) {
                         is Resource.Failure -> {
@@ -311,92 +294,13 @@ class DashboardViewModel @Inject constructor(
                                     infoMsg = null,
                                 )
                             }
-                            resetApplyingList()
                             getAppliedFormData()
                             getNewVideoLink()
                         }
                     }
                 }
 
-                is DashboardEvent.ShowApplyDialog -> {
-                    _state.update {
-                        it.copy(
-                            showApplyDialog = event.value
-                        )
-                    }
-                }
 
-                is DashboardEvent.UpdateCheckedList -> {
-                    _state.update {
-
-                        when (event.title) {
-                            "शिक्षक सेवा आयोग" -> {
-                                it.copy(shikashakSewaAayog = UploadAppliedFormDataRequest.AcademicList(
-                                    listName = event.title,
-                                    jobList = event.value.map {
-                                        UploadAppliedFormDataRequest.AcademicList.AvailableJobs(
-                                            it
-                                        )
-                                    },
-                                    levels = event.selectedLevels.map {
-                                        UploadAppliedFormDataRequest.AcademicList.AvailableLevels(
-                                            it
-                                        )
-                                    }
-                                ))
-                            }
-
-                            "लोकसेवा आयोग" -> {
-                                it.copy(lokSewaAayog =UploadAppliedFormDataRequest.AcademicList(
-                                    listName = event.title,
-                                    jobList = event.value.map {
-                                        UploadAppliedFormDataRequest.AcademicList.AvailableJobs(
-                                            it
-                                        )
-                                    },
-                                    levels = event.selectedLevels.map {
-                                        UploadAppliedFormDataRequest.AcademicList.AvailableLevels(
-                                            it
-                                        )
-                                    }
-                                ))
-                            }
-
-                            "राष्ट्रिय अनुसन्धान विभाग" -> {
-                                it.copy(rastriyaAnusandhanBibhag = UploadAppliedFormDataRequest.AcademicList(
-                                    listName = event.title,
-                                    jobList = event.value.map {
-                                        UploadAppliedFormDataRequest.AcademicList.AvailableJobs(
-                                            it
-                                        )
-                                    },
-                                    levels = event.selectedLevels.map {
-                                        UploadAppliedFormDataRequest.AcademicList.AvailableLevels(
-                                            it
-                                        )
-                                    }
-                                ))
-                            }
-
-
-                            else -> {
-                                it.copy(lokSewaAayog = UploadAppliedFormDataRequest.AcademicList(
-                                    listName = event.title,
-                                    jobList = event.value.map {
-                                        UploadAppliedFormDataRequest.AcademicList.AvailableJobs(
-                                            it
-                                        )
-                                    },
-                                    levels = event.selectedLevels.map {
-                                        UploadAppliedFormDataRequest.AcademicList.AvailableLevels(
-                                            it
-                                        )
-                                    }
-                                ))
-                            }
-                        }
-                    }
-                }
 
                 DashboardEvent.Logout -> {
                     preference.isFirstTime = true
@@ -453,19 +357,19 @@ class DashboardViewModel @Inject constructor(
                 }
 
                 is DashboardEvent.JobsForDialog -> {
-                    _state.update {
-                        it.copy(jobsForDialog = event.value.academicList.map { academicList ->
-                            Triple(
-                                academicList.listName,
-                                academicList.jobList.map { availableJobs ->
-                                    availableJobs.jobName
-                                },
-                                academicList.levels.map { availableLevels ->
-                                    availableLevels.levelName
-                                }
-                            )
-                        })
-                    }
+//                    _state.update {
+//                        it.copy(jobsForDialog = event.value.academicList.map { academicList ->
+//                            Triple(
+//                                academicList.listName,
+//                                academicList.jobList.map { availableJobs ->
+//                                    availableJobs.jobName
+//                                },
+//                                academicList.levels.map { availableLevels ->
+//                                    availableLevels.levelName
+//                                }
+//                            )
+//                        })
+//                    }
                 }
 
                 is DashboardEvent.ChangeLanguage -> {
@@ -490,7 +394,6 @@ class DashboardViewModel @Inject constructor(
                             }
                         )
                     }
-
                 }
 
                 is DashboardEvent.OnQuerySearchOnSearch -> {
@@ -533,7 +436,6 @@ class DashboardViewModel @Inject constructor(
                             }
                         }
                     }
-
                 }
 
                 is DashboardEvent.OnFieldFilter -> {
@@ -550,7 +452,6 @@ class DashboardViewModel @Inject constructor(
                         it.copy(
                             videoListResponse = search_list.filter { it.title == event.value })
                     }
-
                 }
 
                 DashboardEvent.OnRefresh -> {
@@ -565,8 +466,6 @@ class DashboardViewModel @Inject constructor(
                     }
                     getNewVideoLink()
                     getAppliedFormData()
-                    resetApplyingList()
-
                 }
 
                 is DashboardEvent.SelectVideo -> {
@@ -587,29 +486,34 @@ class DashboardViewModel @Inject constructor(
                             )
                         )
                     }
-                    val getUrlOfReceipt = firebaseStorageRepository.uploadPaidReceipt(event.receiptUri)
-                    when (getUrlOfReceipt){
+                    val getUrlOfReceipt =
+                        firebaseStorageRepository.uploadPaidReceipt(event.receiptUri)
+                    when (getUrlOfReceipt) {
                         is Resource.Failure -> {
 
                         }
+
                         Resource.Loading -> {
 
                         }
+
                         is Resource.Success -> {
-                        val requestPaidReceipt = firestoreRepository.requestPaidReceipt(
-                            data = PaidPaymentDetails(
-                                emailAddress = preference.dbTable.toString(),
-                                videoId = event.videoId,
-                                receiptLink = getUrlOfReceipt.data.second,
+                            val requestPaidReceipt = firestoreRepository.requestPaidReceipt(
+                                data = PaidPaymentDetails(
+                                    emailAddress = preference.dbTable.toString(),
+                                    videoId = event.videoId,
+                                    receiptLink = getUrlOfReceipt.data.second,
+                                )
                             )
-                        )
-                            when (requestPaidReceipt){
+                            when (requestPaidReceipt) {
                                 is Resource.Failure -> {
 
                                 }
+
                                 Resource.Loading -> {
 
                                 }
+
                                 is Resource.Success -> {
 
                                     _state.update {
@@ -628,6 +532,14 @@ class DashboardViewModel @Inject constructor(
                     _state.update {
                         it.copy(
                             showPaymentDialog = event.value
+                        )
+                    }
+                }
+
+                is DashboardEvent.OnAppliedJobDescriptionChange -> {
+                    _state.update {
+                        it.copy(
+                            onChangeJobDescription = event.value
                         )
                     }
                 }

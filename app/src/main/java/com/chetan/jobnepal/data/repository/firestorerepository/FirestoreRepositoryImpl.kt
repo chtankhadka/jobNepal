@@ -50,27 +50,34 @@ class FirestoreRepositoryImpl @Inject constructor(
 
     override suspend fun uploadNewVideoLink(data: UploadNewVideoLink): Resource<Any> {
         return try {
-            val documentRef = firestore.collection("chtankhadka12").document("videoList")
-            val newData = mapOf(
-                "dataColl" to FieldValue.arrayUnion(*data.dataColl.toTypedArray())
-            )
-            val result = documentRef.update(newData).await()
-            Resource.Success(result)
+                firestore.collection("chtankhadka12")
+                .document("videoList")
+                .collection("data")
+                .document(data.id)
+                .set(data)
+                .await()
+            Resource.Success(Unit)
         } catch (e: Exception) {
             e.printStackTrace()
             Resource.Failure(e)
         }
     }
 
-    override suspend fun getNewVideoLink(): Resource<List<UploadNewVideoLink.DataColl>> {
+    override suspend fun getNewVideoLink(): Resource<List<UploadNewVideoLink>> {
         return try {
-            val result = firestore.collection("chtankhadka12").document("videoList").get().await()
-                .toObject(UploadNewVideoLink::class.java)
-            if (result != null) {
-                Resource.Success(result.dataColl.reversed())
-            } else {
-                Resource.Failure(java.lang.Exception("No Data yet"))
+            val videoList = mutableListOf<UploadNewVideoLink>()
+            val documnetRef = firestore.collection("chtankhadka12")
+                .document("videoList")
+                .collection("data")
+                .get()
+                .await()
+            for (document in documnetRef.documents){
+                val data = document.toObject<UploadNewVideoLink>()
+                data?.let {
+                    videoList.add(data)
+                }
             }
+            Resource.Success(videoList.reversed())
 
         } catch (e: Exception) {
             e.printStackTrace()
@@ -185,12 +192,16 @@ class FirestoreRepositoryImpl @Inject constructor(
     }
 
     override suspend fun uploadAppliedFormData(
-        data: UploadAppliedFormDataRequest, id: String
+        data: UploadAppliedFormDataRequest
     ): Resource<Any> {
         return try {
             val documentRef =
-                firestore.collection(preference.dbTable.toString()).document("appliedList")
-                    .collection("data").document(id).set(data).await()
+                firestore.collection(preference.dbTable.toString())
+                    .document("appliedList")
+                    .collection("data")
+                    .document(data.id)
+                    .set(data)
+                    .await()
 
             Resource.Success(documentRef)
         } catch (e: Exception) {

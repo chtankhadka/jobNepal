@@ -6,27 +6,7 @@ import com.chetan.jobnepal.ui.component.dialogs.Message
 import com.chetan.jobnepal.ui.component.dialogs.Progress
 
 data class UploadVideoState(
-    var videoList: UploadNewVideoLink = UploadNewVideoLink(),
-    val shikashakSewaAayog: UploadNewVideoLink.DataColl.AcademicList =
-        UploadNewVideoLink.DataColl.AcademicList(
-            jobList = emptyList(),
-            listName = "",
-            levels = emptyList()
-        ),
-    val lokSewaAayog: UploadNewVideoLink.DataColl.AcademicList =
-        UploadNewVideoLink.DataColl.AcademicList(
-            jobList = emptyList(),
-            listName = "",
-            levels = emptyList()
-        ),
-
-    val rastriyaAnusandhanBibhag: UploadNewVideoLink.DataColl.AcademicList =
-        UploadNewVideoLink.DataColl.AcademicList(
-            jobList = emptyList(),
-            listName = "",
-            levels = emptyList()
-        ),
-    val academicList: List<UploadNewVideoLink.DataColl.AcademicList> = emptyList(),
+    var videoList: List<UploadNewVideoLink> = emptyList(),
     var showJobDialog: Boolean = false,
     var id: String = "",
     var url: String = "",

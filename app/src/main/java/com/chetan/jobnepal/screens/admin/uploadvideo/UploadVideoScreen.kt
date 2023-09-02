@@ -1,6 +1,5 @@
 package com.chetan.jobnepal.screens.admin.uploadvideo
 
-import JobsSelectionDialog
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,11 +19,9 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -42,8 +39,6 @@ import androidx.navigation.NavHostController
 import com.chetan.jobnepal.R
 import com.chetan.jobnepal.ui.component.IconJobNepal
 import com.chetan.jobnepal.ui.component.dialogs.MessageDialog
-import com.chetan.jobnepal.ui.component.dropdown.CascadeDropdownMenuJobNepal
-import com.chetan.jobnepal.ui.component.dropdown.DropdownJobNepal
 import com.chetan.jobnepal.ui.component.textfield.ReadonlyJobNepalTextField
 import com.chetan.jobnepal.ui.component.textfield.TextFieldJobNepal
 
@@ -57,11 +52,6 @@ fun UploadVideoScreen(
 ) {
 
     var expanded by remember { mutableStateOf(false) }
-
-    if (state.showJobDialog) {
-        JobsSelectionDialog(onEvent) {
-        }
-    }
     val ctx = LocalContext.current
     Scaffold(topBar = {
         CenterAlignedTopAppBar(colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
@@ -171,16 +161,7 @@ fun UploadVideoScreen(
                             onEvent(UploadVideoEvent.OnSelectProvince(it))
                         })
                     }
-
                 }
-                Button(
-                    modifier = Modifier.weight(1f),
-                    onClick = {
-                        onEvent(UploadVideoEvent.SetCheckedList(true))
-                    }) {
-                    Text(text = "Job For")
-                }
-
             }
             Button(
                 onClick = {

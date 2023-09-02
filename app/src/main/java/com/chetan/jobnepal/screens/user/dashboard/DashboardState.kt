@@ -12,8 +12,8 @@ import com.chetan.jobnepal.ui.component.dialogs.Message
 import com.chetan.jobnepal.ui.component.dialogs.Progress
 
 data class DashboardState(
-    val videoListResponse: List<UploadNewVideoLink.DataColl> = emptyList(),
-    val originalVideoListResponse: List<UploadNewVideoLink.DataColl> = emptyList(),
+    val videoListResponse: List<UploadNewVideoLink> = emptyList(),
+    val originalVideoListResponse: List<UploadNewVideoLink> = emptyList(),
     val appliedListResponse: List<UploadAppliedFormDataRequest> = emptyList(),
     val jobsForDialog: List<Triple<String, List<String>, List<String>>> = emptyList(),
     val searchListResponse: List<SearchHistoryRequestResponse.DataColl> = emptyList(),
@@ -23,28 +23,12 @@ data class DashboardState(
     val selectedVideoId: String = "",
     val showPaymentDialog: Boolean = false,
     val paymentMethods: List<AddAdminPaymentMethodResponse> = emptyList(),
-    val shikashakSewaAayog: UploadAppliedFormDataRequest.AcademicList =
-        UploadAppliedFormDataRequest.AcademicList(
-            jobList = emptyList(),
-            listName = "",
-            levels = emptyList()
-        ),
-    val lokSewaAayog: UploadAppliedFormDataRequest.AcademicList =
-        UploadAppliedFormDataRequest.AcademicList(
-            jobList = emptyList(),
-            listName = "",
-            levels = emptyList()
-        ),
-    val rastriyaAnusandhanBibhag: UploadAppliedFormDataRequest.AcademicList =
-        UploadAppliedFormDataRequest.AcademicList(
-            jobList = emptyList(),
-            listName = "",
-            levels = emptyList()
-        ),
+
+    val onChangeJobDescription: String = "",
+    val showApplyDialog: Boolean = false,
     val searchText: String = "",
     val academicList: List<FormAppliedList.DataColl.AcademicList> = emptyList(),
     val profileUrl: String = "",
-    val showApplyDialog: Boolean = false,
     val currentUserName: String = "",
     override val infoMsg: Message? = null,
     override val progress: Progress? = null

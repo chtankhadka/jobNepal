@@ -1,21 +1,12 @@
 package com.chetan.jobnepal.screens.admin.uploadvideo
 
-import com.chetan.jobnepal.screens.user.dashboard.DashboardEvent
 
 sealed interface UploadVideoEvent{
-    object UploadVideoUrl : UploadVideoEvent
-    object DownloadVideoUrl : UploadVideoEvent
-    class UpdateCheckedList(
-        val title: String,
-        val value: List<String>,
-        val selectedLevels: List<String>
-    ) : UploadVideoEvent
-    class SetCheckedList(val value: Boolean): UploadVideoEvent
-    object Reset : UploadVideoEvent
+    data object UploadVideoUrl : UploadVideoEvent
     class IdChange(var value: String) : UploadVideoEvent
     class UrlChange(var value: String) : UploadVideoEvent
     class DescriptionChange(var value: String) : UploadVideoEvent
     class TitleChange(var value: String) : UploadVideoEvent
     class OnSelectProvince(var value: String) : UploadVideoEvent
-    object DismissInfoMsg : UploadVideoEvent
+    data object DismissInfoMsg : UploadVideoEvent
 }

@@ -24,7 +24,7 @@ interface FirestoreRepository {
         data: UploadNewVideoLink
     ): Resource<Any>
 
-    suspend fun getNewVideoLink(): Resource<List<UploadNewVideoLink.DataColl>>
+    suspend fun getNewVideoLink(): Resource<List<UploadNewVideoLink>>
 
     //academic
     suspend fun uploadAcademicData(
@@ -47,8 +47,7 @@ interface FirestoreRepository {
 
     // get applied form data
     suspend fun uploadAppliedFormData(
-        data: UploadAppliedFormDataRequest,
-        id: String
+        data: UploadAppliedFormDataRequest
     ): Resource<Any>
 
     suspend fun deleteAppliedFormData(

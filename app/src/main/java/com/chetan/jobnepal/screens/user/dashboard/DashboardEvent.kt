@@ -5,9 +5,10 @@ import com.chetan.jobnepal.data.models.param.UploadNewVideoLink
 
 sealed interface DashboardEvent {
     class SelectVideo(val value: String): DashboardEvent
-    class ApplyNow(val value: String) : DashboardEvent
-    class ShowApplyDialog(val value: Boolean) : DashboardEvent
-    class JobsForDialog(val value : UploadNewVideoLink.DataColl): DashboardEvent
+    data object ApplyNow : DashboardEvent
+    class OnAppliedJobDescriptionChange(val value: String) : DashboardEvent
+    class ShowApplyDialog(val show: Boolean, val id: String) : DashboardEvent
+    class JobsForDialog(val value : UploadNewVideoLink): DashboardEvent
     class DeleteAppliedData(val value: String) : DashboardEvent
     class ChangeLanguage(val value: Boolean): DashboardEvent
     class OnQueryChangeOnSearch(val value: String): DashboardEvent
@@ -17,15 +18,10 @@ sealed interface DashboardEvent {
     class OnFieldFilter(val value: String) : DashboardEvent
     class OnSubmitReceipt(val videoId: String, val receiptUri: Uri) : DashboardEvent
     class OnShowPaymentDialog(val value: Boolean): DashboardEvent
-    object OnRefresh : DashboardEvent
-    class UpdateCheckedList(
-        val title: String,
-        val value: List<String>,
-        val selectedLevels: List<String>
-    ) : DashboardEvent
+    data object OnRefresh : DashboardEvent
 
-    object DismissInfoMsg : DashboardEvent
-    object Logout : DashboardEvent
+    data object DismissInfoMsg : DashboardEvent
+    data object Logout : DashboardEvent
 
 
 }

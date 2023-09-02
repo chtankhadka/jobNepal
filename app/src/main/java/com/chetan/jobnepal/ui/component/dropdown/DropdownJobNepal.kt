@@ -48,6 +48,7 @@ fun DropdownJobNepal(
                     leadingIcon = { Icon(imageVector = it.second, contentDescription = it.first) },
                     onClick = {
                         clicked(it.first)
+                        expanded = !expanded
                     },
 
                     )

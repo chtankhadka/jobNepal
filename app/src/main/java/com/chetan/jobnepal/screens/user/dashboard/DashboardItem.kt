@@ -1,16 +1,11 @@
 package com.chetan.jobnepal.screens.user.dashboard
 
 
-import JobsApplyDialog
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,6 +23,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -43,7 +42,7 @@ import com.chetan.jobnepal.utils.youtubePlayer.WebContent
 
 @Composable
 fun DashboardItem(
-    list: UploadNewVideoLink.DataColl,
+    list: UploadNewVideoLink,
     isApplied: Boolean,
     onEvent: (event: DashboardEvent) -> Unit,
     state: DashboardState
@@ -52,36 +51,17 @@ fun DashboardItem(
     var isVisible by remember {
         mutableStateOf(false)
     }
-    val id = remember {
-        mutableStateOf(list.id)
-    }
-    if (state.showApplyDialog) {
-        JobsApplyDialog(
-            listOfJobs = state.jobsForDialog,
-            onEvent = onEvent,
-            onApplied = {
-                onEvent(DashboardEvent.ApplyNow(id.value))
-                onEvent(DashboardEvent.ShowApplyDialog(false))
-            },
-            onDismissListener = {
-                onEvent(DashboardEvent.ShowApplyDialog(false))
-            }
-        )
-    }
-
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .animateContentSize(),
         colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primaryContainer)
     ) {
-        var sizeWidth = 0f
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 10.dp)
                 .drawBehind {
-                    sizeWidth = size.width
                     drawLine(
                         color = Color.White, // Set the desired color of the border
                         start = Offset(0f, size.height), // Starting point at the bottom-left corner
@@ -105,10 +85,7 @@ fun DashboardItem(
             ) {
                 when (it) {
                     "Apply Now" -> {
-                        onEvent(DashboardEvent.SelectVideo(list.id))
-                        onEvent(DashboardEvent.JobsForDialog(list))
-
-                        onEvent(DashboardEvent.ShowApplyDialog(true))
+                        onEvent(DashboardEvent.ShowApplyDialog(true,list.id))
                     }
 
                     else -> {
@@ -158,7 +135,7 @@ fun DashboardItem(
             Divider(modifier = Modifier.padding(top = 5.dp, bottom = 5.dp))
             if (isVisible) {
                 Text(
-                    text = list.academicList.toString(),
+                    text = list.toString(),
                     modifier = Modifier
                         .padding(horizontal = 2.dp)
                         .fillMaxWidth(),

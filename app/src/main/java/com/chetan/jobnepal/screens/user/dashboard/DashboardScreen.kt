@@ -4,8 +4,6 @@ import android.annotation.SuppressLint
 import android.os.Handler
 import android.os.Looper
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
@@ -24,7 +22,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material.icons.filled.Close
@@ -35,6 +35,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -52,7 +53,6 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -70,6 +70,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import com.chetan.jobnepal.Destination
@@ -95,13 +96,6 @@ fun DashboardScreen(
     var active by remember {
         mutableStateOf(false)
     }
-    val items = remember {
-        mutableStateListOf(
-            "Butwal Loksewa",
-            "Lumbini Pardesh",
-            "Karnali Pardesh"
-        )
-    }
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
     val refreshScope = rememberCoroutineScope()
@@ -110,6 +104,61 @@ fun DashboardScreen(
         refreshing = true
         onEvent(DashboardEvent.OnRefresh)
         refreshing = false
+    }
+    if (state.showApplyDialog){
+        Dialog(onDismissRequest = {
+            onEvent(DashboardEvent.ShowApplyDialog(false,""))
+        }) {
+            Card(elevation = CardDefaults.cardElevation(10.dp)) {
+                Column(
+                    horizontalAlignment =Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Text(
+                        text = "Enter Details",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(color = MaterialTheme.colorScheme.primary)
+                            .padding(vertical = 10.dp),
+                        textAlign =  TextAlign.Center,
+                        style = MaterialTheme.typography.titleLarge,
+                        color = Color.White
+                        )
+                    OutlinedTextField(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(10.dp),
+                        minLines = 3,
+                        maxLines = 5,
+                        value = state.onChangeJobDescription,
+                        onValueChange = {
+                            onEvent(DashboardEvent.OnAppliedJobDescriptionChange(it))
+                        })
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 10.dp, vertical = 10.dp),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                        Button(
+                            modifier = Modifier.weight(1f),
+                            onClick = {
+                                onEvent(DashboardEvent.ApplyNow)
+                            }) {
+                            Text(text = "Apply Now")
+                        }
+                        Button(
+                            modifier = Modifier.weight(1f),
+                            onClick = {
+                                onEvent(DashboardEvent.ShowApplyDialog(false,""))
+                        }) {
+                            Text(text = "Cancel")
+                        }
+                    }
+
+
+                }
+
+            }
+        }
     }
 
     val refreshState = rememberPullRefreshState(refreshing, ::refresh)
@@ -123,7 +172,6 @@ fun DashboardScreen(
             handler.postDelayed({
                 cardVisible = false
             }, 7000)
-
         }
     })
 
@@ -297,7 +345,6 @@ fun DashboardScreen(
                 },
                 onSearch = {
                     onEvent(DashboardEvent.OnQuerySearchOnSearch(it))
-                    items.add(it)
                     active = false
                 },
                 active = active,
