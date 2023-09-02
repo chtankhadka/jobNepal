@@ -4,8 +4,10 @@ package com.chetan.jobnepal.screens.sign_in.newlogin
 import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
+import com.chetan.jobnepal.BuildConfig
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.SignInClient
+import com.google.errorprone.annotations.Keep
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -13,6 +15,7 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.tasks.await
 
+@Keep
 class GoogleAuthUiClient(
     private val context: Context,
     private val oneTapClient: SignInClient
@@ -83,7 +86,7 @@ class GoogleAuthUiClient(
             .setGoogleIdTokenRequestOptions(
                 BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
                     .setSupported(true)
-                    .setServerClientId("229968047952-eqef9jkpdu1dvokee7svkrhso0nfendd.apps.googleusercontent.com")
+                    .setServerClientId(BuildConfig.Client_Id)
                     .setFilterByAuthorizedAccounts(false)
                     .build()
             )
