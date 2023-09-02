@@ -608,30 +608,152 @@
       ]
     },
     {
-      "name": "Province No. 2",
+      "name": "Province No. 4 (Gandaki)",
       "districts": [
         {
-          "name": "Saptari",
+          "name": "Baglung",
           "municipalities": [
-            "Rajbiraj Municipality",
-            "Kanchanpur Municipality"
+            "Baglung Municipality",
+            "Dhorpatan Municipality",
+            "Galkot Municipality",
+            "Jaimuni Municipality",
+            "Bareng Rural Municipality",
+            "Khathekhola Rural Municipality",
+            "Taman Khola Rural Municipality",
+            "Tara Khola Rural Municipality",
+            "Nisikhola Rural Municipality",
+            "Badigad Rural Municipality"
           ]
         },
         {
-          "name": "Siraha",
+          "name": "Gorkha",
           "municipalities": [
-            "Lahan Municipality",
-            "Siraha Municipality"
-          ],
-          "rural_municipalities": [
-            "Bishnupur Municipality",
-            "Golbazar Municipality"
+            "Gorkha Municipality",
+            "Palungtar Municipality",
+            "Sulikot Rural Municipality",
+            "Siranchowk Rural Municipality",
+            "Ajirkot Rural Municipality",
+            "Tsum Nubri Rural Municipality",
+            "Dharche Rural Municipality",
+            "Bhimsen Thapa Rural Municipality",
+            "Sahid Lakhan Rural Municipality",
+            "Aarughat Rural Municipality",
+            "Gandaki Rural Municipality"
+          ]
+        },
+        {
+          "name": "Kaski",
+          "municipalities": [
+            "Pokhara Metropolitan City",
+            "Annapurna Rural Municipality",
+            "Machhapuchchhre Rural Municipality",
+            "Madi Rural Municipality",
+            "Rupa Rural Municipality"
+            ]
+        },
+        {
+          "name": "Lamjung",
+          "municipalities": [
+            "Rainaas Urban Municipality",
+            "Dudhpokhari Rural Municipality",
+            "Dordi Rural Municipality",
+            "Sundarbazar Urban Municipality",
+            "Madhyanepal Urban Municipality",
+            "Besisahar Urban Municipality",
+            "Marshyangdi Rural Municipality",
+            "Kwoholasothar Rural Municipality"
+          ]
+        },
+        {
+          "name": "Manang",
+          "municipalities": [
+            "Chame",
+            "Nason Rural Municipality",
+            "Narpa Bhumi Rural Municipality",
+            "Manang Ngisyang Rural Municipality"
+          ]
+        },
+        {
+          "name": "Mustang",
+          "municipalities": [
+            "Gharapjhong",
+            "Thasang",
+            "Barhagaun Muktichhetra",
+            "Lomanthang",
+            "Lo-Ghekar Damodarkunda"
+          ]
+        },
+        {
+          "name": "Myagdi",
+          "municipalities": [
+            "Beni Municipality",
+            "Annapurna Rural Municipality",
+            "Dhaulagiri Rural Municipality",
+            "Mangala Rural Municipality",
+            "Malika Rural Municipality",
+            "Raghuganga Rural Municipality"
+          ]
+        },
+        {
+          "name": "Nawalparasi Purba",
+          "municipalities": [
+            "Kawasoti Municipality",
+            "Gaindakot Municipality",
+            "Devachuli",
+            "Madhyabindu",
+            "Baudikali Rural Municipality",
+            "Bulingtar Rural Municipality",
+            "Binayi Tribeni Rural Municipality",
+            "Hupsekot Rural Municipality"
+          ]
+        },
+        {
+          "name": "Parbat",
+          "municipalities": [
+            "Kushma Municipality",
+            "Phalewas Municipality",
+            "Jaljala Rural Municipality",
+            "Paiyun Rural Municipality",
+            "Mahashila Rural Municipality",
+            "Modi Rural Municipality",
+            "Bihadi Rural Municipality"
+          ]
+        },
+        {
+          "name": "Syangjaa",
+          "municipalities": [
+            "Galyang Municipality",
+            "Chapakot Municipality",
+            "Putalibazar Municipality",
+            "Bheerkot Municipality",
+            "Waling Municipality",
+            "Arjun Chaupari Rural Municipality",
+            "Aandhikhola Rural Municipality",
+            "Kaligandaki Rural Municipality",
+            "Phedikhola Rural Municipality",
+            "Harinas Rural Municipality",
+            "Biruwa Rural Municipality"
+          ]
+        },
+        {
+          "name": "Tanahu",
+          "municipalities": [
+            "Abukhaireni Rural Municipality",
+            "Bandipur Rural Municipality",
+            "Bhanu Urban Municipality",
+            "Bhimad Urban Municipality",
+            "Debghat Rural Municipality",
+            "Ghiring Rural Municipality",
+            "Myagde Rural Municipality",
+            "Rishing Rural Municipality",
+            "Shuklagandaki Urban Municipality",
+            "Vyas Urban Municipality"
           ]
         }
       ]
     },
     {
-      "name": "Province No. 5",
+      "name": "Province No. 5 (Lumbini)",
       "districts": [
         {
           "name": "ArghaKhanchi",
@@ -820,47 +942,272 @@
       ]
     },
     {
-      "name": "Province No. 2",
+      "name": "Province No.6 (Karnali)",
       "districts": [
         {
-          "name": "Saptari",
+          "name": "Dailekh",
           "municipalities": [
-            "Rajbiraj Municipality",
-            "Kanchanpur Municipality"
+            "Narayan Municipality",
+            "Dullu Municipality",
+            "Aathbis Municipality",
+            "Chamunda Bindrasaini Municipality",
+            "Thantikandh Rural Municipality",
+            "Bhairabi Rural Municipality",
+            "Mahabu Rural Municipality",
+            "Naumule Rural Municipality",
+            "Dungeshwar Rural Municipality",
+            "Gurans Rural Municipality",
+            "Bhagawatimai Rural Municipality"
           ]
         },
         {
-          "name": "Siraha",
+          "name": "Dolpa",
           "municipalities": [
-            "Lahan Municipality",
-            "Siraha Municipality"
-          ],
-          "rural_municipalities": [
-            "Bishnupur Municipality",
-            "Golbazar Municipality"
+            "Thuli Bheri Municipality",
+            "Tripurasundari Municipality",
+            "Dolpo Buddha Rural Municipality",
+            "She Phoksundo Rural Municipality",
+            "Jagadulla Rural Municipality",
+            "Mudkechula Rural Municipality",
+            "Kaike Rural Municipality",
+            "Chharka Tangsong Rural Municipality"
+          ]
+        },
+        {
+          "name": "Humla",
+          "municipalities": [
+            "Simkot Rural Municipality",
+            "Namkha Rural Municipality",
+            "Kharpunath Rural Municipality",
+            "Sarkegad Rural Municipality",
+            "Chankheli Rural Municipality",
+            "Adanchuli Rural Municipality",
+            "Tajakot Rural Municipality"
+          ]
+        },
+        {
+          "name": "Jajarkot",
+          "municipalities": [
+            "BheriMalika Municipality",
+            "Chhedagad Municipality",
+            "Tribeni Nalgad Municipality",
+            "Kushe Rural Municipality",
+            "Barekot Rural Municipality",
+            "Shivalaya Rural Municipality"
+          ]
+        },
+        {
+          "name": "jumla",
+          "municipalities": [
+            "Chandannath Municipality",
+            "Kankasundari Rural Municipality",
+            "Sinja Rural Municipality",
+            "Hima Rural Municipality",
+            "Tila Rural Municipality",
+            "Guthichaur Rural Municipality",
+            "Tatopani Rural Municipality",
+            "Patarasi Rural Municipality"
+          ]
+        },
+        {
+          "name": "Kalikot",
+          "municipalities": [
+            "Khandachakra Municipality",
+            "Raskot Municipality",
+            "Tilagufa Municipality",
+            "Pachaljharana Rural Municipality",
+            "Sanni Triveni Rural Municipality",
+            "Narharinath Rural Municipality",
+            "Shubha Kalika Rural Municipality",
+            "Mahawai Rural Municipality",
+            "Palata Rural Municipality"
+          ]
+        },
+        {
+          "name": "Mugu",
+          "municipalities": [
+            "Chhayanath Rara Municipality",
+            "Mugum Karmarong Rural Municipality",
+            "Soru Rural Municipality",
+            "Khatyad Rural Municipality"
+          ]
+        },
+        {
+          "name": "Rukum Paschim",
+          "municipalities": [
+            "Musikot Municipality",
+            "Chaurjahari Municipality",
+            "Aathbiskot Municipality",
+            "Banphikot Rural Municipality",
+            "Tribeni Rural Municipality",
+            "Sani Bheri Rural Municipality"
+          ]
+        },
+        {
+          "name": "Salyan",
+          "municipalities": [
+            "Shaarda Municipality",
+            "Bagchaur Municipality",
+            "Bangad Kupinde Municipality",
+            "Kalimati Rural Municipality",
+            "Tribeni Rural Municipality",
+            "Kapurkot Rural Municipality",
+            "Chatreshwari Rural Municipality",
+            "Kumakh Rural Municipality",
+            "Siddha Kumakh Rural Municipality",
+            "Darma Rural Municipality"
+          ]
+        },
+        {
+          "name": "Surkhet",
+          "municipalities": [
+            "Birendranagar Municipality",
+            "Bheriganga Municipality",
+            "Gurbha Kot Municipality",
+            "Panchapuri Municipality",
+            "Lekbesi Municipality",
+            "Chaukune Rural Municipality",
+            "Barahatal Rural Municipality",
+            "Chingad Rural Municipality",
+            "Simta Rural Municipality"
           ]
         }
       ]
     },
     {
-      "name": "Province No. 2",
+      "name": "Province No.7 (Sudurpaschim Pradesh)",
       "districts": [
         {
-          "name": "Saptari",
+          "name": "Aacham",
           "municipalities": [
-            "Rajbiraj Municipality",
-            "Kanchanpur Municipality"
+            "Mangalsen municipality",
+            "Kamalbazar municipality",
+            "Sanfebagar municipality",
+            "Panchadewal Binayak municipality",
+            "Ramaroshan Rural municipality",
+            "Chaurpati Rural municipality",
+            "Turmakhand Rural municipality",
+            "Mellekh Rural municipality",
+            "Dhakari Rural Municipality",
+            "Bannigadi Jayagad Rural Municipality"
           ]
         },
         {
-          "name": "Siraha",
+          "name": "Baitadi",
           "municipalities": [
-            "Lahan Municipality",
-            "Siraha Municipality"
-          ],
-          "rural_municipalities": [
-            "Bishnupur Municipality",
-            "Golbazar Municipality"
+            "Dasharathchand Municipality",
+            "Patan Municipality",
+            "Melauli Municipality",
+            "Purchaudi Municipality",
+            "Sunarya Rural Municipality",
+            "Sigas Rural Municipality",
+            "Shivanath Rural Municipality",
+            "Pancheshwor Rural Municipality",
+            "Dogdakedar Rural Municipality",
+            "Dilasaini Rural Municipality"
+          ]
+        },
+        {
+          "name": "Bajhang",
+          "municipalities": [
+            "Jaya Prithvi Municipality",
+            "Bungal Municipality",
+            "Talkot Rural Municipality",
+            "Masta Rural Municipality",
+            "Khaptadchhanna Rural Municipality",
+            "Thalara Rural Municipality",
+            "Bitthadchir Rural Municipality",
+            "Surma Rural Municipality",
+            "Chhabis Pathibhera Rural Municipality",
+            "Durgathali Rural Municipality",
+            "Kedarsyu Rural Municipality",
+            "Saipal Rural Municipality"
+          ]
+        },
+        {
+          "name": "Bajura",
+          "municipalities": [
+            "Badimalika Municipality",
+            "Triveni Municipality",
+            "Budhiganga Municipality",
+            "Budhinanda Municipality",
+            "Gaumul Rural Municipality",
+            "Jagnnath Rural Municipality",
+            "Swamikartik Khapar Rural Municipality",
+            "Chhededaha Rural Municipality",
+            "Himali Rural Municipality"
+          ]
+        },
+        {
+          "name": "Dadeldhura",
+          "municipalities": [
+            "Amargadhi Municipality",
+            "Parshuram Municipality",
+            "Aalitaal Rural Municipality",
+            "Bhageshwar Rural Municipality",
+            "Navadurga Rural Municipality",
+            "Ajaymeru Rural Municipality",
+            "Ganyapadhura Rural Municipality"
+          ]
+        },
+        {
+          "name": "Darchula",
+          "municipalities": [
+            "Mahakali Municipality",
+            "Shailyasikhar Municipality",
+            "Malikarjun Rural Municipality",
+            "Apihimal Rural Municipality",
+            "Duhun Rural Municipality",
+            "Naugad Rural Municipality",
+            "Marma Rural Municipality",
+            "Lekam Rural Municipality",
+            "Vyans Rural Municipality"
+          ]
+        },
+        {
+          "name": "Doti",
+          "municipalities": [
+            "Dipayal Silgadhi Municipality",
+            "Shikhar Municipality",
+            "Purbichauki Rural Municipality",
+            "Badikedar Rural Municipality",
+            "Jorayal Rural Municipality",
+            "Sayal Rural Municipality",
+            "Aadarsha Rural Municipality",
+            "Dr. K. I. Singh Rural Municipality",
+            "Bogatan Rural Municipality"
+          ]
+        },
+        {
+          "name": "Kailali",
+          "municipalities": [
+            "Dhangadhi Sub-Metropolitan City",
+            "Lamki Chuha Municipality",
+            "Tikapur Municipality",
+            "Ghodaghodi Municipality",
+            "Bhajani Municipality",
+            "Godawari Municipality",
+            "Gauriganga Municipality",
+            "Janaki Rural Municipality",
+            "Bardagoriya Rural Municipality",
+            "Mohanyal Rural Municipality",
+            "Kailari Rural Municipality",
+            "Joshipur Rural Municipality",
+            "Chure Rural Municipality"
+          ]
+        },
+        {
+          "name": "Kanchanpur",
+          "municipalities": [
+            "Bedkot Municipality",
+            "Belauri Municipality",
+            "Bhimdatta Municipality",
+            "Mahakali Municipality",
+            "Shuklaphanta Municipality",
+            "Krishnapur Municipality",
+            "Punarbas Municipality",
+            "Laljhadi Rural Municipality",
+            "Beldandi Rural Municipality"
           ]
         }
       ]

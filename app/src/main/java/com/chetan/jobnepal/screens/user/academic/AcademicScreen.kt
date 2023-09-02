@@ -159,7 +159,7 @@ fun AcademicScreen(
                     ) {
                         Text(
                             modifier = Modifier.padding(vertical = 10.dp, horizontal = 10.dp),
-                            text = state.selectedLevel,
+                            text = if (state.selectedLevel.isEmpty()) "Load Your Data" else state.selectedLevel,
                             style = MaterialTheme.typography.titleMedium
                         )
                         CascadeDropdownMenuJobNepal(expanded = showAcademicDropDownList,
@@ -191,11 +191,8 @@ fun AcademicScreen(
                             }
                         }
                         Divider()
-
                     }
                 }
-
-
             }
 
             LazyRow(
