@@ -22,7 +22,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.icons.Icons
@@ -309,9 +308,11 @@ fun DashboardScreen(
                                 items(state.videoListResponse) { videoList ->
                                     DashboardItem(
                                         state = state,
-                                        list = videoList,
+                                        data = videoList,
                                         isApplied = state.appliedIdsList.contains(videoList.id),
-                                        onEvent = onEvent
+                                        onEvent = onEvent,
+                                        navController = navController
+
                                     )
 
                                 }

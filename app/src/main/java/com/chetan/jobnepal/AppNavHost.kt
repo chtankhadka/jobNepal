@@ -42,6 +42,8 @@ import com.chetan.jobnepal.screens.user.academic.AcademicScreen
 import com.chetan.jobnepal.screens.user.academic.AcademicViewModel
 import com.chetan.jobnepal.screens.user.account.ProfileScreen
 import com.chetan.jobnepal.screens.user.account.ProfileViewModel
+import com.chetan.jobnepal.screens.user.comment.UserCommentScreen
+import com.chetan.jobnepal.screens.user.comment.UserCommentViewModel
 import com.chetan.jobnepal.screens.user.dashboard.DashboardScreen
 import com.chetan.jobnepal.screens.user.dashboard.DashboardViewModel
 import com.chetan.jobnepal.screens.user.notification.UserNotificationScreen
@@ -165,6 +167,15 @@ fun AppNavHost(
         composable(Destination.Screen.UserNotification.route) {
             val viewModel = hiltViewModel<UserNotificationViewModel>()
             UserNotificationScreen(
+                navController = navController,
+                state = viewModel.state.collectAsStateWithLifecycle().value,
+                onEvent = viewModel.onEvent
+            )
+        }
+
+        composable(Destination.Screen.UserComment.route){
+            val viewModel = hiltViewModel<UserCommentViewModel>()
+            UserCommentScreen(
                 navController = navController,
                 state = viewModel.state.collectAsStateWithLifecycle().value,
                 onEvent = viewModel.onEvent

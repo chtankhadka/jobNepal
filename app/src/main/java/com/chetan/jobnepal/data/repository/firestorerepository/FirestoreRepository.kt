@@ -4,6 +4,7 @@ import com.chetan.jobnepal.data.Resource
 import com.chetan.jobnepal.data.models.academic.UploadAcademicData
 import com.chetan.jobnepal.data.models.adminpayment.AddAdminPaymentMethodResponse
 import com.chetan.jobnepal.data.models.adminpayment.PaidPaymentDetails
+import com.chetan.jobnepal.data.models.comment.UserCommentModel
 import com.chetan.jobnepal.data.models.dashboard.UploadAppliedFormDataRequest
 import com.chetan.jobnepal.data.models.formrequest.FormRequestJobDetails
 import com.chetan.jobnepal.data.models.param.UploadNewVideoLink
@@ -71,6 +72,16 @@ interface FirestoreRepository {
     suspend fun requestPaidReceipt(
         data: PaidPaymentDetails
     ): Resource<Any>
+
+    suspend fun setUserComment(
+        data : UserCommentModel
+    ) : Resource<Any>
+
+    suspend fun getUsersComment(
+        videoId: String
+    ) : Resource<List<UserCommentModel>>
+
+
 
     //Admin
     suspend fun updateNoticeUserDashboard(

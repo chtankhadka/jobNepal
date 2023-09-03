@@ -12,9 +12,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Comment
 import androidx.compose.material.icons.filled.FastForward
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material.icons.filled.YoutubeSearchedFor
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -36,16 +38,19 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.startActivity
+import androidx.navigation.NavHostController
+import com.chetan.jobnepal.Destination
 import com.chetan.jobnepal.data.models.param.UploadNewVideoLink
 import com.chetan.jobnepal.ui.component.dropdown.DropdownJobNepal
 import com.chetan.jobnepal.utils.youtubePlayer.WebContent
 
 @Composable
 fun DashboardItem(
-    list: UploadNewVideoLink,
+    data: UploadNewVideoLink,
     isApplied: Boolean,
     onEvent: (event: DashboardEvent) -> Unit,
-    state: DashboardState
+    state: DashboardState,
+    navController: NavHostController
 ) {
     val ctx = LocalContext.current
     var isVisible by remember {
@@ -76,7 +81,7 @@ fun DashboardItem(
             verticalAlignment = Alignment.CenterVertically,
 
             ) {
-            Text(text = list.title)
+            Text(text = data.title)
             DropdownJobNepal(
                 listOf(
                     Triple("Full Guid", Icons.Default.YoutubeSearchedFor, true),
@@ -85,13 +90,13 @@ fun DashboardItem(
             ) {
                 when (it) {
                     "Apply Now" -> {
-                        onEvent(DashboardEvent.ShowApplyDialog(true,list.id))
+                        onEvent(DashboardEvent.ShowApplyDialog(true, data.id))
                     }
 
                     else -> {
-                        val appIntent = Intent(Intent.ACTION_VIEW, Uri.parse(list.videoLink))
+                        val appIntent = Intent(Intent.ACTION_VIEW, Uri.parse(data.videoLink))
                         appIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        startActivity(ctx,appIntent,null)
+                        startActivity(ctx, appIntent, null)
 
                     }
                 }
@@ -99,7 +104,7 @@ fun DashboardItem(
 
             }
         }
-        WebContent(videoId = list.videoLink, modifier = Modifier.height(380.dp))
+        WebContent(videoId = data.videoLink, modifier = Modifier.height(380.dp))
 //        AsyncImage(
 //            modifier = Modifier.fillMaxWidth(),
 //            contentScale = ContentScale.FillWidth,
@@ -110,20 +115,49 @@ fun DashboardItem(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 10.dp, vertical = 5.dp)
-                ,
+                .padding(horizontal = 10.dp, vertical = 5.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 5.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = "240",
-                    modifier = Modifier.padding(horizontal = 2.dp),
-                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
-                )
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.ThumbUp,
+                        tint = if (true) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onPrimary,
+                        contentDescription = "Like"
+                    )
+                    Text(
+                        text = "240",
+                        modifier = Modifier.padding(horizontal = 2.dp),
+                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
+                    )
+                }
+                Card() {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            modifier = Modifier.clickable {
+                                navController.navigate(Destination.Screen.UserComment.route)
+                            },
+                            imageVector = Icons.Default.Comment,
+                            contentDescription = "",
+                        )
+                        Text(
+                            text = "1K",
+                            style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
+                        )
+                    }
+                }
+
                 Icon(
                     imageVector = if (!isVisible) Icons.Default.KeyboardArrowDown else Icons.Default.KeyboardArrowUp,
                     contentDescription = null,
@@ -135,68 +169,13 @@ fun DashboardItem(
             Divider(modifier = Modifier.padding(top = 5.dp, bottom = 5.dp))
             if (isVisible) {
                 Text(
-                    text = list.toString(),
+                    text = data.toString(),
                     modifier = Modifier
                         .padding(horizontal = 2.dp)
                         .fillMaxWidth(),
                     style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
                 )
             }
-
-
-//            Row(
-//                verticalAlignment = Alignment.CenterVertically
-//            ) {
-//                Icon(
-//                    imageVector = Icons.Default.ThumbUp,
-//                    tint = if (true) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onPrimary,
-//                    contentDescription = "Like"
-//                )
-//                Text(
-//                    text = "240",
-//                    modifier = Modifier.padding(horizontal = 2.dp),
-//                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
-//                )
-//                Icon(
-//                    imageVector = Icons.Default.ThumbDown,
-//                    tint = if (true) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onPrimary,
-//                    contentDescription = "Dislike"
-//                )
-//                Text(
-//                    text = "50",
-//                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
-//                )
-//            }
-//            Card() {
-//                Row(
-//                    verticalAlignment = Alignment.CenterVertically
-//                ) {
-//                    Icon(
-//                        imageVector = Icons.Default.Comment,
-//                        contentDescription = "",
-//                    )
-//                    Text(
-//                        text = "1K",
-//                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
-//                    )
-//                }
-//            }
-//            Card(
-//                enabled = !isApplied,
-//                onClick = {
-//                    onEvent(DashboardEvent.Apply(data))
-//
-//                },
-//                colors = CardDefaults.cardColors(Color.Transparent),
-//                ) {
-//                Text(
-//                    text = if (isApplied) "Applied" else "Apply",
-//                    modifier = Modifier.padding(horizontal = 2.dp),
-//                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
-//                )
-//
-//            }
-
         }
     }
 }

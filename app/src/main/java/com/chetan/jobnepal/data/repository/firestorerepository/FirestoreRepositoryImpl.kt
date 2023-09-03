@@ -5,6 +5,7 @@ import com.chetan.jobnepal.data.local.Preference
 import com.chetan.jobnepal.data.models.academic.UploadAcademicData
 import com.chetan.jobnepal.data.models.adminpayment.AddAdminPaymentMethodResponse
 import com.chetan.jobnepal.data.models.adminpayment.PaidPaymentDetails
+import com.chetan.jobnepal.data.models.comment.UserCommentModel
 import com.chetan.jobnepal.data.models.dashboard.UploadAppliedFormDataRequest
 import com.chetan.jobnepal.data.models.formrequest.FormRequestJobDetails
 import com.chetan.jobnepal.data.models.oneSignal.OneSignalId
@@ -336,6 +337,48 @@ class FirestoreRepositoryImpl @Inject constructor(
 
             Resource.Success(documentRef)
         } catch (e: Exception) {
+            e.printStackTrace()
+            Resource.Failure(e)
+        }
+    }
+
+    override suspend fun setUserComment(data: UserCommentModel): Resource<Any> {
+        return try {
+            firestore.collection("chtankhadka12")
+                .document("videoList")
+                .collection("data")
+                .document(data.videoId)
+                .collection("comment")
+                .document(data.commentId)
+                .set(data)
+                .await()
+            Resource.Success(Unit)
+        }catch (e: Exception){
+            e.printStackTrace()
+            Resource.Failure(e)
+        }
+    }
+
+    override suspend fun getUsersComment(videoId: String): Resource<List<UserCommentModel>> {
+        return try {
+            val commentList = mutableListOf<UserCommentModel>()
+
+            val doumentRef = firestore.collection("chtankhadka12")
+                .document("videoList")
+                .collection("data")
+                .document(videoId)
+                .collection("comment")
+                .get()
+                .await()
+            for (document in doumentRef.documents){
+                val data = document.toObject<UserCommentModel>()
+                data?.let {
+                    commentList.add(data)
+                }
+            }
+
+            Resource.Success(commentList)
+        }catch (e: Exception){
             e.printStackTrace()
             Resource.Failure(e)
         }
