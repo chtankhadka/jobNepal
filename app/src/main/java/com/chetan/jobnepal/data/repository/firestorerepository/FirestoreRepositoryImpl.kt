@@ -5,6 +5,7 @@ import com.chetan.jobnepal.data.local.Preference
 import com.chetan.jobnepal.data.models.academic.UploadAcademicData
 import com.chetan.jobnepal.data.models.adminpayment.AddAdminPaymentMethodResponse
 import com.chetan.jobnepal.data.models.adminpayment.PaidPaymentDetails
+import com.chetan.jobnepal.data.models.chat.UserChatModel
 import com.chetan.jobnepal.data.models.comment.UserCommentModel
 import com.chetan.jobnepal.data.models.dashboard.UploadAppliedFormDataRequest
 import com.chetan.jobnepal.data.models.formrequest.FormRequestJobDetails
@@ -14,7 +15,6 @@ import com.chetan.jobnepal.data.models.param.UserDashboardUpdateNoticeRequestRes
 import com.chetan.jobnepal.data.models.profile.UploadProfileParam
 import com.chetan.jobnepal.data.models.searchhistory.SearchHistoryRequestResponse
 import com.chetan.jobnepal.data.models.storenotification.StoreNotificationRequestResponse
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.toObject
@@ -356,6 +356,49 @@ class FirestoreRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun setUserMsg(data: UserChatModel): Resource<Any> {
+        return try {
+            firestore.collection("chtankhadka12")
+                .document("chat")
+                .collection(data.videoId)
+                .document(data.userName)
+                .collection("history")
+                .document(data.msgId)
+                .set(data)
+                .await()
+            println(data)
+            Resource.Success(Unit)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Resource.Failure(e)
+        }
+    }
+
+    override suspend fun getUsersMsg(videoId: String): Resource<List<UserChatModel>> {
+        return try {
+            val chatHistory = mutableListOf<UserChatModel>()
+            val doumentRef =
+                firestore.collection("chtankhadka12")
+                    .document("chat")
+                    .collection(videoId)
+                    .document(preference.dbTable.toString())
+                    .collection("history")
+                    .get()
+                    .await()
+            for (document in doumentRef.documents) {
+                val data = document.toObject<UserChatModel>()
+                data?.let {
+                    chatHistory.add(data)
+                }
+            }
+
+            Resource.Success(chatHistory.reversed())
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Resource.Failure(e)
+        }
+    }
+
     override suspend fun onClickedLike(videoId: String): Resource<Any> {
         return try {
             val path =
@@ -365,7 +408,7 @@ class FirestoreRepositoryImpl @Inject constructor(
 
             if (likedList.contains(preference.dbTable.toString())) {
                 path.document(preference.dbTable.toString()).delete().await()
-            }else{
+            } else {
                 path.document(preference.dbTable.toString()).set("videoId" to videoId).await()
             }
             Resource.Success(Unit)
@@ -375,7 +418,7 @@ class FirestoreRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getLikedList(videoId: String): Resource<Pair<Int,Boolean>> {
+    override suspend fun getLikedList(videoId: String): Resource<Pair<Int, Boolean>> {
         return try {
             var isLiked = false
             val query =

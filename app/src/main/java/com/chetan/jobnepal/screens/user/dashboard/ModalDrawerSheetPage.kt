@@ -146,7 +146,7 @@ fun ModalDrawerSheetPage(
                 .fillMaxHeight(),
             Arrangement.Bottom
         ) {
-            MyForm(state,onEvent)
+            MyForm(state,onEvent,navController)
         }
     }
 }

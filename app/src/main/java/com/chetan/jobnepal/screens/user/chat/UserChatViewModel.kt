@@ -1,37 +1,39 @@
-package com.chetan.jobnepal.screens.user.comment
+package com.chetan.jobnepal.screens.user.chat
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chetan.jobnepal.data.Resource
 import com.chetan.jobnepal.data.local.Preference
-import com.chetan.jobnepal.data.models.comment.UserCommentModel
+import com.chetan.jobnepal.data.models.chat.UserChatModel
 import com.chetan.jobnepal.data.repository.firestorerepository.FirestoreRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
-import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
-class UserCommentViewModel @Inject constructor(
+class UserChatViewModel @Inject constructor(
     private val firestoreRepository: FirestoreRepository,
     private val preference: Preference
 ) : ViewModel() {
-    private val _state = MutableStateFlow(UserCommentState())
-    val state: StateFlow<UserCommentState> = _state
+    private val _state = MutableStateFlow(UserChatState())
+    val state: StateFlow<UserChatState> = _state
 
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    val onEvent: (event: UserCommentEvent) -> Unit = { event ->
+    val onEvent: (event: UserChatEvent) -> Unit = { event ->
         viewModelScope.launch {
             when (event) {
-                is UserCommentEvent.GetUsersComment -> {
-                    when (val getUserComment = firestoreRepository.getUsersComment(event.value)) {
+                is UserChatEvent.GetChatHistory -> {
+                    _state.update {
+                        it.copy(
+                            videoId = event.value
+                        )
+                    }
+                    when (val chatHistory = firestoreRepository.getUsersMsg(
+                        videoId = event.value
+                    )) {
                         is Resource.Failure -> {
 
                         }
@@ -43,35 +45,37 @@ class UserCommentViewModel @Inject constructor(
                         is Resource.Success -> {
                             _state.update {
                                 it.copy(
-                                    userCommentList = getUserComment.data,
-                                    videoId = event.value
+                                    userChatHistory = chatHistory.data
                                 )
                             }
                         }
                     }
                 }
 
-                UserCommentEvent.SetUserComment -> {
-                    when (firestoreRepository.setUserComment(
-                        data = UserCommentModel(
+                UserChatEvent.SetChatHistory -> {
+                    when (firestoreRepository.setUserMsg(
+                        data = UserChatModel(
                             self = true,
-                            comment = state.value.userComment,
-                            commentId = (System.currentTimeMillis() / 1000).toString(),
+                            msg = state.value.userMsg,
+                            msgId = System.currentTimeMillis().toString(),
                             videoId = state.value.videoId,
-                            userName = preference.gmailUserName?:"Unknown User"
-
+                            userName = preference.dbTable.toString()
                         )
                     )) {
-                        is Resource.Failure -> {
-                        }
-
+                        is Resource.Failure -> {}
                         Resource.Loading -> {
 
                         }
 
                         is Resource.Success -> {
-                            when (val getUserComment =
-                                firestoreRepository.getUsersComment(state.value.videoId)) {
+                            _state.update {
+                                it.copy(
+                                    userMsg = ""
+                                )
+                            }
+                            when (val chatHistory = firestoreRepository.getUsersMsg(
+                                videoId = state.value.videoId
+                            )) {
                                 is Resource.Failure -> {
 
                                 }
@@ -83,8 +87,7 @@ class UserCommentViewModel @Inject constructor(
                                 is Resource.Success -> {
                                     _state.update {
                                         it.copy(
-                                            userCommentList = getUserComment.data.toMutableList(),
-                                            userComment = ""
+                                            userChatHistory = chatHistory.data
                                         )
                                     }
                                 }
@@ -93,10 +96,10 @@ class UserCommentViewModel @Inject constructor(
                     }
                 }
 
-                is UserCommentEvent.OnCommentChange -> {
+                is UserChatEvent.OnMsgChange -> {
                     _state.update {
                         it.copy(
-                            userComment = event.value
+                            userMsg = event.value
                         )
                     }
                 }

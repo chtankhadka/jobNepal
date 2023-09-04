@@ -1,14 +1,15 @@
-package com.chetan.jobnepal.screens.user.comment
+package com.chetan.jobnepal.screens.user.chat
 
-import android.os.Build
-import androidx.annotation.RequiresApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -31,23 +32,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import coil.compose.AsyncImage
 import com.chetan.jobnepal.ui.component.IconJobNepal
 import com.chetan.jobnepal.utils.MyDate
-import java.util.Date
 
-@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UserCommentScreen(
-    navController: NavHostController,
-    state: UserCommentState,
-    onEvent: (event: UserCommentEvent) -> Unit,
+fun UserChatScreen(
+    state: UserChatState,
+    onEvent: (event: UserChatEvent) -> Unit,
     vid: String,
+    navController: NavHostController,
 ) {
-    onEvent(UserCommentEvent.GetUsersComment(vid))
+    onEvent(UserChatEvent.GetChatHistory(vid))
     Scaffold(topBar = {
         CenterAlignedTopAppBar(
             colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
@@ -66,7 +65,7 @@ fun UserCommentScreen(
             },
             title = {
                 Text(
-                    text = "Comments", style = MaterialTheme.typography.titleLarge
+                    text = "Message", style = MaterialTheme.typography.titleLarge
                 )
             })
     }, content = {
@@ -85,44 +84,76 @@ fun UserCommentScreen(
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize(),
-                        reverseLayout = true,
+                    reverseLayout = true,
                     content = {
-                        items(state.userCommentList) { data ->
+                        items(state.userChatHistory) { data ->
+                            Spacer(modifier = Modifier.height(10.dp))
+                            Box(modifier = Modifier
+                                .fillMaxWidth()) {
                                 Card(
-                                    modifier = Modifier.padding(10.dp),
-                                    elevation = CardDefaults.cardElevation(10.dp)) {
+                                    modifier = Modifier
+                                        .padding(10.dp)
+                                        .align(if (data.self) Alignment.CenterEnd else Alignment.CenterStart),
+                                    elevation = CardDefaults.cardElevation(10.dp),
+                                    colors =
+                                    if (data.self) {
+                                        CardDefaults.cardColors(
+                                            MaterialTheme.colorScheme.primaryContainer
+                                        )
+                                    } else {
+                                        CardDefaults.cardColors()
+                                    }
+
+                                ) {
                                     Column(modifier = Modifier.padding(10.dp)) {
                                         Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
-                                            Text(text = data.userName, style = MaterialTheme.typography.titleSmall)
-                                            Text(text = MyDate.differenceOfDates(
-                                                data.commentId,System.currentTimeMillis().toString()),
+                                            Text(
+                                                text = data.userName,
+                                                style = MaterialTheme.typography.titleSmall
+                                            )
+                                            Text(
+                                                text = MyDate.differenceOfDates(
+                                                    data.msgId,
+                                                    System.currentTimeMillis().toString()
+                                                ),
                                                 style = MaterialTheme.typography.bodySmall.copy(
-                                                    color = MaterialTheme.colorScheme.outline))
+                                                    color = MaterialTheme.colorScheme.outline
+                                                )
+                                            )
                                         }
-                                        Text(text = data.comment, style = MaterialTheme.typography.bodyMedium)
+                                        Text(
+                                            text = data.msg,
+                                            style = MaterialTheme.typography.bodyMedium
+                                        )
                                     }
 
                                 }
+                            }
+
                         }
+
                     }
+
                 )
             }
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(), // Fill maximum width
-                value = state.userComment,
+                value = state.userMsg,
                 placeholder = {
                     Text(text = "Write a comment...")
                 },
                 trailingIcon = {
-                    if (state.userComment.isNotBlank()){
-                        IconButton(onClick = { onEvent(UserCommentEvent.SetUserComment) }) {
-                            Icon(imageVector = Icons.Default.Send, contentDescription = "Send Comment")
+                    if (state.userMsg.isNotBlank()) {
+                        IconButton(onClick = { onEvent(UserChatEvent.SetChatHistory) }) {
+                            Icon(
+                                imageVector = Icons.Default.Send,
+                                contentDescription = "Send Comment"
+                            )
                         }
                     }
-
                 },
                 onValueChange = {
-                    onEvent(UserCommentEvent.OnCommentChange(it))
+                    onEvent(UserChatEvent.OnMsgChange(it))
                 }
             )
         }

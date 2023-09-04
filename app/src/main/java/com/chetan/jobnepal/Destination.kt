@@ -15,6 +15,7 @@ open class Destination(open val route : String) {
         //user
 
         object UserComment : Destination("user-comment/{vid}")
+        object UserChat : Destination("user-chat/{vid}")
         object OnBoard : Destination("on-board")
         object Dashboard : Destination("dashboard")
         object SignupWithEmailPassword: Destination("signup-with-email-password")
