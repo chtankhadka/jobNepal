@@ -15,6 +15,8 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cancel
+import androidx.compose.material.icons.filled.Chat
+import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.QrCode
 import androidx.compose.material.icons.filled.Undo
 import androidx.compose.material3.Card
@@ -37,6 +39,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import com.chetan.jobnepal.Destination
 import com.chetan.jobnepal.data.models.dashboard.UploadAppliedFormDataRequest
 import com.chetan.jobnepal.screens.user.dashboard.DashboardEvent
 import com.chetan.jobnepal.screens.user.dashboard.DashboardState
@@ -48,7 +52,11 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun MyForm(state: DashboardState, onEvent: (event: DashboardEvent) -> Unit) {
+fun MyForm(
+    state: DashboardState,
+    onEvent: (event: DashboardEvent) -> Unit,
+    navController: NavHostController
+) {
     val scope = rememberCoroutineScope()
     val ctx = LocalContext.current
     val list = listOf("Pay Now", "Paid", "Admit Card")
@@ -107,6 +115,7 @@ fun MyForm(state: DashboardState, onEvent: (event: DashboardEvent) -> Unit) {
                         state.appliedListResponse.filter { it.apply == "applied" },
                         listOf(
                             Triple("Pay", Icons.Default.QrCode, true),
+                            Triple("Chat",Icons.Default.Chat, true),
                             Triple("Cancel", Icons.Default.Cancel, true)
 
                         )
@@ -115,6 +124,11 @@ fun MyForm(state: DashboardState, onEvent: (event: DashboardEvent) -> Unit) {
                             "Pay" -> {
                                 paymentId = id
                                 onEvent(DashboardEvent.OnShowPaymentDialog(true))
+                            }
+                            "Chat" -> {
+                                navController.navigate(Destination.Screen.UserChat.route.replace(
+                                    "{vid}",id
+                                ))
                             }
                             "Cancel" ->{
                                 onEvent(DashboardEvent.DeleteAppliedData(id))
@@ -133,10 +147,17 @@ fun MyForm(state: DashboardState, onEvent: (event: DashboardEvent) -> Unit) {
                     MyFormItem(
                         state.appliedListResponse.filter { it.apply == "paid" },
                         listOf(
-                            Triple("Refund", Icons.Default.Undo, true),
+                            Triple("Chat", Icons.Default.Chat, true),
                         )
                     ){ item, id ->
+                        when  (item){
+                            "Chat" -> {
+                                navController.navigate(Destination.Screen.UserChat.route.replace(
+                                    "{vid}",id
+                                ))
+                            }
 
+                        }
                     }
                 }
             }
@@ -149,11 +170,22 @@ fun MyForm(state: DashboardState, onEvent: (event: DashboardEvent) -> Unit) {
                     MyFormItem(
                         state.appliedListResponse.filter { it.apply == "done" },
                         listOf(
-                            Triple("Download", Icons.Default.Undo, true),
+                            Triple("Download", Icons.Default.Download, true),
+                            Triple("Chat", Icons.Default.Chat, true),
                         )
                     ){ item, id ->
-                        val data = state.appliedListResponse.find { it.id == id }
-                        downloader.downloadFile("https://firebasestorage.googleapis.com/v0/b/jobnepal-674cd.appspot.com/o/chtankhadka12%2FAcademic%2FSEE%2F1000012120174?alt=media&token=79166fd8-1093-40c6-a22d-1b9472820062",data?.title?:"")
+                        when  (item){
+                            "Download" -> {
+                                val data = state.appliedListResponse.find { it.id == id }
+                                downloader.downloadFile("https://firebasestorage.googleapis.com/v0/b/jobnepal-674cd.appspot.com/o/chtankhadka12%2FAcademic%2FSEE%2F1000012120174?alt=media&token=79166fd8-1093-40c6-a22d-1b9472820062",data?.title?:"")
+                            }
+                            "Chat" -> {
+                                navController.navigate(Destination.Screen.UserChat.route.replace(
+                                    "{vid}",id
+                                ))
+                            }
+                        }
+
                     }
                 }
             }

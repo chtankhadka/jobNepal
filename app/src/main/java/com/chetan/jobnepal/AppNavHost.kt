@@ -42,6 +42,8 @@ import com.chetan.jobnepal.screens.user.academic.AcademicScreen
 import com.chetan.jobnepal.screens.user.academic.AcademicViewModel
 import com.chetan.jobnepal.screens.user.account.ProfileScreen
 import com.chetan.jobnepal.screens.user.account.ProfileViewModel
+import com.chetan.jobnepal.screens.user.chat.UserChatScreen
+import com.chetan.jobnepal.screens.user.chat.UserChatViewModel
 import com.chetan.jobnepal.screens.user.comment.UserCommentScreen
 import com.chetan.jobnepal.screens.user.comment.UserCommentViewModel
 import com.chetan.jobnepal.screens.user.dashboard.DashboardScreen
@@ -182,6 +184,16 @@ fun AppNavHost(
                 state = viewModel.state.collectAsStateWithLifecycle().value,
                 onEvent = viewModel.onEvent
             )
+        }
+
+        composable(Destination.Screen.UserChat.route){
+            val viewModel = hiltViewModel<UserChatViewModel>()
+            val vid = it.arguments?.getString("vid")!!
+            UserChatScreen(
+                navController = navController,
+                state = viewModel.state.collectAsStateWithLifecycle().value,
+                onEvent = viewModel.onEvent,
+                vid = vid )
         }
 
 
