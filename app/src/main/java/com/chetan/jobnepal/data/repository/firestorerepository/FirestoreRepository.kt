@@ -81,6 +81,12 @@ interface FirestoreRepository {
         videoId: String
     ) : Resource<List<UserCommentModel>>
 
+    suspend fun onClickedLike(
+        videoId: String
+    ):Resource<Any>
+    suspend fun getLikedList(
+        videoId: String
+    ): Resource<Pair<Int,Boolean>>
 
 
     //Admin

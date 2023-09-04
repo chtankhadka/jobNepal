@@ -24,6 +24,8 @@ data class DashboardState(
     val showPaymentDialog: Boolean = false,
     val paymentMethods: List<AddAdminPaymentMethodResponse> = emptyList(),
 
+//    val likedListDetails : Pair<Int,Boolean> = 0 to false,
+
     val onChangeJobDescription: String = "",
     val showApplyDialog: Boolean = false,
     val searchText: String = "",

@@ -5,4 +5,5 @@ sealed interface UserCommentEvent{
     data object SetUserComment : UserCommentEvent
     class OnCommentChange(val value: String) : UserCommentEvent
 
+
 }

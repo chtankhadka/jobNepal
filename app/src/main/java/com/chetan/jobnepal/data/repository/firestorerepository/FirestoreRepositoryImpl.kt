@@ -14,6 +14,7 @@ import com.chetan.jobnepal.data.models.param.UserDashboardUpdateNoticeRequestRes
 import com.chetan.jobnepal.data.models.profile.UploadProfileParam
 import com.chetan.jobnepal.data.models.searchhistory.SearchHistoryRequestResponse
 import com.chetan.jobnepal.data.models.storenotification.StoreNotificationRequestResponse
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.toObject
@@ -51,12 +52,8 @@ class FirestoreRepositoryImpl @Inject constructor(
 
     override suspend fun uploadNewVideoLink(data: UploadNewVideoLink): Resource<Any> {
         return try {
-                firestore.collection("chtankhadka12")
-                .document("videoList")
-                .collection("data")
-                .document(data.id)
-                .set(data)
-                .await()
+            firestore.collection("chtankhadka12").document("videoList").collection("data")
+                .document(data.id).set(data).await()
             Resource.Success(Unit)
         } catch (e: Exception) {
             e.printStackTrace()
@@ -67,12 +64,10 @@ class FirestoreRepositoryImpl @Inject constructor(
     override suspend fun getNewVideoLink(): Resource<List<UploadNewVideoLink>> {
         return try {
             val videoList = mutableListOf<UploadNewVideoLink>()
-            val documnetRef = firestore.collection("chtankhadka12")
-                .document("videoList")
-                .collection("data")
-                .get()
-                .await()
-            for (document in documnetRef.documents){
+            val documnetRef =
+                firestore.collection("chtankhadka12").document("videoList").collection("data").get()
+                    .await()
+            for (document in documnetRef.documents) {
                 val data = document.toObject<UploadNewVideoLink>()
                 data?.let {
                     videoList.add(data)
@@ -91,12 +86,8 @@ class FirestoreRepositoryImpl @Inject constructor(
     ): Resource<Any> {
         return try {
             val documentRef =
-                firestore.collection(preference.dbTable.toString())
-                    .document("academic")
-                    .collection(data.level)
-                    .document(data.id)
-                    .set(data)
-                    .await()
+                firestore.collection(preference.dbTable.toString()).document("academic")
+                    .collection(data.level).document(data.id).set(data).await()
             Resource.Success(documentRef)
         } catch (e: Exception) {
             e.printStackTrace()
@@ -108,11 +99,8 @@ class FirestoreRepositoryImpl @Inject constructor(
         return try {
             val academicData = mutableListOf<UploadAcademicData>()
             val documentRef =
-                firestore.collection(preference.dbTable.toString())
-                    .document("academic")
-                    .collection(level)
-                    .get()
-                    .await()
+                firestore.collection(preference.dbTable.toString()).document("academic")
+                    .collection(level).get().await()
             for (document in documentRef.documents) {
                 val data = document.toObject<UploadAcademicData>()
                 data?.let {
@@ -130,9 +118,9 @@ class FirestoreRepositoryImpl @Inject constructor(
 
     override suspend fun deleteAcademicData(level: String): Resource<Any> {
         return try {
-            val collectionRef = firestore.collection(preference.dbTable.toString())
-                .document("academic")
-                .collection(level)
+            val collectionRef =
+                firestore.collection(preference.dbTable.toString()).document("academic")
+                    .collection(level)
 
             val querySnapshot = collectionRef.get().await()
 
@@ -150,12 +138,8 @@ class FirestoreRepositoryImpl @Inject constructor(
 
     override suspend fun deleteAcademicSingleAttachement(id: String, level: String): Resource<Any> {
         return try {
-            firestore.collection(preference.dbTable.toString())
-                .document("academic")
-                .collection(level)
-                .document(id)
-                .delete()
-                .await()
+            firestore.collection(preference.dbTable.toString()).document("academic")
+                .collection(level).document(id).delete().await()
             Resource.Success(Unit)
         } catch (e: Exception) {
             e.printStackTrace()
@@ -197,12 +181,8 @@ class FirestoreRepositoryImpl @Inject constructor(
     ): Resource<Any> {
         return try {
             val documentRef =
-                firestore.collection(preference.dbTable.toString())
-                    .document("appliedList")
-                    .collection("data")
-                    .document(data.id)
-                    .set(data)
-                    .await()
+                firestore.collection(preference.dbTable.toString()).document("appliedList")
+                    .collection("data").document(data.id).set(data).await()
 
             Resource.Success(documentRef)
         } catch (e: Exception) {
@@ -344,16 +324,12 @@ class FirestoreRepositoryImpl @Inject constructor(
 
     override suspend fun setUserComment(data: UserCommentModel): Resource<Any> {
         return try {
-            firestore.collection("chtankhadka12")
-                .document("videoList")
-                .collection("data")
-                .document(data.videoId)
-                .collection("comment")
-                .document(data.commentId)
-                .set(data)
+            firestore.collection("chtankhadka12").document("videoList").collection("data")
+                .document(data.videoId).collection("comment").document(data.commentId).set(data)
                 .await()
+            println(data)
             Resource.Success(Unit)
-        }catch (e: Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
             Resource.Failure(e)
         }
@@ -363,22 +339,53 @@ class FirestoreRepositoryImpl @Inject constructor(
         return try {
             val commentList = mutableListOf<UserCommentModel>()
 
-            val doumentRef = firestore.collection("chtankhadka12")
-                .document("videoList")
-                .collection("data")
-                .document(videoId)
-                .collection("comment")
-                .get()
-                .await()
-            for (document in doumentRef.documents){
+            val doumentRef =
+                firestore.collection("chtankhadka12").document("videoList").collection("data")
+                    .document(videoId).collection("comment").get().await()
+            for (document in doumentRef.documents) {
                 val data = document.toObject<UserCommentModel>()
                 data?.let {
                     commentList.add(data)
                 }
             }
 
-            Resource.Success(commentList)
-        }catch (e: Exception){
+            Resource.Success(commentList.reversed())
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Resource.Failure(e)
+        }
+    }
+
+    override suspend fun onClickedLike(videoId: String): Resource<Any> {
+        return try {
+            val path =
+                firestore.collection("chtankhadka12").document("videoList").collection("data")
+                    .document(videoId).collection("liked")
+            val likedList: List<String> = path.get().await().documents.map { it.id }
+
+            if (likedList.contains(preference.dbTable.toString())) {
+                path.document(preference.dbTable.toString()).delete().await()
+            }else{
+                path.document(preference.dbTable.toString()).set("videoId" to videoId).await()
+            }
+            Resource.Success(Unit)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Resource.Failure(e)
+        }
+    }
+
+    override suspend fun getLikedList(videoId: String): Resource<Pair<Int,Boolean>> {
+        return try {
+            var isLiked = false
+            val query =
+                firestore.collection("chtankhadka12").document("videoList").collection("data")
+                    .document(videoId).collection("liked").get().await().documents.map { it.id }
+            if (query.contains(preference.dbTable.toString())) {
+                isLiked = true
+            }
+            Resource.Success(query.size to isLiked)
+        } catch (e: Exception) {
             e.printStackTrace()
             Resource.Failure(e)
         }
@@ -429,8 +436,7 @@ class FirestoreRepositoryImpl @Inject constructor(
 
     override suspend fun changeFormRequestToPaid(user: String, videoId: String): Resource<Any> {
         return try {
-            firestore.collection(user).document("appliedList")
-                .collection("data").document(videoId)
+            firestore.collection(user).document("appliedList").collection("data").document(videoId)
                 .update("apply", "paid").await()
             firestore.collection("chtankhadka12").document("paidReceipt").collection("videoId")
                 .document(videoId).collection("data").document(user).update("approved", true)
@@ -443,18 +449,12 @@ class FirestoreRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getAppliedFormDetails(
-        user: String,
-        videoId: String
+        user: String, videoId: String
     ): Resource<FormRequestJobDetails> {
         return try {
             val formDetails: FormRequestJobDetails
-            val documentRef = firestore.collection(user)
-                .document("appliedList")
-                .collection("data")
-                .document(videoId)
-                .get()
-                .await()
-                .toObject<FormRequestJobDetails>()
+            val documentRef = firestore.collection(user).document("appliedList").collection("data")
+                .document(videoId).get().await().toObject<FormRequestJobDetails>()
             formDetails = documentRef ?: FormRequestJobDetails()
             Resource.Success(formDetails)
         } catch (e: Exception) {

@@ -175,7 +175,9 @@ fun AppNavHost(
 
         composable(Destination.Screen.UserComment.route){
             val viewModel = hiltViewModel<UserCommentViewModel>()
+            val vid = it.arguments?.getString("vid")!!
             UserCommentScreen(
+                vid = vid,
                 navController = navController,
                 state = viewModel.state.collectAsStateWithLifecycle().value,
                 onEvent = viewModel.onEvent

@@ -18,11 +18,15 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material.icons.filled.YoutubeSearchedFor
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -56,6 +60,7 @@ fun DashboardItem(
     var isVisible by remember {
         mutableStateOf(false)
     }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -125,39 +130,22 @@ fun DashboardItem(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.ThumbUp,
-                        tint = if (true) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onPrimary,
-                        contentDescription = "Like"
-                    )
-                    Text(
-                        text = "240",
-                        modifier = Modifier.padding(horizontal = 2.dp),
-                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
-                    )
-                }
                 Card() {
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
                             modifier = Modifier.clickable {
-                                navController.navigate(Destination.Screen.UserComment.route)
+                                navController.navigate(Destination.Screen.UserComment.route.replace(
+                                    "{vid}",data.id
+                                ))
                             },
                             imageVector = Icons.Default.Comment,
                             contentDescription = "",
                         )
-                        Text(
-                            text = "1K",
-                            style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
-                        )
+
                     }
                 }
-
                 Icon(
                     imageVector = if (!isVisible) Icons.Default.KeyboardArrowDown else Icons.Default.KeyboardArrowUp,
                     contentDescription = null,

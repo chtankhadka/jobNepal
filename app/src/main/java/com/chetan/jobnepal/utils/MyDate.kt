@@ -27,14 +27,36 @@ object MyDate {
         val minutes = TimeUnit.MILLISECONDS.toMinutes(duration) % 60
         val seconds = TimeUnit.MILLISECONDS.toSeconds(duration) % 60
 
-        return if (days != 0L) {
-            "$days days ago"
-        } else if (hours != 0L) {
-            "$hours hours ago"
-        } else if (minutes != 0L) {
-            "$minutes minutes ago"
-        } else {
-            "just a moment ago"
+        return when {
+            days != 0L -> if (days == 1L) "$days day ago" else "$days days ago"
+            hours != 0L -> if (hours == 1L) "$hours hour ago" else "$hours hours ago"
+            minutes != 0L -> if (minutes == 1L) "$minutes minute ago" else "$minutes minutes ago"
+            else -> "just now"
         }
+//
+//        (days != 0L) {
+//            if (days == 1L ){
+//                "$days day ago"
+//            }else{
+//                "$days days ago"
+//            }
+//
+//        } else if (hours != 0L) {
+//            if (hours == 1L){
+//                "$hours hour ago"
+//            }else{
+//                "$hours hours ago"
+//            }
+//
+//        } else if (minutes != 0L) {
+//            if (minutes == 1L){
+//                "$minutes minute ago"
+//            }else{
+//                "$minutes minutes ago"
+//            }
+//
+//        } else {
+//            "just now"
+//        }
     }
 }

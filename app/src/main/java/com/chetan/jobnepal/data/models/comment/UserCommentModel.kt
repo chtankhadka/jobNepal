@@ -5,5 +5,5 @@ data class UserCommentModel(
     val comment: String = "",
     val commentId: String = "",
     val videoId : String = "",
-    val date : String = "",
+    val userName: String = ""
 )
