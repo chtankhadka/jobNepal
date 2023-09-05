@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Chat
 import androidx.compose.material.icons.filled.Contacts
 import androidx.compose.material.icons.filled.LibraryBooks
 import androidx.compose.material.icons.filled.LocalOffer
@@ -69,6 +70,7 @@ fun ModalDrawerSheetPage(
             MenuItem.Offer,
             MenuItem.Payments,
             MenuItem.FormRequest,
+            MenuItem.ChatRequest,
             MenuItem.Documents
         )
 
@@ -100,5 +102,6 @@ sealed class MenuItem(val icon: ImageVector, val label: String){
     object Offer : MenuItem(Icons.Default.LocalOffer, "Offer")
     object Payments : MenuItem(Icons.Default.Payments, "Payments")
     object FormRequest: MenuItem(Icons.Default.MenuBook, "Form Request")
+    object ChatRequest: MenuItem(Icons.Default.Chat,"Chat Request")
     object Documents : MenuItem(Icons.Default.LibraryBooks, "Documents")
 }

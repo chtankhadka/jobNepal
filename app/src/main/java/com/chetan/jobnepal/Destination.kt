@@ -11,6 +11,7 @@ open class Destination(open val route : String) {
         object AdminPayment: Destination("admin-payment")
         object AdminBottomSheetNotice: Destination("admin-bottom-sheet-notification")
         object UserFormRequestScreen: Destination("user-form-request-screen")
+        object AdminChat : Destination("admin-chat")
 
         //user
 

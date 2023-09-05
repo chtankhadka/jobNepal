@@ -4,6 +4,7 @@ import com.chetan.jobnepal.data.Resource
 import com.chetan.jobnepal.data.models.academic.UploadAcademicData
 import com.chetan.jobnepal.data.models.adminpayment.AddAdminPaymentMethodResponse
 import com.chetan.jobnepal.data.models.adminpayment.PaidPaymentDetails
+import com.chetan.jobnepal.data.models.chat.ChatNotificationModel
 import com.chetan.jobnepal.data.models.chat.UserChatModel
 import com.chetan.jobnepal.data.models.comment.UserCommentModel
 import com.chetan.jobnepal.data.models.dashboard.UploadAppliedFormDataRequest
@@ -116,6 +117,15 @@ interface FirestoreRepository {
         videoId: String
     ): Resource<FormRequestJobDetails>
     suspend fun getUserPaymentVideoIdList() : Resource<List<String>>
+
+    suspend fun getVideoIdList() : Resource<List<String>>
+    suspend fun getChatRequestUsers(videoId: String) :
+            Resource<List<ChatNotificationModel>>
+
+    suspend fun getUsersAdminMsg(
+        videoId: String,
+        userId: String
+    ) : Resource<List<UserChatModel>>
 
 
     //for oneSignal notification

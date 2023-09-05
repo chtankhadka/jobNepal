@@ -5,6 +5,7 @@ import com.chetan.jobnepal.data.local.Preference
 import com.chetan.jobnepal.data.models.academic.UploadAcademicData
 import com.chetan.jobnepal.data.models.adminpayment.AddAdminPaymentMethodResponse
 import com.chetan.jobnepal.data.models.adminpayment.PaidPaymentDetails
+import com.chetan.jobnepal.data.models.chat.ChatNotificationModel
 import com.chetan.jobnepal.data.models.chat.UserChatModel
 import com.chetan.jobnepal.data.models.comment.UserCommentModel
 import com.chetan.jobnepal.data.models.dashboard.UploadAppliedFormDataRequest
@@ -358,14 +359,19 @@ class FirestoreRepositoryImpl @Inject constructor(
 
     override suspend fun setUserMsg(data: UserChatModel): Resource<Any> {
         return try {
-            firestore.collection("chtankhadka12")
+            val path = firestore.collection("chtankhadka12")
                 .document("chat")
                 .collection(data.videoId)
                 .document(data.userName)
-                .collection("history")
+            path.collection("history")
                 .document(data.msgId)
                 .set(data)
                 .await()
+            path.set(ChatNotificationModel(
+                newFromAdmin = false,
+                newFromUser = true,
+                user = data.userName,
+            )).await()
             println(data)
             Resource.Success(Unit)
         } catch (e: Exception) {
@@ -519,6 +525,71 @@ class FirestoreRepositoryImpl @Inject constructor(
             println(videoIdList)
 
             Resource.Success(videoIdList)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Resource.Failure(e)
+        }
+    }
+
+    override suspend fun getVideoIdList(): Resource<List<String>> {
+        return try {
+            val videoIdList = mutableListOf<String>()
+            val query = firestore.collection("chtankhadka12")
+                .document("videoList")
+                .collection("data")
+                .get()
+                .await()
+            for (document in query.documents) {
+                videoIdList.add(document.id)
+            }
+            Resource.Success(videoIdList)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Resource.Failure(e)
+        }
+    }
+    override suspend fun getChatRequestUsers(videoId: String): Resource<List<ChatNotificationModel>> {
+        return try {
+            val users = mutableListOf<ChatNotificationModel>()
+            val query = firestore.collection("chtankhadka12")
+                .document("chat")
+                .collection(videoId)
+                .get()
+                .await()
+            for (document in query.documents) {
+                val pairData = document.toObject<ChatNotificationModel>()
+                pairData?.let { data ->
+                    users.add(data)
+                }
+            }
+            Resource.Success(users)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Resource.Failure(e)
+        }
+    }
+
+    override suspend fun getUsersAdminMsg(
+        videoId: String,
+        userId: String
+    ): Resource<List<UserChatModel>> {
+        return try {
+            val chatHistory = mutableListOf<UserChatModel>()
+            val doumentRef =
+                firestore.collection("chtankhadka12")
+                    .document("chat")
+                    .collection(videoId)
+                    .document(userId)
+                    .collection("history")
+                    .get()
+                    .await()
+            for (document in doumentRef.documents) {
+                val data = document.toObject<UserChatModel>()
+                data?.let {
+                    chatHistory.add(data)
+                }
+            }
+            Resource.Success(chatHistory.reversed())
         } catch (e: Exception) {
             e.printStackTrace()
             Resource.Failure(e)

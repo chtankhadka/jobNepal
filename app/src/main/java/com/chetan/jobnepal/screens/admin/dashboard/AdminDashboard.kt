@@ -99,6 +99,10 @@ fun AdminDashboard(
                             MenuItem.FormRequest -> {
                                 navController.navigate(Destination.Screen.UserFormRequestScreen.route)
                             }
+
+                            MenuItem.ChatRequest -> {
+                                navController.navigate(Destination.Screen.AdminChat.route)
+                            }
                         }
                     }
                 )

@@ -20,6 +20,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.chetan.jobnepal.screens.admin.adminbottomsheet.AdminBottomSheetScreen
 import com.chetan.jobnepal.screens.admin.adminbottomsheet.AdminBottomSheetViewModel
+import com.chetan.jobnepal.screens.admin.chat.AdminChatScreen
+import com.chetan.jobnepal.screens.admin.chat.AdminChatViewModel
 import com.chetan.jobnepal.screens.admin.dashboard.AdminDashboard
 import com.chetan.jobnepal.screens.admin.dashboard.AdminDashboardViewModel
 import com.chetan.jobnepal.screens.admin.formrequest.FormRequestScreen
@@ -253,10 +255,15 @@ fun AppNavHost(
                 onEvent = viewModel.onEvent
             )
         }
+        composable(Destination.Screen.AdminChat.route){
+            val viewModel = hiltViewModel<AdminChatViewModel>()
 
-
-
-
+            AdminChatScreen(
+                navController = navController,
+                state = viewModel.state.collectAsStateWithLifecycle().value,
+                onEvent = viewModel.onEvent
+            )
+        }
 
         composable("academic") {
             val viewModel = hiltViewModel<AcademicViewModel>()

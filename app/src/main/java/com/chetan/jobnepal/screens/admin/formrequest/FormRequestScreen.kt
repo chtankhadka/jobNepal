@@ -356,7 +356,7 @@ fun FormRequestItem(
     }
     if (showJobDetails){
         FormRequestJobDetailsDialog(
-            listOfJobs = userAppliedFormDetails) {
+            jobDetails = userAppliedFormDetails.jobInfo) {
             showJobDetails = false
         }
     }
