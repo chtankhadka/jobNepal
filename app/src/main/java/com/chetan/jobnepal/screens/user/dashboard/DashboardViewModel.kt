@@ -248,7 +248,8 @@ class DashboardViewModel @Inject constructor(
                     }
 
                 }
-                 DashboardEvent.ApplyNow -> {
+
+                DashboardEvent.ApplyNow -> {
                     _state.update {
                         it.copy(
                             infoMsg = Message.Loading(
@@ -293,6 +294,7 @@ class DashboardViewModel @Inject constructor(
                             _state.update {
                                 it.copy(
                                     infoMsg = null,
+                                    showApplyDialog = false
                                 )
                             }
                             getAppliedFormData()
@@ -300,7 +302,6 @@ class DashboardViewModel @Inject constructor(
                         }
                     }
                 }
-
 
 
                 DashboardEvent.Logout -> {

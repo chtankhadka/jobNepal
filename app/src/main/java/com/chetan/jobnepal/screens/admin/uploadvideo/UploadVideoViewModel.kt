@@ -62,6 +62,7 @@ class UploadVideoViewModel @Inject constructor(
                                 description = state.description,
                                 videoLink = state.url,
                                 publishedTime = state.publishedTime,
+                                province = state.editProvince
                             )
 
                         )
@@ -78,9 +79,19 @@ class UploadVideoViewModel @Inject constructor(
                             Resource.Loading -> {
 
                             }
+
                             is Resource.Success -> {
                                 _state.update {
-                                    it.copy(infoMsg = null)
+                                    it.copy(
+                                        infoMsg = null,
+                                        editProvince = "",
+                                        id = "",
+                                        url = "",
+                                        title = "",
+                                        description = "",
+                                        publishedTime = "",
+                                        videoList = emptyList()
+                                    )
                                 }
                             }
                         }

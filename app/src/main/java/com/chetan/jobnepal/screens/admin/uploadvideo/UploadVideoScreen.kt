@@ -134,12 +134,12 @@ fun UploadVideoScreen(
             ) {
                 val provienceList = listOf(
                     "Province 1",
-                    "Province 2",
-                    "Province 3",
-                    "Province 4",
-                    "Province 5",
-                    "Province 6",
-                    "Province 7"
+                    "Madhesh",
+                    "Bagmati",
+                    "Gandaki",
+                    "Lumbini",
+                    "Karnali",
+                    "Sudurpaschim"
                 )
                 ReadonlyJobNepalTextField(
                     modifier = Modifier.weight(1f),
@@ -159,6 +159,7 @@ fun UploadVideoScreen(
                             Text(text = it)
                         }, onClick = {
                             onEvent(UploadVideoEvent.OnSelectProvince(it))
+                            expanded = false
                         })
                     }
                 }
