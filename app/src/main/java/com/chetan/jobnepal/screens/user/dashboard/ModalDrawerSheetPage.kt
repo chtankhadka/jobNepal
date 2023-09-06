@@ -11,14 +11,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Contacts
-import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Book
+import androidx.compose.material.icons.filled.Details
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Logout
+import androidx.compose.material.icons.filled.ManageAccounts
 import androidx.compose.material.icons.filled.PrivacyTip
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -26,9 +28,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.chetan.jobnepal.Destination
+import com.chetan.jobnepal.R
 import com.chetan.jobnepal.screens.user.dashboard.myForm.MyForm
 import com.chetan.jobnepal.ui.component.dialogs.AboutUsDialog
 import com.chetan.jobnepal.ui.component.dialogs.PrivacyPolicyDialog
@@ -41,7 +46,7 @@ fun ModalDrawerSheetPage(
     state: DashboardState,
     onClick: (String) -> Unit,
     onEvent: (event: DashboardEvent) -> Unit,
-    ) {
+) {
 
     var showDialog by remember {
         mutableStateOf(false)
@@ -70,35 +75,46 @@ fun ModalDrawerSheetPage(
             modifier = Modifier
                 .fillMaxWidth()
         ) {
-            ProfileAnimation(size = 100.dp,padding = 10.dp, uri = state.profileUrl,enableEdit = false)
+            ProfileAnimation(
+                size = 100.dp,
+                padding = 10.dp,
+                uri = state.profileUrl,
+                enableEdit = false
+            )
             Column(
-                modifier = Modifier.padding(vertical = 10.dp)
+                modifier = Modifier
+                    .padding(vertical = 10.dp)
+                    .height(70.dp),
+                verticalArrangement = Arrangement.Bottom
             ) {
 
-                Text(text = state.currentUserName)
-                Text(text = "Form Requested: 4")
-                Text(text = "Attend Exam: 1")
+                Text(text = state.currentUserName, style = MaterialTheme.typography.titleMedium)
+//                Text(text = "Form Requested: 4")
+//                Text(text = "Attend Exam: 1")
             }
             val list = listOf(
-                Triple("Nepali", Icons.Default.Language,true),
-                Triple("About Us" , Icons.Default.Contacts,true),
-                Triple("Privacy & Policy", Icons.Default.PrivacyTip, true),
-                Triple("Logout" , Icons.Default.Logout,true),
-                )
-            DropdownJobNepalSetting(list,state,onEvent,onClick ={
-                when (it){
-                    "Logout" -> {
+                SettingItem.Nepali,
+                SettingItem.About_Us,
+                SettingItem.Privacy_Policy,
+                SettingItem.Logout
+            )
+            DropdownJobNepalSetting(list, state, onEvent, onClick = {
+                when (it) {
+                    SettingItem.Nepali -> {
                         onEvent(DashboardEvent.Logout)
-                        onClick("logout")
-                    }
-                    "Nepali" -> {
                         onClick("Nepali")
                     }
-                    "Privacy & Policy" ->{
-                        showDialog = true
-                    }
-                    "About Us" -> {
+
+                    SettingItem.About_Us -> {
                         showAboutUsDialog = true
+                    }
+
+                    SettingItem.Logout -> {
+                        onClick("logout")
+                    }
+
+                    SettingItem.Privacy_Policy -> {
+                        showDialog = true
                     }
                 }
             })
@@ -110,19 +126,22 @@ fun ModalDrawerSheetPage(
                 .height(2.dp)
         )
         val menuList = listOf(
-            Icons.Default.Home to "Profile",
-            Icons.Default.Contacts to "Documents"
+            MenuItem.Profile,
+            MenuItem.Documents
         )
 
         menuList.forEach {
             Spacer(modifier = Modifier.height(5.dp))
             ElevatedCard(
                 modifier = Modifier.clickable {
-                  if (it.second == "Documents")  {
-                      navController.navigate(Destination.Screen.Academic.route)
-                  }
-                    if (it.second == "Profile"){
-                        navController.navigate(Destination.Screen.ProfileScreen.route)
+                    when (it) {
+                        MenuItem.Profile -> {
+                            navController.navigate(Destination.Screen.ProfileScreen.route)
+                        }
+
+                        MenuItem.Documents -> {
+                            navController.navigate(Destination.Screen.Academic.route)
+                        }
                     }
                 },
                 shape = RoundedCornerShape(5.dp)
@@ -130,11 +149,11 @@ fun ModalDrawerSheetPage(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 7.dp),
+                        .padding(7.dp),
                     horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    Icon(imageVector = it.first, contentDescription = "")
-                    Text(text = it.second)
+                    Icon(imageVector = it.icon, contentDescription = "")
+                    Text(text = stringResource(id = it.label))
                 }
             }
 
@@ -146,7 +165,20 @@ fun ModalDrawerSheetPage(
                 .fillMaxHeight(),
             Arrangement.Bottom
         ) {
-            MyForm(state,onEvent,navController)
+            MyForm(state, onEvent, navController)
         }
     }
+}
+
+
+sealed class MenuItem(val icon: ImageVector, val label: Int) {
+    object Profile : MenuItem(Icons.Default.ManageAccounts, R.string.profile)
+    object Documents : MenuItem(Icons.Default.Book, R.string.documents)
+}
+
+sealed class SettingItem(val label: Int, val icon: ImageVector, val active: Boolean) {
+    object Nepali : SettingItem(R.string.language, Icons.Default.Language, true)
+    object About_Us : SettingItem(R.string.about_us, Icons.Default.Details, true)
+    object Privacy_Policy : SettingItem(R.string.privacy_policy, Icons.Default.PrivacyTip, true)
+    object Logout : SettingItem(R.string.logout, Icons.Default.Logout, true)
 }

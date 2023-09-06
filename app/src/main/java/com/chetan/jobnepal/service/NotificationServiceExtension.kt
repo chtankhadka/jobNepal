@@ -14,7 +14,6 @@ import kotlinx.coroutines.launch
 class NotificationServiceExtension : OneSignal.OSRemoteNotificationReceivedHandler {
     override fun remoteNotificationReceived(context: Context?, notificationReceivedEvent: OSNotificationReceivedEvent?) {
         try {
-            println("I am called")
             val notification = notificationReceivedEvent?.notification
             val hiltEntryPoint =
                 EntryPointAccessors.fromApplication(context!!, HiltEntryPoint::class.java)

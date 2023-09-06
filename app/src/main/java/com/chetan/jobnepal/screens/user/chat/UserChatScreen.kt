@@ -144,7 +144,9 @@ fun UserChatScreen(
                 },
                 trailingIcon = {
                     if (state.userMsg.isNotBlank()) {
-                        IconButton(onClick = { onEvent(UserChatEvent.SetChatHistory) }) {
+                        IconButton(onClick = {
+                            onEvent(UserChatEvent.SetChatHistory)
+                        }) {
                             Icon(
                                 imageVector = Icons.Default.Send,
                                 contentDescription = "Send Comment"

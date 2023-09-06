@@ -3,6 +3,7 @@ package com.chetan.jobnepal.screens.user.notification
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chetan.jobnepal.data.Resource
+import com.chetan.jobnepal.data.local.Preference
 import com.chetan.jobnepal.data.models.storenotification.StoreNotificationRequestResponse
 import com.chetan.jobnepal.data.repository.firestorerepository.FirestoreRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,12 +15,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class UserNotificationViewModel @Inject constructor(
-    private val firebaseRepository: FirestoreRepository
+    private val firebaseRepository: FirestoreRepository,
+    private val preference: Preference
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(UserNotificationState())
     val state: StateFlow<UserNotificationState> = _state
  init {
+     preference.isRingBell = false
      getNotification()
  }
 

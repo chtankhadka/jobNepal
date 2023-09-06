@@ -9,11 +9,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddBox
@@ -27,6 +27,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -38,17 +39,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import com.chetan.jobnepal.R
 import com.chetan.jobnepal.ui.component.IconJobNepal
 import com.chetan.jobnepal.ui.component.dialogs.AcademicDialog
 import com.chetan.jobnepal.ui.component.dialogs.MessageDialog
 import com.chetan.jobnepal.ui.component.dropdown.CascadeDropdownMenuJobNepal
 import com.chetan.jobnepal.ui.component.dropdown.DropdownJobNepal
+import com.chetan.jobnepal.utils.LoadLottieAnimation
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -66,22 +69,29 @@ fun AcademicScreen(
     var alertDialog by remember {
         mutableStateOf(false)
     }
-    if (alertDialog){
+    if (alertDialog) {
         Dialog(
             onDismissRequest = { alertDialog = false }) {
-            Card(elevation = CardDefaults.cardElevation(10.dp)) {
-                Column(modifier = Modifier.padding(10.dp),
-                    horizontalAlignment =Alignment.CenterHorizontally){
-                    Text(text = "Are you sure \n want to delete ?")
+            Card(modifier = Modifier.padding( 30.dp),elevation = CardDefaults.cardElevation(10.dp)) {
+                Column(
+                    modifier = Modifier.padding(10.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    LoadLottieAnimation(modifier = Modifier.size(100.dp), image = R.raw.delete_simple)
+                    Text(text = "Are you sure \n want to delete ?", textAlign = TextAlign.Center)
                     Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                        Button(onClick = {
+                        Button(
+                            modifier = Modifier.weight(0.5f),
+                            onClick = {
                             onEvent(AcademicEvent.Delete)
                             alertDialog = false
                         }) {
                             Text(text = "Yes")
 
                         }
-                        Button(onClick = {
+                        Button(
+                            modifier = Modifier.weight(0.5f),
+                            onClick = {
                             alertDialog = false
                         }) {
                             Text(text = "Cancel")
@@ -162,17 +172,17 @@ fun AcademicScreen(
                             text = if (state.selectedLevel.isEmpty()) "Load Your Data" else state.selectedLevel,
                             style = MaterialTheme.typography.titleMedium
                         )
-                        CascadeDropdownMenuJobNepal(expanded = showAcademicDropDownList,
-                            onDismiss = {
-                                showAcademicDropDownList = false
-                            },
-                            onLevelSelected = {
-                                onEvent(AcademicEvent.GetAcademicEvent(it))
-                                showAcademicDropDownList = false
-                            })
+                            CascadeDropdownMenuJobNepal(expanded = showAcademicDropDownList,
+                                onDismiss = {
+                                    showAcademicDropDownList = false
+                                },
+                                onLevelSelected = {
+                                    onEvent(AcademicEvent.GetAcademicEvent(it))
+                                    showAcademicDropDownList = false
+                                })
                     }
                 }
-                if (state.selectedLevel.isNotEmpty()){
+                if (!state.academicListResponse.isEmpty()){
                     Card(elevation = CardDefaults.cardElevation(10.dp)) {
 
                         DropdownJobNepal(
@@ -181,11 +191,12 @@ fun AcademicScreen(
                                 Triple("Delete", Icons.Default.Delete, true)
                             )
                         ) {
-                            when(it){
+                            when (it) {
                                 "Edit" -> {
                                     onEvent(AcademicEvent.ShowEdit(true))
                                 }
-                                else ->{
+
+                                else -> {
                                     alertDialog = true
                                 }
                             }

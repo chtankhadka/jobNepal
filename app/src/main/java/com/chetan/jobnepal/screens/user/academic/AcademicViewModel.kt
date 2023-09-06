@@ -131,7 +131,7 @@ class AcademicViewModel @Inject constructor(
                 AcademicEvent.Delete -> {
                     _state.update {
                         it.copy(
-                            infoMsg = Message.Loading(description = "deleting", yesNoRequired = false)
+                            infoMsg = Message.Loading(description = "deleting...", yesNoRequired = false)
                         )
                     }
                     val resource = storageRepository.deleteAcademicAtachements(
@@ -151,7 +151,11 @@ class AcademicViewModel @Inject constructor(
 
                         is Resource.Loading -> {}
                         is Resource.Success -> {
-
+                                _state.update {
+                                    it.copy(
+                                        academicListResponse = emptyList()
+                                    )
+                                }
                         }
                     }
 

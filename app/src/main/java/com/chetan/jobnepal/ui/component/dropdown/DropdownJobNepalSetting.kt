@@ -19,18 +19,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import com.chetan.jobnepal.screens.user.dashboard.DashboardEvent
 import com.chetan.jobnepal.screens.user.dashboard.DashboardState
+import com.chetan.jobnepal.screens.user.dashboard.SettingItem
 
 @Composable
 fun DropdownJobNepalSetting(
-    list: List<Triple<String, ImageVector, Boolean>>,
+    list: List<SettingItem>,
     state: DashboardState,
     onEvent: (event: DashboardEvent) -> Unit,
-    onClick: (String) -> Unit
+    onClick: (SettingItem) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
     Box(
@@ -49,32 +50,33 @@ fun DropdownJobNepalSetting(
             onDismissRequest = { expanded = false }
         ) {
             list.forEach { tripleValue ->
+                val clickedString = stringResource(id = tripleValue.label)
                 Row(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     DropdownMenuItem(
                         modifier = Modifier.weight(1f),
-                        text = { Text(tripleValue.first) },
+                        text = { Text(stringResource(id = tripleValue.label)) },
                         leadingIcon = {
                             Icon(
-                                imageVector = tripleValue.second,
-                                contentDescription = tripleValue.first
+                                imageVector = tripleValue.icon,
+                                contentDescription = stringResource(id = tripleValue.label)
                             )
                         },
                         onClick = {
-                                  if (tripleValue.first !="Nepali")
-                                      onClick(tripleValue.first)
+
+                            if (clickedString != "Nepali")
+                                onClick(tripleValue)
                         },
                     )
-                    if (tripleValue.first == "Nepali"){
+                    if (clickedString == "Nepali") {
                         Switch(
                             modifier = Modifier
-                                .semantics { contentDescription = "Demo" }
-                            ,
-                            checked = state.nepaliLanguage ,
+                                .semantics { contentDescription = "Demo" },
+                            checked = state.nepaliLanguage,
                             onCheckedChange = {
                                 onEvent(DashboardEvent.ChangeLanguage(it))
-                                onClick(tripleValue.first)
+                                onClick(tripleValue)
                             })
                     }
 

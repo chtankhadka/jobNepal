@@ -66,7 +66,9 @@ class FirestoreRepositoryImpl @Inject constructor(
         return try {
             val videoList = mutableListOf<UploadNewVideoLink>()
             val documnetRef =
-                firestore.collection("chtankhadka12").document("videoList").collection("data").get()
+                firestore.collection("chtankhadka12")
+                    .document("videoList")
+                    .collection("data").get()
                     .await()
             for (document in documnetRef.documents) {
                 val data = document.toObject<UploadNewVideoLink>()
@@ -368,8 +370,8 @@ class FirestoreRepositoryImpl @Inject constructor(
                 .set(data)
                 .await()
             path.set(ChatNotificationModel(
-                newFromAdmin = false,
-                newFromUser = true,
+                newFromAdmin = !data.self,
+                newFromUser = data.self,
                 user = data.userName,
             )).await()
             println(data)
@@ -599,6 +601,7 @@ class FirestoreRepositoryImpl @Inject constructor(
     // oneSignal Notification
     override suspend fun saveNotification(data: StoreNotificationRequestResponse): Resource<Any> {
         return try {
+            preference.isRingBell = true
             val documentRef =
                 firestore.collection(preference.dbTable.toString()).document("notificationData")
                     .collection("data").document(data.time).set(data).await()

@@ -97,9 +97,9 @@ class AdminChatViewModel @Inject constructor(
                 AdminChatEvent.SetChatHistory -> {
                     when (firestoreRepository.setUserMsg(
                         data = UserChatModel(
-                            self = true,
+                            self = false,
                             msg = state.value.userMsg,
-                            msgId = System.currentTimeMillis().toString(),
+                            msgId = (System.currentTimeMillis() / 1000L).toString(),
                             videoId = state.value.vId,
                             userName = state.value.user
                         )

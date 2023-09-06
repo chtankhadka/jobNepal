@@ -8,14 +8,18 @@
     <string name="female">Female</string>
     <string name="upload_data">Upload Data</string>
     <string name="profile">Profile</string>
-    <string name="primary_level">Primary Level</string>
-    <string name="secondary_level">Secondary Level</string>
-    <string name="higher_secondary_level">Higher Secondary Level</string>
-    <string name="primary_level_license">Primary Level License</string>
-    <string name="secondary_level_license">Secondary Level License</string>
-    <string name="higher_secondary_level_license">Higher Secondary Level License</string>
+
     <string name="teacher">Teacher</string>
-    <string name="nontechnicallist">nonTechnicalList</string>
     <string name="physically_disabled">Physically Disabled</string>
     <string name="ethnic_group">Ethnic Group</string>
+    <string name="upload_receipt">Upload Receipt</string>
+    <string name="send">Send</string>
+    <string name="documents">Documents</string>
+    <string name="language">Nepali</string>
+    <string name="about_us">About Us</string>
+    <string name="privacy_policy"><![CDATA[Privacy & Policy]]></string>
+    <string name="logout">Logout</string>
+    <string name="pay_now">Pay Now</string>
+    <string name="paid">Paid</string>
+    <string name="admit_card">Admit Card</string>
 </resources>

@@ -57,7 +57,7 @@ class UserChatViewModel @Inject constructor(
                         data = UserChatModel(
                             self = true,
                             msg = state.value.userMsg,
-                            msgId = System.currentTimeMillis().toString(),
+                            msgId = (System.currentTimeMillis() / 1000L).toString(),
                             videoId = state.value.videoId,
                             userName = preference.dbTable.toString()
                         )

@@ -227,7 +227,7 @@ fun ChatingDialog(
         onDismissRequest = { }) {
         Column(
             modifier = Modifier
-                .padding(horizontal = 10.dp, vertical = 20.dp)
+                .padding( vertical = 20.dp)
                 .background(color = MaterialTheme.colorScheme.onPrimary, shape = RoundedCornerShape(10.dp))
                 .fillMaxSize(), // Fill maximum height
             verticalArrangement = Arrangement.SpaceBetween
@@ -313,7 +313,7 @@ fun ChatingDialog(
                 }
             }
             OutlinedTextField(
-                modifier = Modifier.fillMaxWidth(), // Fill maximum width
+                modifier = Modifier.fillMaxWidth().padding(5.dp), // Fill maximum width
                 value = state.userMsg,
                 placeholder = {
                     Text(text = "Write a comment...")

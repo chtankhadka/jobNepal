@@ -227,7 +227,7 @@ fun DashboardScreen(
                                         .background(MaterialTheme.colorScheme.primaryContainer),
                                     contentAlignment = Alignment.Center
                                 ) {
-                                    VibratingIcon(Icons.Default.NotificationsActive) {
+                                    VibratingIcon(Icons.Default.NotificationsActive, isVibrating = state.isVibrating) {
                                         navController.navigate(Destination.Screen.UserNotification.route)
                                     }
                                 }

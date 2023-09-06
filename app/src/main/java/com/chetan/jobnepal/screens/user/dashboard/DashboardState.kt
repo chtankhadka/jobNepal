@@ -2,7 +2,6 @@ package com.chetan.jobnepal.screens.user.dashboard
 
 
 import com.chetan.jobnepal.data.models.adminpayment.AddAdminPaymentMethodResponse
-import com.chetan.jobnepal.data.models.dashboard.FormAppliedList
 import com.chetan.jobnepal.data.models.dashboard.UploadAppliedFormDataRequest
 import com.chetan.jobnepal.data.models.param.UploadNewVideoLink
 import com.chetan.jobnepal.data.models.param.UserDashboardUpdateNoticeRequestResponse
@@ -23,13 +22,12 @@ data class DashboardState(
     val selectedVideoId: String = "",
     val showPaymentDialog: Boolean = false,
     val paymentMethods: List<AddAdminPaymentMethodResponse> = emptyList(),
+    val isVibrating: Boolean = false,
 
 //    val likedListDetails : Pair<Int,Boolean> = 0 to false,
-
     val onChangeJobDescription: String = "",
     val showApplyDialog: Boolean = false,
     val searchText: String = "",
-    val academicList: List<FormAppliedList.DataColl.AcademicList> = emptyList(),
     val profileUrl: String = "",
     val currentUserName: String = "",
     override val infoMsg: Message? = null,

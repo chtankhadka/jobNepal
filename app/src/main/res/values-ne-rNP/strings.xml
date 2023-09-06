@@ -12,4 +12,12 @@
     <string name="teacher">शिक्षक</string>
     <string name="physically_disabled">"शारीरिक रूपमा अशक्त "</string>
     <string name="ethnic_group">"जातीय समूह "</string>
+    <string name="upload_receipt">रसिद अपलोड गर्नुहोस्</string>
+    <string name="send">पठाउनुहोस्</string>
+    <string name="documents">कागजातहरू</string>
+    <string name="about_us">हाम्रोबारे</string>
+    <string name="privacy_policy">गोपनीयता र नीति</string>
+    <string name="pay_now">भुक्तान गर्नुहोस्</string>
+    <string name="paid">भुक्तान गरियो</string>
+    <string name="admit_card">प्रवेश पत्र</string>
 </resources>

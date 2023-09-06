@@ -38,9 +38,11 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.chetan.jobnepal.Destination
+import com.chetan.jobnepal.R
 import com.chetan.jobnepal.data.models.dashboard.UploadAppliedFormDataRequest
 import com.chetan.jobnepal.screens.user.dashboard.DashboardEvent
 import com.chetan.jobnepal.screens.user.dashboard.DashboardState
@@ -59,7 +61,11 @@ fun MyForm(
 ) {
     val scope = rememberCoroutineScope()
     val ctx = LocalContext.current
-    val list = listOf("Pay Now", "Paid", "Admit Card")
+    val list = listOf(stringResource(R.string.pay_now), stringResource(R.string.paid),
+        stringResource(
+            R.string.admit_card
+        )
+    )
     val pagerState = rememberPagerState(initialPage = 0) { 3 }
 
 
@@ -250,3 +256,4 @@ fun MyFormItem(
     }
 
 }
+sealed class PagerItem()

@@ -35,6 +35,7 @@ class DashboardViewModel @Inject constructor(
     init {
         _state.update {
             it.copy(
+                isVibrating = preference.isRingBell,
                 profileUrl = preference.gmailProfile.toString(),
                 currentUserName = preference.gmailUserName.toString(),
                 nepaliLanguage = preference.isNepaliLanguage

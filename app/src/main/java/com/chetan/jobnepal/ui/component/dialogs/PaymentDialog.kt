@@ -41,10 +41,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import coil.compose.AsyncImage
+import com.chetan.jobnepal.R
 import com.chetan.jobnepal.data.models.adminpayment.AddAdminPaymentMethodResponse
 import com.chetan.jobnepal.screens.user.dashboard.DashboardEvent
 
@@ -113,7 +115,7 @@ fun PaymentDialog(
                 contentDescription = ""
             )
             Divider()
-            Row(modifier = Modifier.animateContentSize()) {
+            Row(modifier = Modifier.animateContentSize(), verticalAlignment = Alignment.CenterVertically) {
                 IconButton(
                     modifier = Modifier
                         .weight(0.7f)
@@ -126,7 +128,7 @@ fun PaymentDialog(
                     }) {
                     Row {
                         Icon(imageVector = Icons.Default.FileUpload, contentDescription = "Upload File")
-                        Text(text = "Upload Receipt ScreenShots")
+                        Text(text = stringResource(R.string.upload_receipt))
                     }
 
                 }
@@ -135,7 +137,7 @@ fun PaymentDialog(
                         onClick = {
                         onEvent(DashboardEvent.OnSubmitReceipt(videoId, selectedImageUri))
                     }) {
-                        Text(text = "Send")
+                        Text(text = stringResource(R.string.send))
                     }
                 }
 
