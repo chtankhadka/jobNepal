@@ -74,6 +74,10 @@ interface FirestoreRepository {
     suspend fun requestPaidReceipt(
         data: PaidPaymentDetails
     ): Resource<Any>
+    suspend fun updateSelfPaidVoucher(
+        vid: String,
+        url : String
+    ): Resource<Any>
 
     suspend fun setUserComment(
         data : UserCommentModel
@@ -105,6 +109,13 @@ interface FirestoreRepository {
 
     suspend fun addAdminPaymentMethod(
         data: AddAdminPaymentMethodResponse
+    ): Resource<Any>
+
+    suspend fun uploadAdmitCard(
+        user: String,
+        videoId: String,
+        url : String,
+        field: String
     ): Resource<Any>
 
     suspend fun getUserPaymentFormRequest(docsId: String) : Resource<List<PaidPaymentDetails>>

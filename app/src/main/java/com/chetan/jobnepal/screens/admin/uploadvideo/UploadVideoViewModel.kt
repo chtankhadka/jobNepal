@@ -26,14 +26,6 @@ class UploadVideoViewModel @Inject constructor(
     private val _state = MutableStateFlow(UploadVideoState())
     val state: StateFlow<UploadVideoState> = _state
 
-    init {
-        _state.update {
-            it.copy(
-                publishedTime = LocalDateTime.now().toString()
-            )
-        }
-
-    }
 
     val onEvent: (event: UploadVideoEvent) -> Unit = { event ->
         viewModelScope.launch {
@@ -55,13 +47,12 @@ class UploadVideoViewModel @Inject constructor(
                         }
                         val resource = repository.uploadNewVideoLink(
                             UploadNewVideoLink(
-                                id = state.id + GenerateRandomNumber.generateRandomNumber(
-                                    111111..999999
-                                ),
+                                id = System.currentTimeMillis().toString() + state.id ,
                                 title = state.title,
                                 description = state.description,
-                                videoLink = state.url,
-                                publishedTime = state.publishedTime,
+                                videoId = state.videoId,
+                                videoUrl = state.videoUrl,
+                                publishedTime = LocalDateTime.now().toString(),
                                 province = state.editProvince
                             )
 
@@ -86,10 +77,10 @@ class UploadVideoViewModel @Inject constructor(
                                         infoMsg = null,
                                         editProvince = "",
                                         id = "",
-                                        url = "",
+                                        videoId = "",
                                         title = "",
                                         description = "",
-                                        publishedTime = "",
+                                        videoUrl = "",
                                         videoList = emptyList()
                                     )
                                 }
@@ -107,9 +98,9 @@ class UploadVideoViewModel @Inject constructor(
                     }
                 }
 
-                is UploadVideoEvent.UrlChange -> {
+                is UploadVideoEvent.UrlIdChange -> {
                     _state.update {
-                        it.copy(url = event.value)
+                        it.copy(videoId = event.value)
                     }
                 }
 
@@ -135,6 +126,14 @@ class UploadVideoViewModel @Inject constructor(
                     _state.update {
                         it.copy(
                             editProvince = event.value
+                        )
+                    }
+                }
+
+                is UploadVideoEvent.OnVideoUrlChange -> {
+                    _state.update {
+                        it.copy(
+                            videoUrl = event.value
                         )
                     }
                 }

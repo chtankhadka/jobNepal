@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
@@ -18,7 +19,7 @@ import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.Chat
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.QrCode
-import androidx.compose.material.icons.filled.Undo
+import androidx.compose.material.icons.filled.UploadFile
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -36,7 +37,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -47,6 +47,7 @@ import com.chetan.jobnepal.data.models.dashboard.UploadAppliedFormDataRequest
 import com.chetan.jobnepal.screens.user.dashboard.DashboardEvent
 import com.chetan.jobnepal.screens.user.dashboard.DashboardState
 import com.chetan.jobnepal.ui.component.dialogs.PaymentDialog
+import com.chetan.jobnepal.ui.component.dialogs.VoucherUploadDialog
 import com.chetan.jobnepal.ui.component.dropdown.DropdownJobNepal
 import com.chetan.jobnepal.utils.downloader.AndroidDownloader
 import com.chetan.jobnepal.utils.youtubePlayer.WebContent
@@ -61,8 +62,8 @@ fun MyForm(
 ) {
     val scope = rememberCoroutineScope()
     val ctx = LocalContext.current
-    val list = listOf(stringResource(R.string.pay_now), stringResource(R.string.paid),
-        stringResource(
+    val list = listOf(
+        stringResource(R.string.pay_now), stringResource(R.string.paid), stringResource(
             R.string.admit_card
         )
     )
@@ -74,41 +75,42 @@ fun MyForm(
     }
     if (state.showPaymentDialog) {
         PaymentDialog(
-            paymentMethods = state.paymentMethods,
-            videoId = paymentId,
-            onEvent = onEvent
+            paymentMethods = state.paymentMethods, videoId = paymentId, onEvent = onEvent
         ) {
             onEvent(DashboardEvent.OnShowPaymentDialog(it))
         }
     }
+    var showUploadVoucher by remember {
+        mutableStateOf(false)
+    }
+    if (showUploadVoucher) {
+        VoucherUploadDialog(onEvent, vid = paymentId) {
+            showUploadVoucher = !it
+
+        }
+    }
+
     val downloader = AndroidDownloader(ctx)
-    TabRow(
-        selectedTabIndex = pagerState.currentPage,
+    TabRow(selectedTabIndex = pagerState.currentPage,
         containerColor = MaterialTheme.colorScheme.onPrimary,
-        divider = {}
-    ) {
+        divider = {}) {
         list.forEachIndexed { index, page ->
-            Tab(
-                selected = pagerState.currentPage == index,
-                onClick = {
-                    scope.launch {
-                        pagerState.animateScrollToPage(index)
-                    }
-                },
-                text = {
-                    Text(
-                        text = page,
-                        color = MaterialTheme.colorScheme.onBackground,
-                        style = if (pagerState.currentPage == index) MaterialTheme.typography.labelMedium else MaterialTheme.typography.bodySmall
-                    )
+            Tab(selected = pagerState.currentPage == index, onClick = {
+                scope.launch {
+                    pagerState.animateScrollToPage(index)
                 }
-            )
+            }, text = {
+                Text(
+                    text = page,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    style = if (pagerState.currentPage == index) MaterialTheme.typography.labelMedium else MaterialTheme.typography.bodySmall
+                )
+            })
         }
     }
 
     HorizontalPager(
-        modifier = Modifier.fillMaxSize(),
-        state = pagerState
+        modifier = Modifier.fillMaxSize(), state = pagerState
     ) { page ->
         when (page) {
             0 -> {
@@ -117,27 +119,25 @@ fun MyForm(
                         .fillMaxSize()
                         .padding(horizontal = 5.dp)
                 ) {
-                    MyFormItem(
+                    PayFormItem(
                         state.appliedListResponse.filter { it.apply == "applied" },
-                        listOf(
-                            Triple("Pay", Icons.Default.QrCode, true),
-                            Triple("Chat",Icons.Default.Chat, true),
-                            Triple("Cancel", Icons.Default.Cancel, true)
-
-                        )
-                    ){ item, id ->
-                        when  (item){
+                    ) { dropDownItem, item ->
+                        when (dropDownItem) {
                             "Pay" -> {
-                                paymentId = id
+                                paymentId = item.id
                                 onEvent(DashboardEvent.OnShowPaymentDialog(true))
                             }
+
                             "Chat" -> {
-                                navController.navigate(Destination.Screen.UserChat.route.replace(
-                                    "{vid}",id
-                                ))
+                                navController.navigate(
+                                    Destination.Screen.UserChat.route.replace(
+                                        "{vid}", item.id
+                                    )
+                                )
                             }
-                            "Cancel" ->{
-                                onEvent(DashboardEvent.DeleteAppliedData(id))
+
+                            "Cancel" -> {
+                                onEvent(DashboardEvent.DeleteAppliedData(item.id))
                             }
                         }
                     }
@@ -150,45 +150,58 @@ fun MyForm(
                         .fillMaxSize()
                         .padding(horizontal = 5.dp)
                 ) {
-                    MyFormItem(
-                        state.appliedListResponse.filter { it.apply == "paid" },
-                        listOf(
-                            Triple("Chat", Icons.Default.Chat, true),
-                        )
-                    ){ item, id ->
-                        when  (item){
+                    val list =  state.appliedListResponse.filter { it.apply == "paid" }
+                    PaidFormItem(
+                       list,
+                    ) { dropDownItem, item ->
+                        when (dropDownItem) {
                             "Chat" -> {
-                                navController.navigate(Destination.Screen.UserChat.route.replace(
-                                    "{vid}",id
-                                ))
+                                navController.navigate(
+                                    Destination.Screen.UserChat.route.replace(
+                                        "{vid}", item.id
+                                    )
+                                )
+                            }
+                            "Upload Voucher" -> {
+                                paymentId = item.id
+                                showUploadVoucher = true
+                            }
+                            "Unpaid Voucher" -> {
+                                downloader.downloadFile(
+                                    item.unPaidBankReceipt,
+                                    item.title ?: ""
+                                )
                             }
 
                         }
                     }
                 }
             }
+
             2 -> {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(horizontal = 5.dp)
                 ) {
-                    MyFormItem(
-                        state.appliedListResponse.filter { it.apply == "done" },
-                        listOf(
-                            Triple("Download", Icons.Default.Download, true),
-                            Triple("Chat", Icons.Default.Chat, true),
-                        )
-                    ){ item, id ->
-                        when  (item){
+                    AdmitCardFormItem(
+                        state.appliedListResponse.filter { it.apply == "done" }
+                    ) { dropDownItem, item ->
+                        when (dropDownItem) {
                             "Download" -> {
-                                val data = state.appliedListResponse.find { it.id == id }
-                                downloader.downloadFile("https://firebasestorage.googleapis.com/v0/b/jobnepal-674cd.appspot.com/o/chtankhadka12%2FAcademic%2FSEE%2F1000012120174?alt=media&token=79166fd8-1093-40c6-a22d-1b9472820062",data?.title?:"")
+                                    downloader.downloadFile(
+                                        item.admitCard,
+                                        item.title ?: ""
+                                    )
+
                             }
+
                             "Chat" -> {
-                                navController.navigate(Destination.Screen.UserChat.route.replace(
-                                    "{vid}",id
-                                ))
+                                navController.navigate(
+                                    Destination.Screen.UserChat.route.replace(
+                                        "{vid}", item.id
+                                    )
+                                )
                             }
                         }
 
@@ -201,18 +214,16 @@ fun MyForm(
 }
 
 @Composable
-fun MyFormItem(
+fun PayFormItem(
     data: List<UploadAppliedFormDataRequest>,
-    listOfDropdownItem: List<Triple<String, ImageVector, Boolean>>,
-    onClickedDropdownItem: (item: String, id: String) -> Unit
-    ) {
+    onClickedDropdownItem: (dropDownitem: String, item: UploadAppliedFormDataRequest) -> Unit
+) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(5.dp),
     ) {
-        items(data.size) {
+        items(data) {itemData ->
             Card(
-                modifier = Modifier.fillMaxWidth(),
-                elevation = CardDefaults.cardElevation()
+                modifier = Modifier.fillMaxWidth(), elevation = CardDefaults.cardElevation()
             ) {
                 Row(
                     modifier = Modifier
@@ -222,12 +233,10 @@ fun MyFormItem(
                             drawLine(
                                 color = Color.White, // Set the desired color of the border
                                 start = Offset(
-                                    0f,
-                                    size.height
+                                    0f, size.height
                                 ), // Starting point at the bottom-left corner
                                 end = Offset(
-                                    size.width,
-                                    size.height
+                                    size.width, size.height
                                 ), // Ending point at the bottom-right corner
                                 strokeWidth = 1.dp.toPx(), // Set the desired width of the border
                             )
@@ -236,18 +245,23 @@ fun MyFormItem(
                     verticalAlignment = Alignment.CenterVertically,
 
                     ) {
-                    Text(text = data[it].title)
+                    Text(text = itemData.title)
                     DropdownJobNepal(
-                        listOfDropdownItem
-                    ) {item ->
-                        onClickedDropdownItem(item, data[it].id)
+                        listOf(
+                            Triple("Pay", Icons.Default.QrCode, true),
+                            Triple("Chat", Icons.Default.Chat, true),
+                            Triple("Cancel", Icons.Default.Cancel, true)
+
+                        )
+                    ) { dropDownitem ->
+                        onClickedDropdownItem(dropDownitem, itemData)
                     }
                 }
-                WebContent(videoId = data[it].videoLink, modifier = Modifier.height(380.dp))
+                WebContent(videoId = itemData.shortVideoId, modifier = Modifier.height(380.dp))
 //                AsyncImage(
 //                    modifier = Modifier.fillMaxWidth(),
 //                    contentScale = ContentScale.FillWidth,
-//                    model = data[it].videoLink,
+//                    model = itemData.videoLink,
 //                    contentDescription = "details",
 //                    alignment = Alignment.Center
 //                )
@@ -256,4 +270,123 @@ fun MyFormItem(
     }
 
 }
+
+@Composable
+fun PaidFormItem(
+    data: List<UploadAppliedFormDataRequest>,
+    onClickedDropdownItem: (dropDownitem: String, item: UploadAppliedFormDataRequest) -> Unit
+) {
+    LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(5.dp),
+    ) {
+        items(data) {itemData ->
+            Card(
+                modifier = Modifier.fillMaxWidth(), elevation = CardDefaults.cardElevation()
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 10.dp)
+                        .drawBehind {
+                            drawLine(
+                                color = Color.White, // Set the desired color of the border
+                                start = Offset(
+                                    0f, size.height
+                                ), // Starting point at the bottom-left corner
+                                end = Offset(
+                                    size.width, size.height
+                                ), // Ending point at the bottom-right corner
+                                strokeWidth = 1.dp.toPx(), // Set the desired width of the border
+                            )
+                        },
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+
+                    ) {
+                    Text(text = itemData.title)
+                    DropdownJobNepal(
+                        listOf(
+                            Triple("Chat", Icons.Default.Chat, true),
+                            Triple("Upload Voucher", Icons.Default.UploadFile,
+                                itemData.unPaidBankReceipt.isNotBlank()),
+                            Triple("Unpaid Voucher", Icons.Default.Download,
+                                itemData.unPaidBankReceipt.isNotBlank())
+                        )
+                    ) { dropDownitem ->
+                        onClickedDropdownItem(dropDownitem, itemData)
+                    }
+                }
+                WebContent(videoId = itemData.shortVideoId, modifier = Modifier.height(380.dp))
+//                AsyncImage(
+//                    modifier = Modifier.fillMaxWidth(),
+//                    contentScale = ContentScale.FillWidth,
+//                    model = itemData.videoLink,
+//                    contentDescription = "details",
+//                    alignment = Alignment.Center
+//                )
+            }
+        }
+    }
+
+}
+
+@Composable
+fun AdmitCardFormItem(
+    data: List<UploadAppliedFormDataRequest>,
+    onClickedDropdownItem: (dropDownitem: String, item: UploadAppliedFormDataRequest) -> Unit
+) {
+    LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(5.dp),
+    ) {
+        items(data) {itemData->
+            Card(
+                modifier = Modifier.fillMaxWidth(), elevation = CardDefaults.cardElevation()
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 10.dp)
+                        .drawBehind {
+                            drawLine(
+                                color = Color.White, // Set the desired color of the border
+                                start = Offset(
+                                    0f, size.height
+                                ), // Starting point at the bottom-left corner
+                                end = Offset(
+                                    size.width, size.height
+                                ), // Ending point at the bottom-right corner
+                                strokeWidth = 1.dp.toPx(), // Set the desired width of the border
+                            )
+                        },
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+
+                    ) {
+                    Text(text = itemData.title)
+                    DropdownJobNepal(
+                        listOf(
+                            Triple("Download", Icons.Default.Download,
+                                itemData.admitCard.isNotBlank()
+                            ),
+                            Triple("Chat", Icons.Default.Chat, true),
+                        )
+                    ) { dropDownitem ->
+                        onClickedDropdownItem(dropDownitem, itemData)
+                    }
+                }
+                WebContent(videoId = itemData.shortVideoId, modifier = Modifier.height(380.dp))
+//                AsyncImage(
+//                    modifier = Modifier.fillMaxWidth(),
+//                    contentScale = ContentScale.FillWidth,
+//                    model = itemData.videoLink,
+//                    contentDescription = "details",
+//                    alignment = Alignment.Center
+//                )
+            }
+        }
+    }
+
+}
+
+
 sealed class PagerItem()

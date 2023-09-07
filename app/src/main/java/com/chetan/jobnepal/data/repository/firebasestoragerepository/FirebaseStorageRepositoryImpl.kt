@@ -55,6 +55,21 @@ class FirebaseStorageRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun adminUploadReceipt(user: String, fileUri: Uri): Resource<Pair<String, String>> {
+        return try {
+            val file = File(fileUri.path!!)
+            val fileName = file.name + "${GenerateRandomNumber.generateRandomNumber(111..999)}"
+            val imageRef = storageRef.child("$user/PaidReceipt/$fileName")
+            val uploadTask = imageRef.putFile(fileUri).await()
+            val downloadUrl = uploadTask.storage.downloadUrl.await()
+            val uploadImageInfo = Pair(fileName, downloadUrl.toString())
+            Resource.Success(uploadImageInfo)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Resource.Failure(e)
+        }
+    }
+
 
     override suspend fun uploadAcademicAttachement(
         fileUri: Uri,
@@ -109,6 +124,21 @@ class FirebaseStorageRepositoryImpl @Inject constructor(
     }
 
     override suspend fun uploadPaidReceipt(fileUri: Uri): Resource<Pair<String, String>> {
+        return try {
+            val file = File(fileUri.path!!)
+            val fileName = file.name + "${GenerateRandomNumber.generateRandomNumber(111..999)}"
+            val imageRef = storageRef.child(preference.dbTable + "/PaidReceipt/" + fileName)
+            val uploadTask = imageRef.putFile(fileUri).await()
+            val downloadUrl = uploadTask.storage.downloadUrl.await()
+            val uploadImageInfo = Pair(fileName, downloadUrl.toString())
+            Resource.Success(uploadImageInfo)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Resource.Failure(e)
+        }
+    }
+
+    override suspend fun uploadSelfPaidBankBoucher(fileUri: Uri): Resource<Pair<String, String>> {
         return try {
             val file = File(fileUri.path!!)
             val fileName = file.name + "${GenerateRandomNumber.generateRandomNumber(111..999)}"

@@ -1,5 +1,8 @@
 package com.chetan.jobnepal.screens.admin.formrequest
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -18,16 +21,16 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Details
+import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.ManageAccounts
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.PendingActions
+import androidx.compose.material.icons.filled.UploadFile
 import androidx.compose.material.icons.filled.VerifiedUser
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -38,6 +41,7 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
@@ -57,6 +61,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -67,6 +72,8 @@ import com.chetan.jobnepal.data.models.adminpayment.PaidPaymentDetails
 import com.chetan.jobnepal.data.models.formrequest.FormRequestJobDetails
 import com.chetan.jobnepal.ui.component.IconJobNepal
 import com.chetan.jobnepal.ui.component.dialogs.MessageDialog
+import com.chetan.jobnepal.utils.downloader.AndroidDownloader
+import com.chetan.jobnepal.utils.downloader.Downloader
 import kotlinx.coroutines.launch
 
 @OptIn(
@@ -84,8 +91,7 @@ fun FormRequestScreen(
     val pagerList = listOf("Request", "Paid")
     val pagerState = rememberPagerState(initialPage = 0) { 3 }
 
-    ModalNavigationDrawer(drawerState = drawerState,
-        drawerContent = {
+    ModalNavigationDrawer(drawerState = drawerState, drawerContent = {
         ModalDrawerSheet(
             modifier = Modifier
                 .padding(10.dp)
@@ -244,7 +250,33 @@ fun FormRequestItem(
     onEvent: (event: FormRequestEvent) -> Unit,
     userAppliedFormDetails: FormRequestJobDetails
 ) {
+    val ctx = LocalContext.current
+    val downloader = AndroidDownloader(ctx)
+    var isUploadReceipt by remember {
+        mutableStateOf(false)
+    }
+    val photoPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia(),
+        onResult = {uri ->
+        uri?.let {
+            if (isUploadReceipt){
+                onEvent(FormRequestEvent.UploadUnpaidReceipt(
+                    user = paidPaymentDetails.emailAddress,
+                    videoId = paidPaymentDetails.videoId,
+                    imgUri = it))
+            }else{
+                onEvent(FormRequestEvent.UploadAdmitCard(
+                    user = paidPaymentDetails.emailAddress,
+                    videoId = paidPaymentDetails.videoId,
+                    imgUri = it))
+            }
+        }
 
+        }
+    )
+    val isReceiptData by remember {
+        mutableStateOf(true)
+    }
     var showReceipt by remember {
         mutableStateOf(false)
     }
@@ -265,7 +297,7 @@ fun FormRequestItem(
                         modifier = Modifier.clickable {
                             showDismissButton = !showDismissButton
                         },
-                        model = paidPaymentDetails.receiptLink,
+                        model = if (isReceiptData) paidPaymentDetails.receiptLink else paidPaymentDetails.paidBankReceipt,
                         contentDescription = "receipt",
                         contentScale = ContentScale.Fit
                     )
@@ -276,10 +308,9 @@ fun FormRequestItem(
                                 .align(Alignment.TopEnd),
                             elevation = CardDefaults.cardElevation(10.dp)
                         ) {
-                            IconButton(
-                                onClick = {
-                                    showReceipt = false
-                                }) {
+                            IconButton(onClick = {
+                                showReceipt = false
+                            }) {
                                 Icon(imageVector = Icons.Filled.Close, contentDescription = "")
                             }
                         }
@@ -297,7 +328,7 @@ fun FormRequestItem(
     if (showAlertConfirmedPaymentDialog) {
         Dialog(
             onDismissRequest = {
-                showReceipt = false
+                showAlertConfirmedPaymentDialog = false
             }, properties = DialogProperties()
         ) {
             Column(
@@ -315,32 +346,30 @@ fun FormRequestItem(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
-                        Button(
-                            modifier = Modifier
-                                .weight(0.5f)
-                                .clip(RoundedCornerShape(10.dp))
-                                .background(MaterialTheme.colorScheme.primary),
-                            onClick = {
-                                onEvent(
-                                    FormRequestEvent.OnPaymentVerified(
-                                        user = paidPaymentDetails.emailAddress,
-                                        videoId = paidPaymentDetails.videoId
-                                    )
+                        Button(modifier = Modifier
+                            .weight(0.5f)
+                            .clip(RoundedCornerShape(10.dp))
+                            .background(MaterialTheme.colorScheme.primary), onClick = {
+                            onEvent(
+                                FormRequestEvent.OnPaymentVerified(
+                                    user = paidPaymentDetails.emailAddress,
+                                    videoId = paidPaymentDetails.videoId
                                 )
-                                showAlertConfirmedPaymentDialog = false
-                            }) {
+                            )
+                            showAlertConfirmedPaymentDialog = false
+                        }) {
                             Text(text = "Confirmed")
                         }
                         Button(modifier = Modifier
                             .weight(0.5f)
                             .clip(RoundedCornerShape(10.dp))
-                            .background(MaterialTheme.colorScheme.error),
-                            onClick = {
-                                showAlertConfirmedPaymentDialog = false
-                            }) {
+                            .background(MaterialTheme.colorScheme.error), onClick = {
+                            showAlertConfirmedPaymentDialog = false
+                        }) {
                             Text(
                                 modifier = Modifier.background(MaterialTheme.colorScheme.error),
-                                text = "Cancel")
+                                text = "Cancel"
+                            )
                         }
 
                     }
@@ -354,9 +383,10 @@ fun FormRequestItem(
     var showJobDetails by remember {
         mutableStateOf(false)
     }
-    if (showJobDetails){
+    if (showJobDetails) {
         FormRequestJobDetailsDialog(
-            jobDetails = userAppliedFormDetails.jobInfo) {
+            jobDetails = userAppliedFormDetails.jobInfo
+        ) {
             showJobDetails = false
         }
     }
@@ -383,8 +413,7 @@ fun FormRequestItem(
         ) {
             Row {
                 Card(
-                    modifier = Modifier.padding(5.dp),
-                    elevation = CardDefaults.cardElevation(10.dp)
+                    modifier = Modifier.padding(5.dp), elevation = CardDefaults.cardElevation(10.dp)
                 ) {
                     IconButton(onClick = {
 
@@ -428,7 +457,11 @@ fun FormRequestItem(
                 elevation = CardDefaults.cardElevation(10.dp)
             ) {
                 IconButton(onClick = {
-                    onEvent(FormRequestEvent.OnJobDetailsClicked(paidPaymentDetails.emailAddress,paidPaymentDetails.videoId))
+                    onEvent(
+                        FormRequestEvent.OnJobDetailsClicked(
+                            paidPaymentDetails.emailAddress, paidPaymentDetails.videoId
+                        )
+                    )
                     showJobDetails = true
                 }) {
                     Row(
@@ -446,31 +479,22 @@ fun FormRequestItem(
 
                 }
             }
-            Card(
-                modifier = Modifier
-                    .padding(5.dp)
-                    .weight(0.5f),
-                elevation = CardDefaults.cardElevation(10.dp)
-            ) {
-                IconButton(onClick = {
-                    if (!paidPaymentDetails.approved){
+            if (!paidPaymentDetails.approved) {
+                Card(
+                    modifier = Modifier
+                        .padding(5.dp)
+                        .weight(0.5f),
+                    elevation = CardDefaults.cardElevation(10.dp)
+                ) {
+                    IconButton(onClick = {
                         showAlertConfirmedPaymentDialog = true
-                    }
 
-                }) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        if (paidPaymentDetails.approved){
-                            Icon(
-                                modifier = Modifier.size(40.dp),
-                                imageVector = Icons.Default.Check,
-                                contentDescription = ""
-                            )
-                            Text(text = "Paid")
-                        }else{
+                    }) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+                        ) {
                             Icon(
                                 modifier = Modifier.size(40.dp),
                                 imageVector = Icons.Default.PendingActions,
@@ -478,8 +502,108 @@ fun FormRequestItem(
                             )
                             Text(text = "Pending")
                         }
+                    }
+                }
+
+            }
+            if (paidPaymentDetails.paidBankReceiptIs) {
+                Card(
+                    modifier = Modifier
+                        .padding(5.dp)
+                        .weight(0.5f),
+                    elevation = CardDefaults.cardElevation(10.dp)
+                ) {
+                    Box {
+                        IconButton(onClick = {
+
+                            downloader.downloadFile(
+                                paidPaymentDetails.paidBankVoucher,
+                                paidPaymentDetails.videoId?: "fff"
+                            )
+                        }) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                Icon(
+                                    modifier = Modifier.size(40.dp),
+                                    imageVector = Icons.Default.Download,
+                                    contentDescription = ""
+                                )
+                                Text(text = "Paid Receipt")
+                            }
+                        }
 
                     }
+
+                }
+            }
+        }
+        Spacer(modifier = Modifier.height(5.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceAround,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Card(
+                modifier = Modifier
+                    .padding(5.dp)
+                    .weight(0.5f),
+                elevation = CardDefaults.cardElevation(10.dp)
+            ) {
+                IconButton(
+                    enabled = !paidPaymentDetails.paidBankReceiptIs,
+                    onClick = {
+                    isUploadReceipt = true
+                    photoPickerLauncher.launch(
+                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                    )
+                }) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        Icon(
+                            modifier = Modifier.size(50.dp),
+                            imageVector = Icons.Default.UploadFile,
+                            contentDescription = ""
+                        )
+                        Text(text = "Receipt")
+                    }
+
+                }
+            }
+            Card(
+                modifier = Modifier
+                    .padding(5.dp)
+                    .weight(0.5f),
+                elevation = CardDefaults.cardElevation(10.dp)
+            ) {
+                Box {
+                    IconButton(
+                        enabled = !paidPaymentDetails.adminCardIs,
+                        onClick = {
+                        isUploadReceipt = false
+                        photoPickerLauncher.launch(
+                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                        )
+                    }) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Icon(
+                                modifier = Modifier.size(40.dp),
+                                imageVector = Icons.Default.UploadFile,
+                                contentDescription = ""
+                            )
+                            Text(text = "Admin Card")
+                        }
+                    }
+
                 }
 
             }

@@ -143,8 +143,6 @@ class DashboardViewModel @Inject constructor(
                 it.copy(progress = Progress(value = 0.0F, cancellable = false))
             }
             val resource2 = firestoreRepository.getAppliedFormData()
-            println("Goooooooooooooooooooooooooooooooooooooo")
-            println(resource2)
             when (resource2) {
                 is Resource.Failure -> {
 //                    _state.update {
@@ -155,7 +153,9 @@ class DashboardViewModel @Inject constructor(
 //                    }
                 }
 
-                Resource.Loading -> TODO()
+                Resource.Loading -> {
+
+                }
                 is Resource.Success -> {
                     _state.update {
                         it.copy(
@@ -267,8 +267,10 @@ class DashboardViewModel @Inject constructor(
                         UploadAppliedFormDataRequest(
                             id = applylist?.id ?: "",
                             title = applylist?.title ?: "",
-                            videoLink = applylist?.videoLink ?: "",
+                            shortVideoId = applylist?.videoId ?: "",
                             description = applylist?.description ?: "",
+                            videoUrl = applylist?.videoUrl?: "",
+                            appliedTime = System.currentTimeMillis().toString(),
                             apply = "applied",
                             paymentSuccess = false,
                             jobInfo = state.value.onChangeJobDescription
@@ -546,6 +548,35 @@ class DashboardViewModel @Inject constructor(
                     }
                 }
 
+                is DashboardEvent.UploadPaidVoucher -> {
+                    _state.update {
+                        it.copy(
+                            infoMsg =  Message.Loading(yesNoRequired = false,
+                                isCancellable = false,
+                                description = "Uploading...")
+                        )
+                    }
+
+                    when(val selfPaidBankVoucher = firebaseStorageRepository.uploadSelfPaidBankBoucher(event.imgUri)){
+                        is Resource.Failure -> {}
+                        Resource.Loading -> {}
+                        is Resource.Success -> {
+                            when(val uplodUrl = firestoreRepository.updateSelfPaidVoucher(event.vid,selfPaidBankVoucher.data.second)){
+                                is Resource.Failure -> {}
+                                Resource.Loading -> {
+
+                                }
+                                is Resource.Success -> {
+                                    _state.update {
+                                        it.copy(
+                                            infoMsg = null
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }

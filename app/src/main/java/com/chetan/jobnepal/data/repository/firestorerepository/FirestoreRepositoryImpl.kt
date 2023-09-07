@@ -325,6 +325,28 @@ class FirestoreRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun updateSelfPaidVoucher(vid: String, url: String): Resource<Any> {
+        return try {
+            val documentRef =
+                firestore.collection("chtankhadka12").document("paidReceipt")
+                    .collection("videoId")
+                    .document(vid)
+                    .collection("data")
+                    .document(preference.dbTable.toString())
+                    .update(hashMapOf<String, Any>("paidBankVoucher" to url,"bankVoucher" to true))
+                    .await()
+                val new = firestore.collection(preference.dbTable.toString()).document("appliedList")
+                    .collection("data")
+                    .document(vid)
+                    .update("paidBankReceipt" , url)
+                    .await()
+            Resource.Success(documentRef)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Resource.Failure(e)
+        }
+    }
+
     override suspend fun setUserComment(data: UserCommentModel): Resource<Any> {
         return try {
             firestore.collection("chtankhadka12").document("videoList").collection("data")
@@ -466,6 +488,31 @@ class FirestoreRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun uploadAdmitCard(
+        user: String,
+        videoId: String,
+        url: String,
+        field: String
+    ): Resource<Any> {
+        return try {
+            firestore.collection(user).document("appliedList").collection("data").document(videoId)
+                .update(
+                    hashMapOf<String,Any>(field to  url,
+                        if (field == "admitCard") "apply" to "done" else "apply" to "paid")).await()
+
+
+            firestore.collection("chtankhadka12").document("paidReceipt").collection("videoId")
+                .document(videoId).collection("data").document(user).update(
+                        hashMapOf<String, Any>(field to url, field+"Is" to true)
+                )
+                .await()
+            Resource.Success("Success")
+        }catch (e: Exception){
+            e.printStackTrace()
+            Resource.Failure(e)
+        }
+    }
+
     override suspend fun getUserPaymentFormRequest(docsId: String): Resource<List<PaidPaymentDetails>> {
         return try {
             val paidReceiptList = mutableListOf<PaidPaymentDetails>()
@@ -504,7 +551,9 @@ class FirestoreRepositoryImpl @Inject constructor(
     ): Resource<FormRequestJobDetails> {
         return try {
             val formDetails: FormRequestJobDetails
-            val documentRef = firestore.collection(user).document("appliedList").collection("data")
+            val documentRef = firestore.collection(user)
+                .document("appliedList")
+                .collection("data")
                 .document(videoId).get().await().toObject<FormRequestJobDetails>()
             formDetails = documentRef ?: FormRequestJobDetails()
             Resource.Success(formDetails)

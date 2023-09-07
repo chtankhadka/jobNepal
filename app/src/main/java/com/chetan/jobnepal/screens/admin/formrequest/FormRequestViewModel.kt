@@ -3,6 +3,7 @@ package com.chetan.jobnepal.screens.admin.formrequest
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chetan.jobnepal.data.Resource
+import com.chetan.jobnepal.data.repository.firebasestoragerepository.FirebaseStorageRepository
 import com.chetan.jobnepal.data.repository.firestorerepository.FirestoreRepository
 import com.chetan.jobnepal.ui.component.dialogs.Message
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,7 +15,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FormRequestViewModel @Inject constructor(
-    private val firestoreRepository: FirestoreRepository
+    private val firestoreRepository: FirestoreRepository,
+    private val storageRepository: FirebaseStorageRepository
 ): ViewModel(){
 
     private val _state = MutableStateFlow(FormRequestState())
@@ -119,6 +121,83 @@ class FormRequestViewModel @Inject constructor(
                                 it.copy(
                                     userAppliedFormDetails = getAppliedFormDetails.data
                                 )
+                            }
+                        }
+                    }
+                }
+
+                is FormRequestEvent.UploadAdmitCard -> {
+                    _state.update {
+                        it.copy(
+                            infoMsg = Message.Loading(
+                                yesNoRequired = false,
+                                isCancellable = false,
+                                description = "Uploading..."
+                            )
+                        )
+                    }
+                    when(val getReceiptUrl = storageRepository.adminUploadReceipt(user = event.user, fileUri = event.imgUri)){
+                        is Resource.Failure -> {
+
+                        }
+                        Resource.Loading -> {
+
+                        }
+                        is Resource.Success -> {
+                            when(val uploadReceipt = firestoreRepository.uploadAdmitCard(
+                                user = event.user, videoId = event.videoId, url = getReceiptUrl.data.second, field = "admitCard"
+                            )){
+                                is Resource.Failure -> {
+
+                                }
+                                Resource.Loading -> {
+
+                                }
+                                is Resource.Success -> {
+                                    _state.update {
+                                        it.copy(
+                                            infoMsg =null
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                is FormRequestEvent.UploadUnpaidReceipt -> {
+                    _state.update {
+                        it.copy(
+                            infoMsg = Message.Loading(
+                                yesNoRequired = false,
+                                isCancellable = false,
+                                description = "Uploading..."
+                            )
+                        )
+                    }
+                    when(val getReceiptUrl = storageRepository.adminUploadReceipt(user = event.user, fileUri = event.imgUri)){
+                        is Resource.Failure -> {
+
+                        }
+                        Resource.Loading -> {
+
+                        }
+                        is Resource.Success -> {
+                            when(val uploadReceipt = firestoreRepository.uploadAdmitCard(
+                                user = event.user, videoId = event.videoId, url = getReceiptUrl.data.second, field = "unPaidBankReceipt"
+                            )){
+                                is Resource.Failure -> {
+
+                                }
+                                Resource.Loading -> {
+
+                                }
+                                is Resource.Success -> {
+                                    _state.update {
+                                        it.copy(
+                                            infoMsg =null
+                                        )
+                                    }
+                                }
                             }
                         }
                     }

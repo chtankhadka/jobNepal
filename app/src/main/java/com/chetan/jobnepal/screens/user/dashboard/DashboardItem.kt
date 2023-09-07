@@ -16,17 +16,12 @@ import androidx.compose.material.icons.filled.Comment
 import androidx.compose.material.icons.filled.FastForward
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material.icons.filled.YoutubeSearchedFor
-import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -99,7 +94,7 @@ fun DashboardItem(
                     }
 
                     else -> {
-                        val appIntent = Intent(Intent.ACTION_VIEW, Uri.parse(data.videoLink))
+                        val appIntent = Intent(Intent.ACTION_VIEW, Uri.parse(data.videoUrl))
                         appIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                         startActivity(ctx, appIntent, null)
 
@@ -109,7 +104,7 @@ fun DashboardItem(
 
             }
         }
-        WebContent(videoId = data.videoLink, modifier = Modifier.height(380.dp))
+        WebContent(videoId = data.videoId, modifier = Modifier.height(380.dp))
 //        AsyncImage(
 //            modifier = Modifier.fillMaxWidth(),
 //            contentScale = ContentScale.FillWidth,

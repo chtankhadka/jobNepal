@@ -98,19 +98,26 @@ fun UploadVideoScreen(
                 onValueChange = {
                     onEvent(UploadVideoEvent.IdChange(it))
                 },
-                label = "Add video Id"
+                label = "Id"
             )
 
             TextFieldJobNepal(
-                value = state.url,
+                value = state.videoId,
                 onValueChange = {
-                    onEvent(UploadVideoEvent.UrlChange(it))
+                    onEvent(UploadVideoEvent.UrlIdChange(it))
                 },
-                label = "Add video link id",
+                label = "Add video id",
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text
                 )
             )
+
+            TextFieldJobNepal(
+                label = "Video Url",
+                value = state.videoUrl ,
+                onValueChange = {
+                    onEvent(UploadVideoEvent.OnVideoUrlChange(it))
+                })
             TextFieldJobNepal(
                 value = state.title,
                 onValueChange = {

@@ -9,11 +9,11 @@ data class UploadVideoState(
     var videoList: List<UploadNewVideoLink> = emptyList(),
     var showJobDialog: Boolean = false,
     var id: String = "",
-    var url: String = "",
+    var videoId: String = "",
     var title: String = "",
+    var videoUrl: String = "",
     var editProvince: String = "",
     var description: String = "",
-    var publishedTime: String = "",
     override val infoMsg: Message? = null,
     override val progress: Progress? = null
 ) : JobNepalScreenState(infoMsg, progress)
