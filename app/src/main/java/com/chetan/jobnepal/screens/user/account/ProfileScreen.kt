@@ -502,7 +502,6 @@ fun ProfileScreen(
                                 onValueChange = {
                                     onEvent(ProfileEvent.OnFatherLastNameChange(it))
                                 },
-                                required = true
                             )
                         }
                     }
@@ -561,8 +560,7 @@ fun ProfileScreen(
                                 value = state.editMotherLastNam,
                                 onValueChange = {
                                     onEvent(ProfileEvent.OnMotherLastNameChange(it))
-                                },
-                                required = true
+                                }
                             )
                         }
                     }
@@ -625,7 +623,6 @@ fun ProfileScreen(
                                 onValueChange = {
                                     onEvent(ProfileEvent.GrandFathersLastName(it))
                                 },
-                                required = true
                             )
                         }
                     }
@@ -687,8 +684,7 @@ fun ProfileScreen(
                                 value = state.editHusbandWifeLastName,
                                 onValueChange = {
                                     onEvent(ProfileEvent.HusbandWifeLastName(it))
-                                },
-                                required = true
+                                }
                             )
                         }
                     }

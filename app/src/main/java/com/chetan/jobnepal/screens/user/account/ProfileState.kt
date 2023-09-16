@@ -61,15 +61,11 @@ data class ProfileState(
 
     fun areAllDataFilled(): Boolean {
         return editFirstName.isNotBlank()
-                && editMiddleName.isNotBlank()
                 && editLastName.isNotBlank()
                 && !editGender?.value.isNullOrBlank()
                 && editEmail.isNotBlank()
                 && editDob.isNotBlank()
-                && editFatherFirstName.isNotBlank()
-                && editFatherMiddleName.isNotBlank()
-                && editFatherLastNam.isNotBlank()
-                && imageUrl.isNotBlank()
+                && editPhone.isNotBlank()
     }
 //    fun asUpdateProfileParam() = UpdateProfilePaream()
 }

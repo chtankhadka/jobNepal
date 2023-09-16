@@ -140,7 +140,7 @@ class ProfileViewModel @Inject constructor(
                                     middleName = state.editMiddleName,
                                     lastName = state.editLastName,
                                     email = state.editEmail,
-                                    phoneNo = "",
+                                    phoneNo = state.editPhone,
                                     profileUrl = resource.data.second,
                                     photoName = resource.data.first,
                                     dob = state.editDob,
