@@ -60,7 +60,19 @@ fun NotificationScreen(
                         onNegative = { }
                     )
                 }
+
                 TextFieldJobNepal(
+                    placeholder = "Title",
+                    singleLine = false,
+                    value = state.message,
+                    onValueChange = {
+                        onEvent(AdminNotificationEvent.OnTitleChange(it))
+                    }
+                )
+
+
+                TextFieldJobNepal(
+                    placeholder = "Title Details",
                     singleLine = false,
                     value = state.message,
                     onValueChange = {

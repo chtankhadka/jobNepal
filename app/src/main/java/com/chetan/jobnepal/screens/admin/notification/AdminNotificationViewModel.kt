@@ -36,6 +36,13 @@ class AdminNotificationViewModel @Inject constructor(
                         )
                     }
                 }
+                is AdminNotificationEvent.OnTitleChange -> {
+                    _state.update {
+                        it.copy(
+                            title = event.value
+                        )
+                    }
+                }
 
                 AdminNotificationEvent.OnSendNotification -> {
                     _state.update {
@@ -53,7 +60,7 @@ class AdminNotificationViewModel @Inject constructor(
                         val sendNotification = oneSiganlRepository.pushNotification(
                             PushNotificationRequest(
                                 contents = mapOf("en" to state.value.message),
-                                name = "Offer"
+                                name = state.value.title
                             )
                         )
                         when (sendNotification) {
@@ -109,6 +116,8 @@ class AdminNotificationViewModel @Inject constructor(
                         it.copy(infoMsg = null)
                     }
                 }
+
+
             }
         }
     }

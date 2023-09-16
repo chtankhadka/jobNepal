@@ -24,10 +24,12 @@ class ProfileViewModel @Inject constructor(
 ) : ViewModel() {
     private val _state = MutableStateFlow(ProfileState())
     val state: StateFlow<ProfileState> = _state
+
     init {
         getProfileData()
 
     }
+
     val onEvent: (event: ProfileEvent) -> Unit = { event ->
         when (event) {
 
@@ -49,12 +51,19 @@ class ProfileViewModel @Inject constructor(
                 }
             }
 
+            is ProfileEvent.OnPhoneChange -> {
+                _state.update {
+                    it.copy(editPhone = event.value)
+                }
+            }
+
             is ProfileEvent.OnLastNameChange -> {
                 _state.update {
                     it.copy(editLastName = event.value)
                 }
             }
-            is ProfileEvent.OnDobChange ->{
+
+            is ProfileEvent.OnDobChange -> {
                 _state.update {
                     it.copy(editDob = event.value)
                 }
@@ -84,10 +93,34 @@ class ProfileViewModel @Inject constructor(
                 }
             }
 
+            is ProfileEvent.OnMotherFirstNameChange -> {
+                _state.update {
+                    it.copy(editMotherFirstName = event.value)
+                }
+            }
+
+            is ProfileEvent.OnMotherMiddleNameChange -> {
+                _state.update {
+                    it.copy(editMotherMiddleName = event.value)
+                }
+            }
+
+            is ProfileEvent.OnMotherLastNameChange -> {
+                _state.update {
+                    it.copy(editMotherLastNam = event.value)
+                }
+            }
+
             is ProfileEvent.Upload -> {
                 viewModelScope.launch {
                     _state.update {
-                        it.copy(progress = Progress(value = 0.0F))
+                        it.copy(
+                            infoMsg = Message.Loading(
+                                yesNoRequired = false,
+                                isCancellable = false,
+                                description = "Uploading..."
+                            )
+                        )
                     }
                     val resource = storageRepository.uploadProfileImage(event.value)
                     when (resource) {
@@ -112,17 +145,47 @@ class ProfileViewModel @Inject constructor(
                                     photoName = resource.data.first,
                                     dob = state.editDob,
                                     gender = state.editGender?.value,
+
+                                    husbandWifeFirstName = state.editHusbandWifeFirstName,
+                                    husbandWifeMiddleName = state.editHusbandWifeMiddleName,
+                                    husbandWifeLastName = state.editHusbandWifeLastName,
+
                                     fatherFirstName = state.editFatherFirstName,
                                     fatherMiddleName = state.editFatherMiddleName,
-                                    fatherLastName = state.editFatherLastNam
-                                )
+                                    fatherLastName = state.editFatherLastNam,
+
+                                    motherFirstName = state.editMotherFirstName,
+                                    motherMiddleName = state.editMotherMiddleName,
+                                    motherLastName = state.editMotherLastNam,
+
+                                    grandfatherFirstName = state.editGrandFatherFirstName,
+                                    grandfatherMiddleName = state.editGrandFatherMiddleName,
+                                    grandfatherLastName = state.editGrandFatherLastNam,
+
+                                    province = state.provience,
+                                    district = state.district,
+                                    municipality = state.municipality,
+                                    wardNo = state.wardNo,
+                                    villageName = state.villageName,
+
+                                    //Temporary address
+                                    tprovience = state.tprovience,
+                                    tdistrict = state.tdistrict,
+                                    tmunicipality = state.tmunicipality,
+                                    twardNo = state.twardNo,
+                                    tvillageName = state.tvillageName,
+
+
+                                    )
                             )) {
                                 is Resource.Failure -> {
 
                                 }
+
                                 Resource.Loading -> {
 
                                 }
+
                                 is Resource.Success -> {
                                     getProfileData()
                                 }
@@ -140,6 +203,7 @@ class ProfileViewModel @Inject constructor(
                     )
                 }
             }
+
             is ProfileEvent.PermanentMunicipality -> {
                 _state.update {
                     it.copy(
@@ -148,6 +212,7 @@ class ProfileViewModel @Inject constructor(
                 }
 
             }
+
             is ProfileEvent.PermanentProvince -> {
                 _state.update {
                     it.copy(
@@ -164,6 +229,7 @@ class ProfileViewModel @Inject constructor(
                 }
 
             }
+
             is ProfileEvent.PermanentWard -> {
                 _state.update {
                     it.copy(
@@ -171,6 +237,7 @@ class ProfileViewModel @Inject constructor(
                     )
                 }
             }
+
             is ProfileEvent.TemporaryDistrict -> {
                 _state.update {
                     it.copy(
@@ -178,6 +245,7 @@ class ProfileViewModel @Inject constructor(
                     )
                 }
             }
+
             is ProfileEvent.TemporaryMunicipality -> {
                 _state.update {
                     it.copy(
@@ -185,6 +253,7 @@ class ProfileViewModel @Inject constructor(
                     )
                 }
             }
+
             is ProfileEvent.TemporaryProvince -> {
                 _state.update {
                     it.copy(
@@ -192,6 +261,7 @@ class ProfileViewModel @Inject constructor(
                     )
                 }
             }
+
             is ProfileEvent.TemporaryVillage -> {
                 _state.update {
                     it.copy(
@@ -199,6 +269,7 @@ class ProfileViewModel @Inject constructor(
                     )
                 }
             }
+
             is ProfileEvent.TemporaryWard -> {
                 _state.update {
                     it.copy(
@@ -214,6 +285,7 @@ class ProfileViewModel @Inject constructor(
                     )
                 }
             }
+
             is ProfileEvent.GrandFathersLastName -> {
                 _state.update {
                     it.copy(
@@ -221,6 +293,7 @@ class ProfileViewModel @Inject constructor(
                     )
                 }
             }
+
             is ProfileEvent.GrandFathersMiddleName -> {
                 _state.update {
                     it.copy(
@@ -228,6 +301,7 @@ class ProfileViewModel @Inject constructor(
                     )
                 }
             }
+
             is ProfileEvent.HusbandWifeFirstName -> {
                 _state.update {
                     it.copy(
@@ -235,6 +309,7 @@ class ProfileViewModel @Inject constructor(
                     )
                 }
             }
+
             is ProfileEvent.HusbandWifeLastName -> {
                 _state.update {
                     it.copy(
@@ -242,10 +317,19 @@ class ProfileViewModel @Inject constructor(
                     )
                 }
             }
+
             is ProfileEvent.HusbandWifeMiddleName -> {
                 _state.update {
                     it.copy(
                         editHusbandWifeMiddleName = event.value
+                    )
+                }
+            }
+
+            ProfileEvent.DismissInfoMsg -> {
+                _state.update {
+                    it.copy(
+                        infoMsg = null
                     )
                 }
             }
@@ -255,18 +339,11 @@ class ProfileViewModel @Inject constructor(
 
     fun getProfileData() {
         viewModelScope.launch {
-            _state.update {
-                it.copy(progress = Progress(value = 0.0F))
-            }
+
             val resource = firestoreRepository.getProfileData()
             when (resource) {
                 is Resource.Failure -> {
-                    _state.update {
-                        it.copy(
-                            infoMsg = Message.Error(description = resource.exception.message),
-                            progress = null
-                        )
-                    }
+
                 }
 
                 Resource.Loading -> {
@@ -276,21 +353,49 @@ class ProfileViewModel @Inject constructor(
                 is Resource.Success -> {
                     _state.update {
                         it.copy(
-                            progress = null,
+                            infoMsg = null,
                             editFirstName = resource.data.firstName ?: "",
                             editMiddleName = resource.data.middleName ?: "",
                             editLastName = resource.data.lastName ?: "",
                             editDob = resource.data.dob ?: "",
-                            editGender = Gender.values().find {gender ->
+                            editGender = Gender.values().find { gender ->
                                 gender.value == resource.data.gender
                             },
                             editEmail = resource.data.email ?: "",
+                            editPhone = resource.data.phoneNo ?: "",
+
+                            editHusbandWifeFirstName = resource.data.husbandWifeFirstName ?: "",
+                            editHusbandWifeMiddleName = resource.data.husbandWifeMiddleName ?: "",
+                            editHusbandWifeLastName = resource.data.husbandWifeLastName ?: "",
+
                             editFatherFirstName = resource.data.fatherFirstName ?: "",
                             editFatherMiddleName = resource.data.fatherMiddleName ?: "",
                             editFatherLastNam = resource.data.fatherLastName ?: "",
-                            imageUrl = resource.data.profileUrl?: ""
 
-                            )
+                            editMotherFirstName = resource.data.motherFirstName ?: "",
+                            editMotherMiddleName = resource.data.motherMiddleName ?: "",
+                            editMotherLastNam = resource.data.motherLastName ?: "",
+
+                            editGrandFatherFirstName = resource.data.grandfatherFirstName ?: "",
+                            editGrandFatherLastNam = resource.data.grandfatherLastName ?: "",
+                            editGrandFatherMiddleName = resource.data.grandfatherMiddleName ?: "",
+
+                            provience = resource.data.province ?: "",
+                            district = resource.data.district ?: "",
+                            municipality = resource.data.municipality ?: "",
+                            wardNo = resource.data.wardNo ?: "",
+                            villageName = resource.data.villageName ?: "",
+                            //Temporary address
+                            tprovience = resource.data.tprovience ?: "",
+                            tdistrict = resource.data.tdistrict ?: "",
+                            tmunicipality = resource.data.tmunicipality ?: "",
+                            twardNo = resource.data.twardNo ?: "",
+                            tvillageName = resource.data.tvillageName ?: "",
+
+
+                            imageUrl = resource.data.profileUrl ?: ""
+
+                        )
                     }
                 }
             }

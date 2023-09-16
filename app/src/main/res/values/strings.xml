@@ -22,4 +22,9 @@
     <string name="pay_now">Pay Now</string>
     <string name="paid">Paid</string>
     <string name="admit_card">Admit Card</string>
+    <string name="citizenship">Citizenship</string>
+    <string name="experience">Experience</string>
+    <string name="training">Training</string>
+    <string name="signature">Signature</string>
+    <string name="others">Others Docs</string>
 </resources>

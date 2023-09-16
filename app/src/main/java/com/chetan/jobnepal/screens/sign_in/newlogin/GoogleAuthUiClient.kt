@@ -90,7 +90,7 @@ class GoogleAuthUiClient(
                     .setFilterByAuthorizedAccounts(false)
                     .build()
             )
-            .setAutoSelectEnabled(true)
+            .setAutoSelectEnabled(false)
             .build()
     }
 }

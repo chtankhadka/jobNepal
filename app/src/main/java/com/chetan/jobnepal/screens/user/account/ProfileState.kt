@@ -16,6 +16,7 @@ data class ProfileState(
     val imageUrl: String = "",
     val editGender: Gender? = null,
     val editEmail: String = "",
+    val editPhone: String = "",
 
     //Permanent address
 
@@ -32,10 +33,15 @@ data class ProfileState(
     val twardNo: String = "",
     val tvillageName: String = "",
 
-//fathers details
+    //fathers details
     val editFatherFirstName: String = "",
     val editFatherMiddleName: String = "",
     val editFatherLastNam: String = "",
+
+    //fathers details
+    val editMotherFirstName: String = "",
+    val editMotherMiddleName: String = "",
+    val editMotherLastNam: String = "",
 
     //GrandFathers Details
     val editGrandFatherFirstName: String = "",
@@ -63,6 +69,7 @@ data class ProfileState(
                 && editFatherFirstName.isNotBlank()
                 && editFatherMiddleName.isNotBlank()
                 && editFatherLastNam.isNotBlank()
+                && imageUrl.isNotBlank()
     }
 //    fun asUpdateProfileParam() = UpdateProfilePaream()
 }

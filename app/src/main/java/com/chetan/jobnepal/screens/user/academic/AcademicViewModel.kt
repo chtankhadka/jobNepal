@@ -261,7 +261,7 @@ class AcademicViewModel @Inject constructor(
                         is Resource.Failure -> {
                             _state.update {
                                 it.copy(
-                                    infoMsg = Message.Error(description = "Deletion Failed !!!"),
+                                    infoMsg = Message.Error(description = "Deletion Failed !!!", yesNoRequired = false),
                                     progress = null
                                 )
                             }

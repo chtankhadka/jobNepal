@@ -47,9 +47,11 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.chetan.jobnepal.R
 import com.chetan.jobnepal.data.enums.Gender
+import com.chetan.jobnepal.screens.user.dashboard.DashboardEvent
 import com.chetan.jobnepal.ui.component.IconJobNepal
 import com.chetan.jobnepal.ui.component.animation.YouCannotClickMe
 import com.chetan.jobnepal.ui.component.dialogs.AddressDialog
+import com.chetan.jobnepal.ui.component.dialogs.MessageDialog
 import com.chetan.jobnepal.ui.component.textfield.EnumTextFieldJobNepal
 import com.chetan.jobnepal.ui.component.textfield.ReadonlyJobNepalTextField
 import com.chetan.jobnepal.ui.component.textfield.TextFieldJobNepal
@@ -144,6 +146,17 @@ fun ProfileScreen(
             )
         })
     }, content = {
+        state.infoMsg?.let {
+            MessageDialog(
+                message = it,
+                onDismissRequest = {
+                    if (onEvent != null && state.infoMsg.isCancellable == true) {
+                        onEvent(ProfileEvent.DismissInfoMsg)
+                    }
+                },
+                onPositive = { },
+                onNegative = {})
+        }
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -238,6 +251,12 @@ fun ProfileScreen(
                     TextFieldJobNepal(
                         label = "Email", value = state.editEmail, onValueChange = {
                             onEvent(ProfileEvent.OnEmailChange(it))
+                        }, required = true
+                    )
+
+                    TextFieldJobNepal(
+                        label = "Phone No.", value = state.editPhone, onValueChange = {
+                            onEvent(ProfileEvent.OnPhoneChange(it))
                         }, required = true
                     )
 
@@ -388,7 +407,7 @@ fun ProfileScreen(
                                 onClick = {
                                     if (address != null) {
                                         addressList =
-                                            address.find { it.name == state.provience }?.districts?.map { it.name }
+                                            address.find { it.name == state.tprovience }?.districts?.map { it.name }
                                                 ?.toMutableList() ?: mutableListOf()
                                         addressListIndicator = "td"
                                         addressDialog = true
@@ -401,7 +420,7 @@ fun ProfileScreen(
                                 onClick = {
                                     if (address != null) {
                                         addressList =
-                                            address.find { it.name == state.provience }?.districts?.find { it.name == state.district }?.municipalities?.toMutableList()
+                                            address.find { it.name == state.tprovience }?.districts?.find { it.name == state.tdistrict }?.municipalities?.toMutableList()
                                                 ?: mutableListOf()
                                         addressListIndicator = "tm"
                                         addressDialog = true
@@ -482,6 +501,66 @@ fun ProfileScreen(
                                 value = state.editFatherLastNam,
                                 onValueChange = {
                                     onEvent(ProfileEvent.OnFatherLastNameChange(it))
+                                },
+                                required = true
+                            )
+                        }
+                    }
+                }
+            }
+
+            //Mothers Details
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth(0.9f)
+                    .animateContentSize(),
+                colors = CardDefaults.cardColors(MaterialTheme.colorScheme.inversePrimary),
+            ) {
+
+                var isExpand by remember {
+                    mutableStateOf(false)
+                }
+                Column(
+                    modifier = Modifier.padding(7.dp),
+                    verticalArrangement = Arrangement.spacedBy(5.dp)
+                ) {
+
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(text = "Mother's Details")
+                        Icon(imageVector = if (!isExpand) Icons.Default.KeyboardArrowDown else Icons.Default.KeyboardArrowUp,
+                            contentDescription = null,
+                            modifier = Modifier.clickable {
+                                isExpand = !isExpand
+                            })
+                    }
+                    Divider(modifier = Modifier.padding(top = 20.dp, bottom = 10.dp))
+                    if (isExpand) {
+                        TextFieldJobNepal(label = "First Name",
+                            value = state.editMotherFirstName,
+                            onValueChange = {
+                                onEvent(ProfileEvent.OnMotherFirstNameChange(it))
+                            })
+                        Row(
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            TextFieldJobNepal(modifier = Modifier.weight(1f),
+                                label = "Middle Name",
+                                value = state.editMotherMiddleName,
+                                onValueChange = {
+                                    onEvent(ProfileEvent.OnMotherMiddleNameChange(it))
+                                })
+                            Spacer(modifier = Modifier.width(5.dp))
+                            TextFieldJobNepal(
+                                modifier = Modifier.weight(1f),
+                                label = "Last Name",
+                                value = state.editMotherLastNam,
+                                onValueChange = {
+                                    onEvent(ProfileEvent.OnMotherLastNameChange(it))
                                 },
                                 required = true
                             )

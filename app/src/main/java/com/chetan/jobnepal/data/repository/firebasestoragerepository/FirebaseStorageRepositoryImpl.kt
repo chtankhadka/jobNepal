@@ -114,7 +114,7 @@ class FirebaseStorageRepositoryImpl @Inject constructor(
 
     override suspend fun deleteAcademicSingleAttachement(id: String, level: String): Resource<Any> {
         return try {
-            val filePath = "${preference.dbTable}/Academic/${level}"
+            val filePath = "${preference.dbTable}/Academic/${level}/"
             storageRef.child(filePath + id).delete().await()
             Resource.Success(Unit)
         }catch (e: Exception){

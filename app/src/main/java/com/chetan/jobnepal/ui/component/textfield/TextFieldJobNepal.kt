@@ -97,14 +97,3 @@ fun TextFieldJobNepal(
             }
     )
 }
-
-@Preview
-@Composable
-fun ShowTextField() {
-    TextFieldJobNepal(
-        label = "hi",
-        value = "Nepal",
-        onValueChange = {
-    },
-    placeholder = "Your Father Name")
-}

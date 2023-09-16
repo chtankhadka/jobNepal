@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -127,11 +128,13 @@ fun UploadVideoScreen(
             )
 
             TextFieldJobNepal(
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Default),
                 value = state.description,
                 onValueChange = {
                     onEvent(UploadVideoEvent.DescriptionChange(it))
                 },
-                label = "Add Description"
+                label = "Add Description",
+                singleLine = false
             )
             Row(
                 modifier = Modifier

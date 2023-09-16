@@ -432,7 +432,7 @@ fun DashboardScreen(
                     .align(Alignment.BottomCenter)
             ) {
                 BannerAd(
-                    bId = "ca-app-pub-3940256099942544/6300978111",
+                    bId = "ca-app-pub-1412843616436423/5772386299",
                     modifier = Modifier.fillMaxWidth()
                 )
             }

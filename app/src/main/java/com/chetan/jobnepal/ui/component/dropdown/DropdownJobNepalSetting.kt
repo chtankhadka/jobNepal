@@ -28,6 +28,7 @@ import com.chetan.jobnepal.screens.user.dashboard.SettingItem
 
 @Composable
 fun DropdownJobNepalSetting(
+    modifier: Modifier = Modifier,
     list: List<SettingItem>,
     state: DashboardState,
     onEvent: (event: DashboardEvent) -> Unit,
@@ -35,7 +36,7 @@ fun DropdownJobNepalSetting(
 ) {
     var expanded by remember { mutableStateOf(false) }
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .wrapContentSize(Alignment.TopEnd)
     ) {

@@ -6,6 +6,7 @@ import com.chetan.jobnepal.ui.component.dialogs.Progress
 
 data class AdminNotificationState(
     val message: String = "",
+    val title: String = "",
     override val infoMsg: Message? = null,
     override val progress: Progress? = null
 ) : JobNepalScreenState(infoMsg, progress)

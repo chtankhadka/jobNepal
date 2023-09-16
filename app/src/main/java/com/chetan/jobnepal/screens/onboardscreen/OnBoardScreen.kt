@@ -101,7 +101,7 @@ fun OnBoardScreen(onComplete: () -> Unit, state: OnBoardState, onEvent: (OnBoard
                         }
                 }) {
                     Text(
-                        text = "Let's begin to JobNepal"
+                        text = "Let's begin to Online Form"
                     )
                 }
             }

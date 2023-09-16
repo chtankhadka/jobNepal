@@ -2,6 +2,7 @@ package com.chetan.jobnepal.screens.user.dashboard
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -27,9 +28,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.chetan.jobnepal.Destination
@@ -81,43 +84,48 @@ fun ModalDrawerSheetPage(
                 uri = state.profileUrl,
                 enableEdit = false
             )
-            Column(
-                modifier = Modifier
-                    .padding(vertical = 10.dp)
-                    .height(70.dp),
-                verticalArrangement = Arrangement.Bottom
-            ) {
-
-                Text(text = state.currentUserName, style = MaterialTheme.typography.titleMedium)
-//                Text(text = "Form Requested: 4")
-//                Text(text = "Attend Exam: 1")
-            }
-            val list = listOf(
-                SettingItem.Nepali,
-                SettingItem.About_Us,
-                SettingItem.Privacy_Policy,
-                SettingItem.Logout
-            )
-            DropdownJobNepalSetting(list, state, onEvent, onClick = {
-                when (it) {
-                    SettingItem.Nepali -> {
-                        onEvent(DashboardEvent.Logout)
-                        onClick("Nepali")
-                    }
-
-                    SettingItem.About_Us -> {
-                        showAboutUsDialog = true
-                    }
-
-                    SettingItem.Logout -> {
-                        onClick("logout")
-                    }
-
-                    SettingItem.Privacy_Policy -> {
-                        showDialog = true
-                    }
+            Box(modifier = Modifier
+                .padding(vertical = 10.dp,)) {
+                Column(
+                    modifier = Modifier
+                        .padding(vertical = 10.dp,)
+                        .height(70.dp),
+                    verticalArrangement = Arrangement.Top
+                ) {
+                    Text(text = state.currentUserName,
+                        style = MaterialTheme.typography.titleMedium,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
                 }
-            })
+                val list = listOf(
+                    SettingItem.Nepali,
+                    SettingItem.About_Us,
+                    SettingItem.Privacy_Policy,
+                    SettingItem.Logout
+                )
+                DropdownJobNepalSetting(modifier = Modifier.align(Alignment.TopEnd),list = list, state = state, onEvent = onEvent, onClick = {
+                    when (it) {
+                        SettingItem.Nepali -> {
+                            onEvent(DashboardEvent.Logout)
+                            onClick("Nepali")
+                        }
+
+                        SettingItem.About_Us -> {
+                            showAboutUsDialog = true
+                        }
+
+                        SettingItem.Logout -> {
+                            onClick("logout")
+                        }
+
+                        SettingItem.Privacy_Policy -> {
+                            showDialog = true
+                        }
+                    }
+                })
+            }
+
 
         }
         Divider(

@@ -81,7 +81,7 @@ fun DashboardItem(
             verticalAlignment = Alignment.CenterVertically,
 
             ) {
-            Text(text = data.title)
+            Text(text = data.title, style = MaterialTheme.typography.titleMedium)
             DropdownJobNepal(
                 listOf(
                     Triple("Full Guid", Icons.Default.YoutubeSearchedFor, true),
@@ -104,7 +104,7 @@ fun DashboardItem(
 
             }
         }
-        WebContent(videoId = data.videoId, modifier = Modifier.height(380.dp))
+        WebContent(videoId = data.videoId, modifier = Modifier.height(315.dp))
 //        AsyncImage(
 //            modifier = Modifier.fillMaxWidth(),
 //            contentScale = ContentScale.FillWidth,
@@ -152,7 +152,7 @@ fun DashboardItem(
             Divider(modifier = Modifier.padding(top = 5.dp, bottom = 5.dp))
             if (isVisible) {
                 Text(
-                    text = data.toString(),
+                    text = data.description,
                     modifier = Modifier
                         .padding(horizontal = 2.dp)
                         .fillMaxWidth(),

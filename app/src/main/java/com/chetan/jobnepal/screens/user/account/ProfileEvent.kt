@@ -10,6 +10,7 @@ sealed interface ProfileEvent {
     data class OnLastNameChange(val value: String) : ProfileEvent
     data class OnDobChange(val value: String) : ProfileEvent
     data class OnEmailChange(val value: String) : ProfileEvent
+    data class OnPhoneChange(val value: String) : ProfileEvent
     data class OnGenderChange(val value: Gender?) : ProfileEvent
 
     // Permanent address
@@ -31,6 +32,12 @@ sealed interface ProfileEvent {
     data class OnFatherMiddleNameChange(val value: String) : ProfileEvent
     data class OnFatherLastNameChange(val value: String) : ProfileEvent
 
+    //fathers details
+
+    data class OnMotherFirstNameChange(val value: String) : ProfileEvent
+    data class OnMotherMiddleNameChange(val value: String) : ProfileEvent
+    data class OnMotherLastNameChange(val value: String) : ProfileEvent
+
     //Grand father
     data class GrandFathersFirstName(val value: String) : ProfileEvent
     data class GrandFathersMiddleName(val value: String) : ProfileEvent
@@ -42,4 +49,5 @@ sealed interface ProfileEvent {
     data class HusbandWifeLastName(val value: String): ProfileEvent
 
     data class Upload(val value: Uri) : ProfileEvent
+    object DismissInfoMsg: ProfileEvent
 }

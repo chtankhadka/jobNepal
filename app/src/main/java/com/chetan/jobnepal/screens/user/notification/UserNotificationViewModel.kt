@@ -16,9 +16,8 @@ import javax.inject.Inject
 @HiltViewModel
 class UserNotificationViewModel @Inject constructor(
     private val firebaseRepository: FirestoreRepository,
-    private val preference: Preference
+    preference: Preference
 ) : ViewModel() {
-
     private val _state = MutableStateFlow(UserNotificationState())
     val state: StateFlow<UserNotificationState> = _state
  init {
